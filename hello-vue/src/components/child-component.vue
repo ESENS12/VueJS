@@ -17,7 +17,13 @@
           addTime(){
               //여기서 emit할때 addClick이라는 이름으로 해당 이벤트 정의 하는것
               this.$emit('addClick', this.clickTime+10)
-          }
+          },
+          changeClickTime(){
+            alert('changeClickTime!')
+          },
+        },
+        watch:{
+          clickTime: 'changeClickTime'
         }
     }
 </script>
