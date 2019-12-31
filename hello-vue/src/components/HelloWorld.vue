@@ -4,7 +4,6 @@
       Hover your mouse over me for a few seconds
       to see my dynamically bound title!
     </span>
-    <button v-bind:style="a" v-on:click="count++">You clicked me {{ count }} times.</button>
   </div>
 </template>
 
@@ -21,6 +20,12 @@ export default {
       count: 0,
     }
   },
+
+  method:{
+    ChangeData(){
+      this.data = this.count;
+    }
+  }
 
 
 }
