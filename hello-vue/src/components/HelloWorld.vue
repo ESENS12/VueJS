@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <span v-bind:title="data">
+  <div>
+    <span class="hello" v-bind:title="data">
       Hover your mouse over me for a few seconds
       to see my dynamically bound title!
     </span>
@@ -47,4 +47,9 @@ li {
 a {
   color: #42b983;
 }
+
+.hello{
+  color:#42b983;
+}
+
 </style>
