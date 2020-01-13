@@ -1,7 +1,6 @@
 {
     "files.associations": {
         "*.js": "javascript",
-        "*.vue": "html"
     },
     "editor.tabCompletion": "onlySnippets",
     
