@@ -1,2 +1,6 @@
 # VueJS
-Vue.JS Sample, Recipe, Study FOR VUE
+Vue.JS Sample, Recipe, Study
+
+# Vue Cli
+- vue create project-name
+- yarn serve
