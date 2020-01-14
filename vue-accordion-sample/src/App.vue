@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Helloworld Vue"/>
+    <HelloWorld msg="Vue js is fucking boring"/>
+    <Accordion/>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import Accordion from './components/Accordion.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    Accordion
   }
 }
 </script>

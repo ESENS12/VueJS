@@ -1,24 +1,7 @@
 # vue-accordion-sample
 
-## Project setup
-```
-yarn install
-```
+## references
+- https://vuejsexamples.com/a-cool-accordion-component-written-in-vuejs-and-gsap/
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## components
+- yarn add sass-loader node-sass --save-dev
