@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <simple-menu/>
+    <slide-menu/>
   </div>
 </template>
 
 <script>
 import SimpleMenu from './components/SimpleMenu.vue'
+import SlideMenu from './components/SlideMenu.vue'
 
 export default {
   name: 'app',
   components: {
-    SimpleMenu
+    SimpleMenu,
+    SlideMenu,
   }
 }
 </script>

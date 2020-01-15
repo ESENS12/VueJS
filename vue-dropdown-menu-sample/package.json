@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.4.4",
     "vue": "^2.6.10",
+    "vue-burger-menu": "^2.0.3",
     "vue-stripe-menu": "^1.2.4"
   },
   "devDependencies": {
@@ -26,12 +27,13 @@
     "env": {
       "node": true
     },
-
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": { "no-console": "off" },
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

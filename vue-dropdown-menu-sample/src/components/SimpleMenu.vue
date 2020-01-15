@@ -27,7 +27,7 @@
       <li class="vsm-section vsm-mob-hide">
         <button>My Button</button>
       </li>
-      <vsm-mob>Mobile Content</vsm-mob>
+      <vsm-mob >Mobile Content</vsm-mob>
     </template>
   </vsm-menu>
 </div>
