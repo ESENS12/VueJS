@@ -1,16 +1,21 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <my-play-ground msg="Welcome to Your Vue.js App"/> -->
+    <sticky-top-header/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+// import MyPlayGround from './components/MyPlayGround.vue'
+import StickyTopHeader from './components/StickyTopHeader.vue'
 
 export default {
+  
   name: 'app',
   components: {
-    HelloWorld
+    // MyPlayGround,
+    StickyTopHeader,
   }
 }
 </script>
@@ -22,6 +27,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
