@@ -12,104 +12,21 @@
     <div class="content">
     <h3>On Scroll Sticky Header</h3>
     <p>The header will stick to the top when you reach its scroll position.</p>
-    <p>Scroll back up to remove the sticky effect.</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
-    <p>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>
-    <p>I HATE THIS</p>
+    <p v-for="(item) in items" :key="item"> ㅁㄴㅇㅁㄴㅇㅁㄴㅇ</p>
+    <!-- {{createMoreView()}} -->
     </div>
 </div> 
-
 </template>
 
 <script>
 
 var header;
 var sticky;
+
+// var data = ["data!","data!","data!","data!"];
+var data = [{
+    items:['item1','item2'],
+}];
 
 export default {
     
@@ -118,7 +35,6 @@ name: 'StickyTopheader',
 beforeMount(){
     console.log('beforeMount');
 },
-
 
 mounted(){
     window.addEventListener('scroll', this.handleScroll);
@@ -131,18 +47,29 @@ beforeCreate(){
     console.log('beforeCreate');
 },
 
+data: function () {      
+    return data;
+},
+
+
 methods:{
     handleScroll : function() {
-    if (window.pageYOffset > sticky) {
-        header.classList.add("sticky");
-    } else {
-        header.classList.remove("sticky");
+        if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+        } else {
+            header.classList.remove("sticky");
+        }
+    },
+    createMoreView : function () {
+        // content
+        var viewTag = "<p v-html>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>";
+        for(let i=0;i<10; i++){
+            viewTag += viewTag;
+        }
+        return viewTag;
+
     }
 }
-
-}
-
-
 }
 </script>
 
