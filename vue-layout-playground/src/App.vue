@@ -1,31 +1,26 @@
 <template>
-  <div id="app">
-    <!-- <my-play-ground msg="Welcome to Your Vue.js App"/> -->
-    <sticky-top-header/>
+  <div>
+    <vuetify-ground/>    
+    <!-- <flex-box/>     -->
   </div>
 </template>
 
 <script>
 
+import VuetifyGround from './components/VuetifyGround.vue';
+// import FlexBox from './components/FlexBox.vue';
 // import MyPlayGround from './components/MyPlayGround.vue'
-import StickyTopHeader from './components/StickyTopHeader.vue'
-
+// import StickyTopHeader from './components/StickyTopHeader.vue'
 export default {
-  
-  name: 'app',
-  components: {
-    // MyPlayGround,
-    StickyTopHeader,
-  }
-}
-</script>
+  name: 'App',
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-</style>
+  components: {
+    VuetifyGround,
+    // FlexBox,
+  },
+
+  data: () => ({
+    
+  }),
+};
+</script>

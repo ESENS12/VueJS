@@ -10,10 +10,12 @@
     </div>
 
     <div class="content">
-    <h3>On Scroll Sticky Header</h3>
-    <p>The header will stick to the top when you reach its scroll position.</p>
-    <p v-for="(item) in items" :key="item"> ㅁㄴㅇㅁㄴㅇㅁㄴㅇ</p>
-    <!-- {{createMoreView()}} -->
+      <h3>On Scroll Sticky Header</h3>
+      <p>The header will stick to the top when you reach its scroll position.</p>
+      <div v-for="(item,index) in items" :key="index">  
+        <p>{{item.message1}}</p>
+        <p>{{item.message2}}</p>
+      </div>
     </div>
 </div> 
 </template>
@@ -23,10 +25,12 @@
 var header;
 var sticky;
 
-// var data = ["data!","data!","data!","data!"];
-var data = [{
-    items:['item1','item2'],
-}];
+var data = {
+    items:[
+      { message1 : 'Some text to enable scrolling..',
+        message2 : 'Vue js is Really Fucnking Ugly' }
+      ],
+};
 
 export default {
     
@@ -38,19 +42,19 @@ beforeMount(){
 
 mounted(){
     window.addEventListener('scroll', this.handleScroll);
-    // console.log('mounted!');
     header = document.getElementById("myHeader");
     sticky = header.offsetTop;
+
+    this.createMoreView();
 },
 
 beforeCreate(){
-    console.log('beforeCreate');
+    // console.log('beforeCreate');
 },
 
 data: function () {      
     return data;
 },
-
 
 methods:{
     handleScroll : function() {
@@ -61,16 +65,13 @@ methods:{
         }
     },
     createMoreView : function () {
-        // content
-        var viewTag = "<p v-html>Some text to enable scrolling.. Vue js is Really Fucnking Ugly</p>";
-        for(let i=0;i<10; i++){
-            viewTag += viewTag;
+        for(let i=0;i<100; i++){
+          this.items.push({ message1 : 'Some text to enable scrolling..', message2 : 'Vue js is Really Fucnking Ugly' });
         }
-        return viewTag;
-
     }
+  }
 }
-}
+
 </script>
 
 <style>
