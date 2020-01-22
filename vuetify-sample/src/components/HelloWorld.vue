@@ -4,7 +4,8 @@
       text-center
       wrap
     >
-      <v-flex xs12>
+    <!-- 기본적으로 그리드 시스템으로 표출됨, 12가 맥스 -->
+      <v-flex lg2>    <!-- xs12의 경우 xs(600px)이하에서는 12개를 다 쓰겠다(full width)  -->
         <v-img
           :src="require('../assets/logo.svg')"
           class="my-3"
@@ -13,7 +14,7 @@
         ></v-img>
       </v-flex>
 
-      <v-flex mb-4>
+      <v-flex mb-12>    <!-- margin bottom -12(max), 1~12 -->
         <h1 class="display-2 font-weight-bold mb-3">
           Welcome to Vuetify
         </h1>
