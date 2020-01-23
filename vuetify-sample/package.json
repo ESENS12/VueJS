@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.4.4",
     "vue": "^2.6.10",
+    "vue-material-design-icons": "^4.4.0",
     "vuetify": "^2.1.0"
   },
   "devDependencies": {
@@ -34,7 +35,10 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": 
+    {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

@@ -5,7 +5,7 @@
       color="dark"
       dark
     >
-     
+     <p> Vuetify Sample </p>
 
       <v-spacer></v-spacer>
 
@@ -21,21 +21,24 @@
 
     <v-content>
       <!-- <HelloWorld/> -->
-      <v-flex-sample/>
+      <!-- <v-flex-sample/> -->
+      <dash-board-sample/>
     </v-content>
   </v-app>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld';
-import VFlexSample from './components/VFlexSample';
+// import VFlexSample from './components/VFlexSample';
+import DashBoardSample from './components/DashBoardSample';
 
 export default {
   name: 'App',
 
   components: {
     // HelloWorld,
-    VFlexSample,
+    // VFlexSample,
+    DashBoardSample,
   },
 
   data: () => ({
