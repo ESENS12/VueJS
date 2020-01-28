@@ -1,1 +1,3 @@
 node_modules/*
+nodejs-jwt-example/node_modules/*
+nodejs-jwt-example/config/*
