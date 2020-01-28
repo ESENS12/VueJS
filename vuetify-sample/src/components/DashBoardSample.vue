@@ -77,7 +77,6 @@ export default {
     data: () => ({
         
     }),
-
     methods:{
         clickIcon(item){
             console.log("clickIcon" , item.srcElement);
