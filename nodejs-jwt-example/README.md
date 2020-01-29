@@ -11,3 +11,6 @@ npm install jsonwebtoken
 ```
 node index.js
 ```
+```
+cd nodejs-jwt-example && node index.js
+```

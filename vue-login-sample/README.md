@@ -6,6 +6,9 @@
 
 # Project setup
 ```
-vue add vuetify jsonwebtoken
+yarn add jsonwebtoken axios vue-router
 ```
 
+```
+vue add vuetify
+```

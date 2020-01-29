@@ -71,6 +71,15 @@ export default {
        
     },
 
+    created () {
+    // 컴포넌트가 생성될 때, /login/test에 get 요청    
+    this.$http.get('/login/test')
+        .then((response) => {
+          console.log(response.data);
+          this.payload = response.data
+        })
+    },
+
     beforeCreate(){
        
     },
