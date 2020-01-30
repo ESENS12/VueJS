@@ -4,43 +4,51 @@ var path = require("path")
 let router = express.Router();
 
 let jwt = require("jsonwebtoken");
+const SecretKey = "@@THISISSAMPLEKEY!!";
 
 // vue sample
-router.get('/', function(req, res, next) { 
+router.get('/', function(req, res, next) {
+    console.log("/login [backend]");
+    // res.json({
+        // isLogin : false
+    // })
+    //dev 일때는 json을 던져주자
     res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
 });
 
-// router.get("/", function(req,res,next){
+router.get("/signin", function(req,res,next){
     
+    console.log('req.email : ' + req.email);
+
 //     //토큰 발행 샘플 
-//   let token = jwt.sign({
-//         email: "foo@example.com",  // 토큰의 내용(payload)
-//         userName : "ESENS",
-//       },
-//         secretObj.secret,    // 비밀키
-//         {
-//             expiresIn: secretObj.expiresin    // 유효 시간은 5분
-//         }
-//     );
-//     const decoded = tokenTest(token);
+  let token = jwt.sign({
+        email: "foo@example.com",  // 토큰의 내용(payload)
+        userName : "ESENS",
+      },
+        SecretKey,    // 비밀키
+        {
+            expiresIn: '5m'    // 유효 시간은 5분
+        }
+    );
+    const decoded = tokenTest(token);
 
-//     if(decoded){
-//         res.cookie("user", token);
-//         res.send("email : " + decoded.email + "\n UserName : " + decoded.userName);
+    if(decoded){
+        res.cookie("user", token);
+        res.send("email : " + decoded.email + "\n UserName : " + decoded.userName);
     
-//         // res.json({
-//         //     token: token
-//         // })
-//     }else{
-//         res.status(403).send("Key is Not Validate!");
-//     };
+        // res.json({
+        //     token: token
+        // })
+    }else{
+        res.status(403).send("Key is Not Validate!");
+    };
 
-// });
+});
 
 function tokenTest(token){
     if(typeof token != 'undefined'){
 
-        var decoded = jwt.verify(token, secretObj.secret);
+        var decoded = jwt.verify(token, SecretKey);
 
         if(decoded.email && decoded.userName){
             console.log('email and userName is verify');

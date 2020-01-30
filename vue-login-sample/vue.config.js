@@ -2,11 +2,11 @@ module.exports = {
 
   devServer: {
     proxy: { 
-      '/login': { 
-        target: 'http://localhost:3000/login',
+      '/login/signin': { 
+        target: 'http://localhost:3000/login/signin',
         changeOrigin: true, 
         pathRewrite: { 
-          '^/login': ''
+          '^/login/signin': ''
         } 
       } 
     } 

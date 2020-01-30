@@ -72,10 +72,10 @@ export default {
     },
 
     created () {
-    // 컴포넌트가 생성될 때, /login/test에 get 요청    
-    this.$http.get('/login/test')
+    // 컴포넌트가 생성될 때, backend에 data 요청    
+    this.$http.get('/login/signin')
         .then((response) => {
-          console.log(response.data);
+          console.log("response.data : " + response.data);
           this.payload = response.data
         })
     },
