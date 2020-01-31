@@ -72,12 +72,12 @@ export default {
     },
 
     created () {
-    // 컴포넌트가 생성될 때, backend에 data 요청    
-    this.$http.get('/login/signin')
-        .then((response) => {
-          console.log("response.data : " + response.data);
-          this.payload = response.data
-        })
+    // 컴포넌트가 생성될 때, backend에 data 요청 샘플
+    // this.$http.post('/login/signin',this.payload)
+    //     .then((response) => {
+    //       console.log("response.data : " + response.data);
+    //       // this.payload = response.data
+    //     })
     },
 
     beforeCreate(){
@@ -94,9 +94,43 @@ export default {
 
     methods:{
         Login(){
-            var decoded = jwt.verify(userToken, privateKey);
+
+          var options = {
+            "audience"   : "audienceSample",
+            "issuer" : "issuerSample",   //발급시 넣어준 options과 값이 다르면 exception 발생
+            "subject" : "subjectsample",  
+            "ignoreExpiration" : true
+          }
+            var decoded = jwt.verify(userToken, privateKey,options);
+            
+            //공개 클레임
+            console.log("expires : " + new Date(decoded.exp * 1000));
+            console.log("발급일자 : " + new Date(decoded.iat * 1000));
+            console.log("토큰제목 : " + decoded.sub);
+            console.log("alg : " + decoded.alg);
+            console.log("typ : " + decoded.typ);
+            console.log("kid : " + decoded.kid);
+            console.log(decoded);
+            //사용자 정의 클레임
             this.payload = decoded.payload;
             console.log("UserId : " + this.payload.userId, " , password : " + this.payload.password);
+
+            // try {
+            //   var decoded = jwt.verify(userToken, privateKey, {
+            //       ignoreExpiration: true //handled by OAuth2 server implementation
+            //   });
+              
+            //   callback(null, {
+            //     accessToken: bearerToken,
+            //     clientId: decoded.sub,
+            //     userId: decoded.user,
+            //     expires: new Date(decoded.exp * 1000)
+            //   });
+
+            // } catch(e) {    
+            //   callback(e);
+            // }
+
         },
         //node express 로그인 하면 토큰을 발급해주고, 그다음부터는 해당토큰이 맞는지 validate
         async SignUp(){
@@ -105,25 +139,41 @@ export default {
                 password : this.password,
             };
 
+            // this.$http.post('/login/signin',{
+            //   user:payload
+            //   })
+            //   .then((response) => {
+            //     console.log("response.data : " + response.data);
+            //     // this.payload = response.data
+            //   })
+
             this.MakeToken(payload);
             
         },
 
         MakeToken(payload){
+
+          let options = {
+            "expiresIn" : 1,
+            "algorithm": "HS384", 
+            "issuer" : "issuerSample" , 
+            "audience": "audienceSample",
+            "subject" : "subjectSample",
+            "jwtid" : "jwtIdSample",
+            "keyid" : "keyidSample"
+          }
             jwt.sign({ 
                  payload
-              }, privateKey, { expiresIn: '7d' }, (err, token) => {
+              }, privateKey, options, (err, token) => {
 
                 if(err) {
                     this.CheckAuth();
                     console.log(err);
                     return;
                 }
-
-                alert('회원가입 성공!');
                 userToken = token;
                 console.log("token : ",userToken);
-            });
+            });            
         },
 
         CheckAuth(token){
