@@ -1,9 +1,12 @@
 let express = require('express');
-var path = require("path")
-
+// let app = express();
+// var bodyParser = require('body-parser');
+let path = require("path");
 let router = express.Router();
-
 let jwt = require("jsonwebtoken");
+
+// router.use(bodyParser.json);
+
 const SecretKey = "@@THISISSAMPLEKEY!!";
 
 // vue sample
@@ -16,9 +19,10 @@ router.get('/', function(req, res, next) {
     res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
 });
 
-router.get("/signin", function(req,res,next){
-    
-    console.log('req.email : ' + req.email);
+router.post("/signin", function(req,res,next){
+    console.log(req.body);
+    // console.log('req.userId : ' + req.body.userId);
+    // console.log('req.password : ' + req.body.password);
 
 //     //토큰 발행 샘플 
   let token = jwt.sign({

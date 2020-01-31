@@ -6,7 +6,7 @@
 
 # Project setup
 ```
-npm install jsonwebtoken
+npm install jsonwebtoken body-parser
 ```
 ```
 node index.js

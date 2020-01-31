@@ -11,5 +11,6 @@ app.get('/', (req, res) => res.send("Hello world"))
 app.use('/login', require('./routes/api/'))
 
 app.use(history())
-
+app.use(express.json());
+app.use(express.urlencoded( {extended : true } ));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
