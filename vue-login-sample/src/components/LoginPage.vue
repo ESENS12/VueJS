@@ -96,10 +96,10 @@ export default {
         Login(){
 
           var options = {
-            "audience"   : "audienceSample",
-            "issuer" : "issuerSample",   //발급시 넣어준 options과 값이 다르면 exception 발생
-            "subject" : "subjectsample",  
-            "ignoreExpiration" : true
+            "audience"   : "audienceSample", //발급시 넣어준 options과 하나라도 값이 다르면 exception 발생
+            "issuer" : "issuerSample",   
+            "subject" : "subjectSample",  
+            "ignoreExpiration" : true   //검증용 아님, 키발급 만료일 무시할것인지 여부 (false일때 발급만료시 exception발생)
           }
             var decoded = jwt.verify(userToken, privateKey,options);
             
@@ -132,22 +132,30 @@ export default {
             // }
 
         },
-        //node express 로그인 하면 토큰을 발급해주고, 그다음부터는 해당토큰이 맞는지 validate
+
+        //todo node에 userid,password 전송 후 (암호화 됐다 치고) return으로 토큰 받아서 쿠키에 넣어주고 다음 api 요청부터는 해당 토큰 체크하도록
+
         async SignUp(){
-            const payload = {
-                userId : this.userId,
-                password : this.password,
-            };
 
-            // this.$http.post('/login/signin',{
-            //   user:payload
-            //   })
-            //   .then((response) => {
-            //     console.log("response.data : " + response.data);
-            //     // this.payload = response.data
-            //   })
+            // const payload = {
+            //     userId : this.userId,
+            //     password : this.password,
+            // };
 
-            this.MakeToken(payload);
+            this.$http.post('/login/signup',{
+                userId:this.userId, 
+                userPassword:this.password
+              })
+              .then((response) => {
+                console.log("response.token : " + response.data.token);
+
+                this.CheckAuth(response.data.token);
+                // this.payload = response.data
+              }).catch(function (err) {
+                console.log("Exception! : " + err);
+              });
+
+            // this.MakeToken(payload);
             
         },
 
@@ -177,11 +185,27 @@ export default {
         },
 
         CheckAuth(token){
-
+            
             if(!token){
                 alert('Invalid Token');
             }
 
+            var options = {
+              "ignoreExpiration" : true   //검증용 아님, 키발급 만료일 무시할것인지 여부 (false일때 발급만료시 exception발생)
+            }
+
+            try{
+              
+              var decoded = jwt.verify(token, privateKey, options);
+              
+              console.log(decoded);
+
+              this.payload = decoded.payload;
+
+              console.log("Decoded UserId : " + this.payload.userId, " , password : " + this.payload.password);
+            }catch (err){
+              console.log('checkAuth Exception : ' + err);
+            }
         },
     }
 
