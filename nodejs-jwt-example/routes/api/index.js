@@ -7,7 +7,7 @@ let jwt = require("jsonwebtoken");
 
 // router.use(bodyParser.json);
 
-const SecretKey = "@@THISISSAMPLEKEY!!";
+const SecretKey = "~!@#$THISISPRIVATEKEY";
 
 // vue sample
 router.get('/', function(req, res, next) {
@@ -19,34 +19,55 @@ router.get('/', function(req, res, next) {
     res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
 });
 
-router.post("/signin", function(req,res,next){
-    console.log(req.body);
-    // console.log('req.userId : ' + req.body.userId);
-    // console.log('req.password : ' + req.body.password);
+router.post("/postSample", function(req, res, next){
+    console.log("/postSample");
+    try{
+        const id = req.body.id;
+        const password = req.body.password;
 
-//     //토큰 발행 샘플 
-  let token = jwt.sign({
-        email: "foo@example.com",  // 토큰의 내용(payload)
-        userName : "ESENS",
-      },
-        SecretKey,    // 비밀키
-        {
-            expiresIn: '5m'    // 유효 시간은 5분
+        if(id && password){
+            console.log("id : " + id + ", password : " + password);
+            res.status(400).send("Okay!");
         }
-    );
-    const decoded = tokenTest(token);
-
-    if(decoded){
-        res.cookie("user", token);
-        res.send("email : " + decoded.email + "\n UserName : " + decoded.userName);
     
-        // res.json({
-        //     token: token
-        // })
-    }else{
-        res.status(403).send("Key is Not Validate!");
-    };
+    }catch(err){
+        console.log("Exception : ",err);
+        res.status(403).send("Need ID or Password!");
+    }
+    
+});
 
+//파라메터 받아서 토큰 생성 후 리턴
+router.post("/signup", function(req,res,next){
+    console.log(req.body);
+    
+    try{
+
+        const id = req.body.userId;
+        const password = req.body.userPassword;
+
+        if(id && password){
+
+            let token = jwt.sign({
+                userId: id,  
+                userPassword : password,
+            },
+                SecretKey,    // 비밀키
+                {
+                    expiresIn: '5m'    // 유효 시간은 5분(옵션)
+                }
+            );
+
+            res.send({token : token});
+
+        }else{
+            res.status(403).send("Need ID or Password!");
+        }
+    
+    }catch(err){
+        console.log("Exception : ",err);
+        res.status(403).send("Need ID or Password!");
+    }  
 });
 
 function tokenTest(token){
