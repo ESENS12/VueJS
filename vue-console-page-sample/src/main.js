@@ -4,8 +4,28 @@ import vuetify from './plugins/vuetify';
 import router  from './routes'
 import axios from 'axios'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-Vue.config.productionTip = false
+import 'chartist/dist/chartist.min.css'
+
+import upperFirst from 'lodash/upperFirst'
+import camelCase from 'lodash/camelCase'
+
+const requireComponent = require.context(
+  '@/components', true, /\.vue$/
+);
+
+requireComponent.keys().forEach(fileName => {
+  const componentConfig = requireComponent(fileName)
+
+  const componentName = upperFirst(
+    camelCase(fileName.replace(/^\.\//, '').replace(/\.\w+$/, ''))
+  )
+
+  Vue.component(componentName, componentConfig.default || componentConfig)
+});
+
+Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
+Vue.use(require('vue-chartist'));
 
 new Vue({
   icons:{

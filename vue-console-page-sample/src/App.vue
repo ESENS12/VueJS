@@ -8,7 +8,7 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
       <v-app-bar-nav-icon @click=this.onDrawer />
-      <span class="title ml-3 mr-5">Sample&nbsp;<span class="font-weight-light">Console</span></span>
+      <span class="title ml-3 mr-5">ESENS&nbsp;<span class="font-weight-light">Console</span></span>
       <v-text-field
         solo-inverted
         flat
@@ -102,10 +102,15 @@ export default {
             this.drawer = !this.drawer;
         },
         onItemClick(index){
-          console.log("onItemClick : " , this.items[index].text);
+          // console.log("onItemClick : " , this.items[index].text);
             this.$router.replace({name:this.items[index].text});
             
         }
     }
 };
 </script>
+
+
+<style lang="scss">
+  @import '@/styles/index.scss';
+</style>
