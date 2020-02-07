@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/HelloWorld'
 import Login from '@/components/LoginPage'
+import Main from '@/components/MainPage'
 // import FirstPage from '@/components/FirstPage'
 // import SecondPage from '@/components/SecondPage'
 
@@ -20,6 +21,11 @@ const router = new Router({
      name: 'login',
      component: Login
    },
+   {
+    path: '/main',
+    name: 'main',
+    component: Main
+  },
  ]
 })
 
