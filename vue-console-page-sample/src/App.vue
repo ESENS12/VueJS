@@ -1,6 +1,7 @@
 <template>
     <v-app>
-    <loginPage v-if="true"></loginPage>
+  
+    <loginPage v-if="!this.isLogin" @login-event="onLogin"></loginPage>
     
     <v-app id="keep" v-else>
     <v-app-bar
@@ -75,6 +76,14 @@
 import LoginPage from '@/components/LoginPage';
 
 export default {
+
+  beforeMount(){
+    this.isLogin = false;
+  },
+
+  created(){
+    
+  },
   name: 'App',
   components: {
     LoginPage,
@@ -82,9 +91,11 @@ export default {
 
   props: {
       source: String,
+
     },
     data: () => ({
       drawer: null,
+      isLogin : false,
       //navigation drawer item list
       items: [
 
@@ -105,6 +116,12 @@ export default {
         onDrawer(){
             // console.log('onDrawer Click! : ' + this.drawer);
             this.drawer = !this.drawer;
+        },
+
+        onLogin(){
+          this.isLogin = true;
+          //첫페이지 
+          this.$router.replace({name:this.items[0].text});
         },
         onItemClick(index){
           // console.log("onItemClick : " , this.items[index].text);
