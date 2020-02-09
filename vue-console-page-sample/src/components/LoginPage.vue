@@ -1,64 +1,158 @@
 <template>
-  <v-app id="inspire">
-    <v-content>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="12"
-            sm="8"
-            md="4"
-          >
-            <v-card class="elevation-12">
-              <v-toolbar
-                color="primary"
-                dark
-                flat
-              >
-                <v-toolbar-title class="topbar">Login Sample</v-toolbar-title>
-        
-              </v-toolbar>
-              <v-card-text>
-                <v-form>
-                  <v-text-field
-                    v-model="userId"
-                    label="Your ID"
-                    prepend-icon="mdi-person"
-                    type="text"
-                  />
 
+  <v-container
+    pa-0
+    fill-height
+    fluid
+    grid-list-xl>
+    
+    <v-layout
+      justify-center
+      wrap
+      fill-height fluid
+    >
+
+
+    <!-- Left Side(Image or Logo) --> 
+    <v-flex
+      xs5
+      md5
+      pb-0
+      >
+
+     <v-layout
+      justify-center
+      wrap
+      fill-height
+      align-content-center
+      
+      
+     >
+      <img src="@/assets/fatos-logo.png"/>
+     </v-layout>
+     </v-flex>
+    
+
+    <!-- Login form --> 
+      <v-flex
+        xs7
+        md7
+        mr-1
+        column
+        d-flex align-content-center flex-wrap
+       
+      >
+      <v-layout  v-if = this.b_isSignUp>
+          <SignUp></SignUp>
+      </v-layout>
+      
+      <v-layout v-else>
+        
+        <material-card
+          color="blue"
+          title="Login"
+          text="Easily And Quick Login"
+        >
+          <v-form>
+            <v-container py-0>
+              <v-layout wrap>
+              
+                <v-flex
+                  xs12
+                  md4
+                >
                   <v-text-field
-                    v-model="password"
-                    id="password"
-                    label="Password"
-                    prepend-icon="mdi-lock"
-                    type="password"
+                    class="purple-input"
+                    label="User Name"
                   />
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn @click="SignUp" color="dark">SignUp</v-btn>
-                <v-btn @click="Login" color="primary">Login</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-content>
-  </v-app>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md4
+                >
+                  <v-text-field
+                    label="Email Address"
+                    class="purple-input"/>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md6
+                >
+                  <v-text-field
+                    label="First Name"
+                    class="purple-input"/>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md6
+                >
+                  <v-text-field
+                    label="Last Name"
+                    class="purple-input"/>
+                </v-flex>
+                <!-- <v-flex
+                  xs12
+                  md12
+                >
+                  <v-text-field
+                    label="Adress"
+                    class="purple-input"/>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md4>
+                  <v-text-field
+                    label="City"
+                    class="purple-input"/>
+                </v-flex> -->
+                <v-flex
+                  xs12
+                  md4>
+                  <v-text-field
+                    label="Country"
+                    class="purple-input"/>
+                </v-flex>
+               
+               
+                <!-- Bottom Button(Signin, signUp..) layout -->
+                <v-flex
+                  xs12
+                  text-xs-right
+                  fluid
+                  row
+                  class="justify-end align-end"
+                >
+                
+                  <v-btn
+                    class="mx-0 font-weight-light justify-center"
+                    color="success"
+                  >
+                    SignIn
+                  </v-btn>
+                  <v-btn
+                    class="ml-5 font-weight-light justify-center"
+                    color="blue"
+                  >
+                    SignUp
+                  </v-btn>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
+        </material-card>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-
+ 
 // const privateKey = "~!@#$THISISPRIVATEKEY";
 // const jwt = require('jsonwebtoken');
 // let userToken = '';
+// import SignIn from '@/components/SignIn';
+import SignUp from '@/components/SignUp';
 
 export default {
     name: 'LoginPage',
@@ -72,6 +166,8 @@ export default {
     },
 
     created () {
+
+      this.b_isSignUp = false;
     // 컴포넌트가 생성될 때, backend에 data 요청 샘플
     // this.$http.post('/login/signin',this.payload)
     //     .then((response) => {
@@ -84,12 +180,12 @@ export default {
        
     },
 
+    components:{
+      SignUp,
+    },
+
     props: {
-        source: String,
-        payload : {
-            userId : String,
-            password : String,
-        },
+        b_isSignUp : Boolean, //회원가입인지 로그인인지 여부
     },
 
     methods:{

@@ -18,6 +18,29 @@
 // import Archive from '@/contents/Archive';
 
   export default {
+
+    beforeMount(){
+        // console.log('password : ' + password);
+    },
+
+    mounted(){
+       
+    },
+
+    created () {
+      
+    // 컴포넌트가 생성될 때, backend에 data 요청 샘플
+    this.$http.get('/sendMail')
+        .then((response) => {
+          console.log("response.data : " + response.data);
+          // this.payload = response.data
+        })
+    },
+
+    beforeCreate(){
+       
+    },
+
     name:"APIKey",
     components:{
         // Archive,

@@ -1,16 +1,16 @@
 module.exports = {
 
-  // devServer: {
-  //   proxy: { 
-  //     '/login/signup': { 
-  //       target: 'http://localhost:3000/login/signup',
-  //       changeOrigin: true, 
-  //       pathRewrite: { 
-  //         '^/login/signup': ''
-  //       } 
-  //     } 
-  //   } 
-  // },
+  devServer: {
+    proxy: { 
+      '/sendMail': { 
+        target: 'http://localhost:3000/sendMail',
+        changeOrigin: true, 
+        pathRewrite: { 
+          '^/sendMail': ''
+        } 
+      } 
+    } 
+  },
   publicPath: '',
   outputDir: '/release',
 

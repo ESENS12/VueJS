@@ -1,6 +1,8 @@
 <template>
-  <v-app>
-    <v-app id="keep">
+    <v-app>
+    <loginPage v-if="true"></loginPage>
+    
+    <v-app id="keep" v-else>
     <v-app-bar
       app
       clipped-left
@@ -8,7 +10,7 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
       <v-app-bar-nav-icon @click=this.onDrawer />
-      <span class="title ml-3 mr-5">ESENS&nbsp;<span class="font-weight-light">Console</span></span>
+      <span class="title ml-3 mr-5">FATOS&nbsp;<span class="font-weight-light">Console</span></span>
       <v-text-field
         solo-inverted
         flat
@@ -70,10 +72,13 @@
 
 <script>
 
-// import HelloWorld from './components/HelloWorld';
+import LoginPage from '@/components/LoginPage';
 
 export default {
   name: 'App',
+  components: {
+    LoginPage,
+  },
 
   props: {
       source: String,

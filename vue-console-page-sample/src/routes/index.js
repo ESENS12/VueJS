@@ -7,7 +7,6 @@ import Logout from '@/components/Logout'
 import Profile from '@/components/Profile'
 import Usage from '@/components/Usage'
 import DeveloperPage from '@/components/DeveloperPage'
-import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
@@ -48,11 +47,6 @@ const router = new Router({
     path: '/usage',
     name: 'Usage',
     component: Usage
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard
   },
  ]
 })
