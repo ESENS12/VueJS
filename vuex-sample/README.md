@@ -1,24 +1,19 @@
-# vuex-sample
+# vue-login-sample
+ - Simple Login Sample Using Vuex, Axios
 
-## Project setup
-```
-yarn install
-```
+# References
+ - vuex (https://vuex.vuejs.org/guide/)
+ - Login Sample (https://github.com/ESENS12/VueJS/tree/master/vue-login-sample)
+ - vuex with axios (http://jeonghwan-kim.github.io/2018/03/26/vue-authentication.html)
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+# Project setup
 
-### Compiles and minifies for production
 ```
-yarn build
+vue add vuetify
 ```
 
-### Lints and fixes files
 ```
-yarn lint
+yarn add jsonwebtoken axios vue-router vuex
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
