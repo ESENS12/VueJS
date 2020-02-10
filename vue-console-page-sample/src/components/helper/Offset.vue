@@ -29,7 +29,7 @@ export default {
     },
     styles () {
       return {
-        top: `-${this.offset}px`,
+        top: `-100px`,
         marginBottom: `-${this.offset}px`
       }
     }

@@ -12,7 +12,7 @@ module.exports = {
     } 
   },
   publicPath: '',
-  outputDir: '/release',
+  outputDir: 'release',
 
   "transpileDependencies": [
     "vuetify"

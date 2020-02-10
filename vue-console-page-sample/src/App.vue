@@ -54,7 +54,10 @@
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title class="grey--text font-weight-bold">
+              <v-list-item-title v-if="i === selected" class="blue--text font-weight-bold">
+                {{ item.text }}
+              </v-list-item-title>
+              <v-list-item-title v-else class="grey--text font-weight-bold">
                 {{ item.text }}
               </v-list-item-title>
             </v-list-item-content>
@@ -78,7 +81,7 @@ import LoginPage from '@/components/LoginPage';
 export default {
 
   beforeMount(){
-    this.isLogin = false;
+    this.isLogin = true;
   },
 
   created(){
@@ -96,6 +99,7 @@ export default {
     data: () => ({
       drawer: null,
       isLogin : false,
+      selected :0,
       //navigation drawer item list
       items: [
 
@@ -125,6 +129,7 @@ export default {
         },
         onItemClick(index){
           // console.log("onItemClick : " , this.items[index].text);
+          this.selected = index;
             this.$router.replace({name:this.items[index].text});
             
         }
