@@ -6,6 +6,9 @@ import axios from 'axios'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'chartist/dist/chartist.min.css'
 
+import VuetifyDialog from 'vuetify-dialog'
+import 'vuetify-dialog/dist/vuetify-dialog.css'
+
 import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 
@@ -26,6 +29,12 @@ requireComponent.keys().forEach(fileName => {
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 Vue.use(require('vue-chartist'));
+
+Vue.use(VuetifyDialog, {
+  context: {
+    vuetify
+  }
+})
 
 new Vue({
   icons:{

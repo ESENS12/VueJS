@@ -2,9 +2,9 @@
  - Simple Login Sample Using JWT(JSON WebToken)
 
 # References
- - login page (https://github.com/ESENS12/VueJS/tree/master/vue-login-sample)
- - dash board (https://www.creative-tim.com/product/vuetify-material-dashboard)
- - 
+ - Login Page (https://github.com/ESENS12/VueJS/tree/master/vue-login-sample)
+ - Dash Board (https://www.creative-tim.com/product/vuetify-material-dashboard)
+ - Vuetify Dialog (https://github.com/ESENS12/VueJS/tree/master/vue-dialog-reuseable-sample)
 
 # Project setup
 ```

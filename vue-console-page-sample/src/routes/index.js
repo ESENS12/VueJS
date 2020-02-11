@@ -7,6 +7,7 @@ import Logout from '@/components/Logout'
 import Profile from '@/components/Profile'
 import Usage from '@/components/Usage'
 import DeveloperPage from '@/components/DeveloperPage'
+import Security from '@/components/Security'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ const router = new Router({
     path: '/usage',
     name: 'Usage',
     component: Usage
+  },
+  {
+    path: '/security',
+    name: 'Security',
+    component: Security
   },
  ]
 })
