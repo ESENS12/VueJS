@@ -12,7 +12,7 @@ module.exports = {
     } 
   },
   publicPath: '',
-  outputDir: 'release',
+  outputDir: '../nodejs-mailer-sample/public',
 
   "transpileDependencies": [
     "vuetify"

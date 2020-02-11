@@ -1,13 +1,13 @@
 <template>
-    <v-container fill-height fluid grid-list-xl>
-        <material-card justify-center wrap
-            color="blue"
+    <v-container fluid class="grey lighten-4 fill-height container--fluid" wrap>
+        <material-card
+            color="green"
             title="Developer Pages"
             text="Let's go find out more FATOS Service"
         >
             <v-layout wrap fill-height fluid grid-list-xl justify-start>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3 >
-                    <material-card column minHeight=360px  maxHeight=360px class="v-card-profile fill-height" >
+                    <material-card column minHeight=360px class="v-card-profile fill-height" >
                         <v-avatar
                             pa-1
                             slot="offset"
@@ -31,7 +31,7 @@
 
                             <v-btn 
                                 color="success"
-                                rounded
+                                round
                                 
                                 class="font-weight mx-auto"
                                 >Go</v-btn
@@ -41,7 +41,7 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card class="v-card-profile">
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -61,7 +61,7 @@
                             </p>
                             <v-btn
                                 color="success"
-                                rounded
+                                round
                                 class="font-weight"
                                 >Go</v-btn
                             >
@@ -69,7 +69,7 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card class="v-card-profile">
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -89,7 +89,7 @@
                             </p>
                             <v-btn
                                 color="success"
-                                rounded
+                                round
                                 class="font-weight"
                                 >Go</v-btn
                             >
@@ -97,7 +97,7 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card class="v-card-profile">
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -117,7 +117,7 @@
                             </p>
                             <v-btn
                                 color="success"
-                                rounded
+                                round
                                 class="font-weight"
                                 >Go</v-btn
                             >
@@ -125,7 +125,7 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3 >
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card class="v-card-profile">
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -145,7 +145,7 @@
                             </p>
                             <v-btn
                                 color="success"
-                                rounded
+                                round
                                 class="font-weight"
                                 >Go</v-btn
                             >

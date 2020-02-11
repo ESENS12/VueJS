@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/HelloWorld'
+// import Index from '@/components/HelloWorld'
 import Login from '@/components/LoginPage'
 import APIKey from '@/components/APIKey'
 import Logout from '@/components/Logout'
@@ -14,9 +14,9 @@ const router = new Router({
  mode: 'history',
  routes: [
    {
-     path: '/',
-     name: 'index',
-     component: Index
+     path: '/api',
+     name: 'API Keys',
+     component: APIKey
    },
    {
      path: '/login',

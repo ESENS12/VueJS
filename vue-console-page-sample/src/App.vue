@@ -12,13 +12,13 @@
       <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
       <v-app-bar-nav-icon @click=this.onDrawer />
       <span class="title ml-3 mr-5">FATOS&nbsp;<span class="font-weight-light">Console</span></span>
-      <v-text-field
+      <!-- <v-text-field
         solo-inverted
         flat
         hide-details
         label="Search"
         prepend-inner-icon="md-search"
-      />
+      /> -->
 
       <v-spacer />
     </v-app-bar>
@@ -28,15 +28,13 @@
       v-model="drawer"
       app
       clipped 
-      color="dark-grey lighten-4"
     >
       <v-list
         dense
-        class="dark-grey lighten-4"
       >
 
       <!-- Itmes -->
-        <template v-for="(item, i) in items">
+        <template v-for="(item, i) in items" class="transparent" >
           
           <v-divider
             v-if="item.divider"
@@ -81,11 +79,12 @@ import LoginPage from '@/components/LoginPage';
 export default {
 
   beforeMount(){
-    this.isLogin = true;
+    // this.isLogin = true;
   },
 
   created(){
-    
+    //개발중에는 로그인된걸로 치고 작업하자
+    // this.onLogin();
   },
   name: 'App',
   components: {
