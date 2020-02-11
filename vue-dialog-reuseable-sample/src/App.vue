@@ -24,37 +24,62 @@
           width="100"
         />
       </div>
-
+      
       <v-spacer></v-spacer>
-
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+      @click="changePage(0)"
         text
       >
-        <span class="mr-2">Latest Release</span>
+        <span class="mr-2">Go MainPage</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
+
+       <v-btn
+       @click="changePage(1)"
+        text
+      >
+        <span class="mr-2">Go SecondPage</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+
+
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+          <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    // HelloWorld,
   },
 
   data: () => ({
-    //
+    items:[
+      {
+        text : "HelloWorld"
+      },
+    
+      {
+        text : "SecondPage"
+      }
+    ]
   }),
+
+  methods:{
+    changePage(pageIndex){
+      
+      this.$router.push({name:this.items[pageIndex].text});
+      
+    }
+  }
+  
 };
 </script>

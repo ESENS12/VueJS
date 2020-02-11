@@ -1,22 +1,26 @@
 <template>
-  <v-container>
-    <h1>THIS IS HELLOWORLD PAGE</h1>
-   
-  <v-btn color="red lighten-2" dark @click="confirm">
+    <v-container>
+        <h1>THIS IS SecondPage PAGE</h1>
+
+        <v-btn color="red lighten-2" dark @click="confirm">
             Click Me
         </v-btn>
 
-  </v-container>
+        <!-- <Dialog v-model="modalOpen" dialog="this.modalOpen" /> -->
+    </v-container>
 </template>
 
 <script>
-  export default {
-    name: 'HelloWorld',
+    // import Dialog from "@/components/Dialog";
 
-    data: () => ({
-      
-    }),
-    methods: {
+    export default {
+        name: "SecondPage",
+        components: {
+        },
+        data: () => ({
+            modalOpen: false
+        }),
+        methods: {
 
             confirm: async function() {
 
@@ -32,5 +36,5 @@
                 });
             }
         }
-  }
+    };
 </script>

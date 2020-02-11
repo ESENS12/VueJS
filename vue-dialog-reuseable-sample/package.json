@@ -10,7 +10,9 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.1.0"
+    "vue-router": "^3.1.5",
+    "vuetify": "^2.1.0",
+    "vuetify-dialog": "^2.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",
@@ -37,7 +39,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-console": "off"
+    }
   },
   "browserslist": [
     "> 1%",
