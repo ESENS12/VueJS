@@ -10,14 +10,32 @@ let jwt = require("jsonwebtoken");
 const SecretKey = "~!@#$THISISPRIVATEKEY";
 
 // vue sample
-router.get('/', function(req, res, next) {
+router.post('/', function(req, res, next) {
     console.log("/login [backend]");
+    try{
+        const email = req.body.email;
+        const password = req.body.password;
+
+        console.log('email : ' + email  + ", password: " + password);
+        if(email && password){
+            res.status(200).json({accessToken : "Hello " + email});
+        }else{
+            res.status(200).json({accessToken : "Hello World!"});
+        }
+        
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+    
+
     // res.json({
         // isLogin : false
     // })
     //dev 일때는 json을 던져주자
-    res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
+    // res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
 });
+
 
 router.post("/postSample", function(req, res, next){
     console.log("/postSample");
