@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "handlebars": "^4.7.3",
     "nodemailer": "^6.4.2"
   }
 }
