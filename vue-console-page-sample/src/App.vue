@@ -3,27 +3,33 @@
         <loginPage v-if="!this.isLogin" @login-event="onLogin"></loginPage>
 
         <v-app id="keep" v-else>
-            <v-app-bar app clipped-left color="amber">
-                <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
+            <!-- <v-app-bar app clipped-left color="amber">
                 <v-app-bar-nav-icon @click="this.onDrawer" />
                 <span class="title ml-3 mr-5"
                     >FATOS&nbsp;<span class="font-weight-light"
                         >Console</span
                     ></span
                 >
-                <!-- <v-text-field
-        solo-inverted
-        flat
-        hide-details
-        label="Search"
-        prepend-inner-icon="md-search"
-      /> -->
-
                 <v-spacer />
-            </v-app-bar>
-
+            </v-app-bar> -->
+            <v-btn
+                v-if="responsive"
+                class="default v-btn--simple"
+                dark
+                icon
+                @click.stop="onDrawer"
+            >
+                <v-icon>mdi-view-list</v-icon>
+            </v-btn>
             <!-- Navigation Drawer -->
-            <v-navigation-drawer v-model="drawer" app clipped>
+            <v-navigation-drawer
+                v-model="drawer"
+                app
+                floating
+                persistent
+                mobile-break-point="991"
+            >
+                <v-img class="ma-10 mt-2" src=@/assets/fatos-logo.png />
                 <v-list dense>
                     <!-- Itmes -->
                     <template v-for="(item, i) in items" class="transparent">
@@ -76,6 +82,13 @@
         beforeMount() {
             // this.isLogin = true;
         },
+        mounted() {
+            this.onResponsiveInverted();
+            window.addEventListener("resize", this.onResponsiveInverted);
+        },
+        beforeDestroy() {
+            window.removeEventListener("resize", this.onResponsiveInverted);
+        },
 
         created() {
             //개발중에는 로그인된걸로 치고 작업하자
@@ -94,6 +107,8 @@
             drawer: null,
             isLogin: false,
             selected: 0,
+            responsive: false,
+
             //navigation drawer item list
             items: [
                 { icon: "mdi-key", text: "API Keys" },
@@ -103,7 +118,7 @@
                 { icon: "mdi-chart-bar", text: "Usage" },
                 { divider: true },
                 { icon: "mdi-account", text: "Profile" },
-                { icon: "mdi-door", text: "Logout" },
+                { icon: "mdi-door", text: "Logout" }
 
                 // { icon: 'chat_bubble', text: 'Trash' },
                 // { icon: 'help', text: 'Help' },
@@ -123,34 +138,44 @@
                 this.$router.replace({ name: this.items[0].text });
             },
             onItemClick(index) {
-
+                // console.log('onItemCLick : ' + index);
                 if (this.items[index].text === "Logout") {
                     this.confirm();
                 } else {
                     this.selected = index;
-                    this.$router.replace({ name: this.items[index].text });
+                    this.$router.push({ name: this.items[index].text });
                 }
             },
 
-            onLogout(){
-              this.isLogin = false;
-              this.$router.replace({ name: "Login" });
+            onLogout() {
+                this.isLogin = false;
+                this.$router.replace({ name: "Login" });
             },
 
             confirm: async function() {
-              
                 const res = await this.$dialog.confirm({
                     title: "Logout",
                     text: "Do you really want to Logout?",
-                    icon: 'warning'
+                    icon: "warning"
                 });
 
-                if (!res) return 
+                if (!res) return;
                 else this.onLogout();
 
                 // this.$dialog.notify.error("Error!", {
                 //     position: "bottom-right"
                 // });
+            },
+
+            // onClickBtn() {
+            //     this.setDrawer(!this.$store.state.app.drawer);
+            // },
+            onResponsiveInverted() {
+                if (window.innerWidth < 991) {
+                    this.responsive = true;
+                } else {
+                    this.responsive = false;
+                }
             }
         }
     };

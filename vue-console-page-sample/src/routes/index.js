@@ -24,11 +24,6 @@ const router = new Router({
      name: 'login',
      component: Login
    },
-   {
-    path: '/api',
-    name: 'API Keys',
-    component: APIKey
-  },
   {
     path: '/developer',
     name: 'Developer Page',

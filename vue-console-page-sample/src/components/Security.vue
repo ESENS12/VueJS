@@ -1,6 +1,35 @@
 <template>
     <v-container fill-height fluid grid-list-xl>
         <v-layout justify-center wrap>
+            <v-dialog v-model="dialog" persistent max-width="600px">
+                <v-card>
+                    <v-card-title class="mx-auto">
+                        <span class="title">Add new</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12" sm="12" md="12">
+                                    <v-text-field
+                                        v-model="ModalData.content"
+                                        v-bind:label="ModalData.description"
+                                        v-bind:hint="ModalData.hint"
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="closeDialog()"
+                            >Close</v-btn
+                        >
+                        <v-btn color="blue darken-1" text @click="saveDialog()"
+                            >Save</v-btn
+                        >
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-flex sm12 lg9 md9>
                 <material-card color="purple" title="Domain Name">
                     <v-row class="mx-auto">
@@ -52,7 +81,7 @@
                     <v-layout>
                         <v-flex class="pb-0 pt-0">
                             <v-card-actions class="pa-0 mx-auto justify-end">
-                                <v-btn color="purple">
+                                <v-btn @click="openDialog(0)" color="purple">
                                     Add New
                                 </v-btn>
                             </v-card-actions>
@@ -111,7 +140,7 @@
                     <v-layout>
                         <v-flex class="pb-0 pt-0">
                             <v-card-actions class="pa-0 mx-auto justify-end">
-                                <v-btn color="grey">
+                                <v-btn @click="openDialog(1)" color="grey">
                                     Add New
                                 </v-btn>
                             </v-card-actions>
@@ -119,7 +148,7 @@
                     </v-layout>
                 </material-card>
 
-                <material-card color="yellow" title="Bundle ID">
+                <material-card color="blue" title="Bundle ID">
                     <v-row class="mx-auto">
                         <v-flex sm4 lg4 md4>
                             <h3>APP BUNDLE ID</h3>
@@ -169,7 +198,7 @@
                     <v-layout>
                         <v-flex class="pb-0 pt-0">
                             <v-card-actions class="pa-0 mx-auto justify-end">
-                                <v-btn color="grey">
+                                <v-btn @click="openDialog(2)" color="blue">
                                     Add New
                                 </v-btn>
                             </v-card-actions>
@@ -215,7 +244,13 @@
             API_item: [],
             IP_item: [],
             Bundle_item: [],
-
+            dialog: false,
+            ModalData: {
+                hint: "",
+                description: "",
+                modalType: 0,
+                content: ""
+            },
             headers: [
                 {
                     sortable: false,
@@ -296,7 +331,7 @@
                     }
                 ];
             },
-            
+
             removeDomain(item) {
                 console.log(
                     "removeDomain" +
@@ -314,8 +349,92 @@
             removeBundle(item) {
                 console.log(
                     "remove bundle" +
-                        this.Bundle_item.splice(this.Bundle_item.indexOf(item), 1)
+                        this.Bundle_item.splice(
+                            this.Bundle_item.indexOf(item),
+                            1
+                        )
                 );
+            },
+
+            openDialog(itemIndex) {
+                // console.log("openDialog! :" + itemIndex);
+
+                switch (itemIndex) {
+                    case 0:
+                        {
+                            //Domain Name
+
+                            this.ModalData.hint = "e.g) onemap.fatos.biz";
+                            this.ModalData.description = "Put Your Domain Name";
+                            this.ModalData.modalType = 0;
+                        }
+                        break;
+                    case 1:
+                        {
+                            //IP Address
+                            this.ModalData.hint = "e.g) 192.168.0.1";
+                            this.ModalData.description =
+                                "Put Your Application Server Public IP Address";
+                            this.ModalData.modalType = 1;
+                        }
+                        break;
+                    case 2:
+                        {
+                            //Bundle ID
+                            this.ModalData.hint = "e.g) biz.fatos.onemap";
+                            this.ModalData.description =
+                                "Put Your App Bundle ID";
+                            this.ModalData.modalType = 2;
+                        }
+                        break;
+                }
+
+                this.dialog = true;
+            },
+
+            saveDialog(hint, description, modalType) {
+                console.log("content :" + this.ModalData.content);
+                switch (modalType) {
+                    case 0:
+                        {
+                            //Domain Name
+                            // this.ModalData.hint = "e.g) onemap.fatos.biz";
+                            // this.ModalData.description = "Put Your Domain Name"
+                            // this.ModalData.modalType = 0;
+                        }
+                        break;
+                    case 1:
+                        {
+                            //IP Address
+                            // this.ModalData.hint = "e.g) 192.168.0.1";
+                            // this.ModalData.description = "Put Your Application Server Public IP Address"
+                            // this.ModalData.modalType = 1;
+                        }
+                        break;
+                    case 2:
+                        {
+                            //Bundle ID
+                            // this.ModalData.hint = "e.g) biz.fatos.onemap";
+                            // this.ModalData.description = "Put Your App Bundle ID"
+                            // this.ModalData.modalType = 2;
+                        }
+                        break;
+                }
+
+
+                //검증 할것인지?, 하고나서 저장되었다고 toast 띄워주도록 하자
+                this.closeDialog();
+            },
+
+            closeDialog() {
+                //데이터 초기화
+                this.ModalData = {
+                    hint: "",
+                    description: "",
+                    modalType: 0,
+                    content: ""
+                };
+                this.dialog = false;
             }
         }
     };

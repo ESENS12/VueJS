@@ -27,12 +27,13 @@
           text="Easily And Quick SignUp"
         >
 
-        <v-container  v-if="this.b_isSendMail"> 
+        <v-container class="justify-center"  v-if="this.b_isSendMail"> 
             <v-flex
                 xs12
                 md12
             >
-            <h1>Check Your Email And Confirm Please</h1>
+            <h2>We've Sent you a Confirmation Email</h2>
+            <h4>Time to Check Your Email</h4>
             </v-flex>
 
             <v-flex
@@ -175,6 +176,7 @@ export default {
     },
 
     created () {
+      // this.b_isSendMail = true
     },
 
     beforeCreate(){
@@ -228,8 +230,9 @@ export default {
         },
 
         sendMail(){
-            this.$http.get('/sendMail')
+            this.$http.post('/sendMail', this.userData)
                 .then((response) => {
+                  // $http.post('/login/signin',this.payload)
                 this.b_isSendMail = true;
                 console.log("response.data : " + response.data);
                 })

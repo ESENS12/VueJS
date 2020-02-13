@@ -1,13 +1,20 @@
 <template>
     <v-container fill-height fluid grid-list-xl>
-        <material-card justify-center wrap
+        <material-card
+            justify-center
+            wrap
             color="blue"
             title="Developer Pages"
             text="Let's go find out more FATOS Service"
         >
             <v-layout wrap fill-height fluid grid-list-xl justify-start>
-                <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3 >
-                    <material-card column minHeight=360px  maxHeight=360px class="v-card-profile fill-height" >
+                <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
+                    <material-card
+                        column
+                        minHeight="360px"
+                        maxHeight="360px"
+                        class="v-card-profile fill-height"
+                    >
                         <v-avatar
                             pa-1
                             slot="offset"
@@ -18,30 +25,38 @@
                         >
                             <img src="@/assets/maps.png" />
                         </v-avatar>
-                        <v-card-text class="text-xs-center fill-height" >
-                           
+
+                        <v-layout class="flex-column mx-auto fill-height justify-space-between align-content-space-around">
+                                    
+                        <v-card-text class="text-xs-center fill-height">
                             <h4 class="card-title font-weight-bold">
                                 Maps
                             </h4>
                             <p class="card-description font-weight-black">
-                                Embed highly customized maps in your applications.
+                                Embed highly customized maps in your
+                                applications.
                             </p>
 
                             <v-spacer></v-spacer>
 
-                            <v-btn 
+                            <v-btn
+                                href="http://onemap.fatos.biz/map-control/bounds/"
                                 color="success"
                                 rounded
-                                
                                 class="font-weight mx-auto"
                                 >Go</v-btn
                             >
                         </v-card-text>
-                        
+                        </v-layout>
+
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card
+                        minHeight="360px"
+                        maxHeight="360px"
+                        class="v-card-profile"
+                    >
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -52,14 +67,16 @@
                             <img src="@/assets/geocoding.png" />
                         </v-avatar>
                         <v-card-text class="text-xs-center">
-                           
                             <h4 class="card-title font-weight-bold">
                                 Geocoding
                             </h4>
                             <p class="card-description font-weight-black">
-                                Convert street addresses to geo-coordinates and vice-versa with forward geocoding, including landmarks, and reverse geocoding.
+                                Convert street addresses to geo-coordinates and
+                                vice-versa with forward geocoding, including
+                                landmarks, and reverse geocoding.
                             </p>
                             <v-btn
+                                href="http://onemap.fatos.biz/geocoding/forward-geocoding/"
                                 color="success"
                                 rounded
                                 class="font-weight"
@@ -69,7 +86,11 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card
+                        minHeight="360px"
+                        maxHeight="360px"
+                        class="v-card-profile"
+                    >
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -80,14 +101,15 @@
                             <img src="@/assets/routing.png" />
                         </v-avatar>
                         <v-card-text class="text-xs-center">
-                           
                             <h4 class="card-title font-weight-bold">
                                 Routing
                             </h4>
                             <p class="card-description font-weight-black">
-                                provides the highest level of navigation service quickly and easily.
+                                provides the highest level of navigation service
+                                quickly and easily.
                             </p>
                             <v-btn
+                                href="http://onemap.fatos.biz/route/"
                                 color="success"
                                 rounded
                                 class="font-weight"
@@ -97,7 +119,11 @@
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                    <material-card
+                        minHeight="360px"
+                        maxHeight="360px"
+                        class="v-card-profile"
+                    >
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -108,14 +134,16 @@
                             <img src="@/assets/vehicletracking.png" />
                         </v-avatar>
                         <v-card-text class="text-xs-center">
-                           
                             <h4 class="card-title font-weight-bold">
                                 Vehicle Tracking
                             </h4>
                             <p class="card-description font-weight-black">
-                                Provides real-time information on various locations, such as driving tracks, as well as vehicle status.
+                                Provides real-time information on various
+                                locations, such as driving tracks, as well as
+                                vehicle status.
                             </p>
                             <v-btn
+                                href="http://onemap.fatos.biz/vehicle-trakcing/monitoring/"
                                 color="success"
                                 rounded
                                 class="font-weight"
@@ -124,8 +152,12 @@
                         </v-card-text>
                     </material-card>
                 </v-flex>
-                <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3 >
-                    <material-card minHeight=360px  maxHeight=360px class="v-card-profile">
+                <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
+                    <material-card
+                        minHeight="360px"
+                        maxHeight="360px"
+                        class="v-card-profile"
+                    >
                         <v-avatar
                             tile="true"
                             slot="offset"
@@ -136,14 +168,15 @@
                             <img src="@/assets/mobilizing.png" />
                         </v-avatar>
                         <v-card-text class="text-xs-center">
-                           
                             <h4 class="card-title font-weight-bold">
-                                Maps
+                                Mobilizing
                             </h4>
                             <p class="card-description font-weight-black">
-                                Embed highly customized maps in your applications.
+                                provides real-time collected vehicle information
+                                based on ADAS map.
                             </p>
                             <v-btn
+                                href="http://onemap.fatos.biz/mobilizing/driving-pattern/mobilizing/"
                                 color="success"
                                 rounded
                                 class="font-weight"

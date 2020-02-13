@@ -1,7 +1,6 @@
 <template>
     <v-container fill-height fluid grid-list-xl>
         <v-layout justify-center wrap>
-            <dialog></dialog>
             <v-flex md12>
                 <material-card
                     color="green"

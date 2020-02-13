@@ -169,7 +169,7 @@
           <v-data-table
             :headers="headers"
             :items="items"
-            hide-actions
+            hide-default-footer
           >
             <template
               slot="headerCell"
@@ -205,7 +205,7 @@
           <v-data-table
             :headers="headers"
             :items="items"
-            hide-actions
+            hide-default-footer
           >
             <template
               slot="headerCell"
@@ -228,8 +228,8 @@
             </template>
           </v-data-table>
         </material-card>
-        
       </v-flex>
+      
     </v-layout>
   </v-container>
 </template>

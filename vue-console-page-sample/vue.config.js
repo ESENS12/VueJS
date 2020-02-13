@@ -14,7 +14,7 @@ module.exports = {
   publicPath: '',
   outputDir: '../nodejs-mailer-sample/public',
 
-  "transpileDependencies": [
-    "vuetify"
-  ]
+    "transpileDependencies": [
+      "vuetify"
+    ]
 }
