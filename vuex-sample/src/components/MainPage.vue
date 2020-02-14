@@ -1,23 +1,32 @@
 <template>
-  <h1>Hello this is main page</h1>
+  <div>
+    <div>Hello : {{userName}}</div>
+  </div>
 </template>
 
 <script>
+import axios from 'axios'
+// const privateKey = "~!@#$THISISPRIVATEKEY";
+// const jwt = require("jsonwebtoken");
+
 export default {
-    name:"MainPage",
-    data: () => ({
-      
-
-    }),
-
-    created(){
-
-    },
-    
-
+  data() {
+    return {
+      userName : '',
+    }
+  },
+  created() {
+    // console.log('this.$store.getAccessToken:  ' + this.$store.getters.getAccessToken);
+    axios.post('http://localhost:3000/auth/checkAuth', {params : this.$store.getters.getAccessToken})
+      .then(({data}) => {
+        console.log("return data : " , data);
+        this.userName = data.accessToken.userId;
+        
+        })
+      .catch(error => console.log("error", error));
+  }
 }
 </script>
-
 <style>
 
 </style>

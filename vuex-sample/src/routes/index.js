@@ -7,7 +7,7 @@ import Login from '@/components/LoginPage'
 Vue.use(Router)
 
 const requireAuth = () => (from, to, next) => {
-  
+    // console.log(" stored accesstoken " + this.$store.getAccessToken);
     const {accessToken} = localStorage
     console.log("accessToken : ",accessToken);
     if (accessToken) return next()

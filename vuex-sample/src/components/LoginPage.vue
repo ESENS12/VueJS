@@ -96,15 +96,15 @@
 
             redirect() {
                 console.log("redirect! ");
-                const { search } = window.location;
-                const tokens = search.replace(/^\?/, "").split("&");
-                const { returnPath } = tokens.reduce((qs, tkn) => {
-                    const pair = tkn.split("=");
-                    qs[pair[0]] = decodeURIComponent(pair[1]);
-                    return qs;
-                }, {});
-                console.log("returnPath : " + returnPath);
-                this.$router.push(returnPath);
+                // const { search } = window.location;
+                // const tokens = search.replace(/^\?/, "").split("&");
+                // const { returnPath } = tokens.reduce((qs, tkn) => {
+                //     const pair = tkn.split("=");
+                //     qs[pair[0]] = decodeURIComponent(pair[1]);
+                //     return qs;
+                // }, {});
+                // console.log("returnPath : " + returnPath);
+                this.$router.push('Main');
 
                 // var options = {
                 //     audience: "audienceSample", //발급시 넣어준 options과 하나라도 값이 다르면 exception 발생
@@ -138,7 +138,7 @@
 
             async SignUp() {
                 this.$http
-                    .post("/login/signup", {
+                    .post("/auth/signup", {
                         userId: this.userId,
                         userPassword: this.password
                     })
