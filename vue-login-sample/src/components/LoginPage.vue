@@ -41,7 +41,7 @@
                   />
                 </v-form>
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions> 
                 <v-spacer />
                 <v-btn @click="SignUp" color="dark">SignUp</v-btn>
                 <v-btn @click="Login" color="primary">Login</v-btn>
@@ -183,7 +183,8 @@ export default {
                 console.log("token : ",userToken);
             });            
         },
-
+        
+        //토큰 검증용 함수
         CheckAuth(token){
             
             if(!token){
@@ -200,12 +201,13 @@ export default {
               
               console.log(decoded);
 
-              this.payload = decoded.payload;
+              // this.payload = decoded.payload;
+              // console.log("Decoded UserId : " + this.payload.userId, " , password : " + this.payload.password);
 
-              console.log("Decoded UserId : " + this.payload.userId, " , password : " + this.payload.password);
             }catch (err){
               console.log('checkAuth Exception : ' + err);
             }
+            
         },
     }
 

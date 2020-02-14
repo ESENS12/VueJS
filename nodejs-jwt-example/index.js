@@ -40,7 +40,7 @@ app.get("/home", function(req, res, next){
 });
 
 
-app.use('/login', require('./routes/api/'))
+app.use('/auth', require('./routes/auth'))
 
 app.use(history())
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

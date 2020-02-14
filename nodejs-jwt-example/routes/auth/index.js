@@ -54,6 +54,29 @@ router.post('/login', function(req, res, next) {
     }
 });
 
+
+router.post('/checkAuth', function(req, res, next) {
+    let result = '';
+    try{
+
+        // console.log(req);
+        if(req.body.params){
+            result = tokenTest(req.body.params);
+        }
+        console.log('res : ' + result);
+
+        if(result){
+            res.status(200).json({accessToken : result});
+        }else{
+            res.status(400).json({accessToken : "false"});
+        }
+        
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+});
+
 router.get('/getSecretKey', function(req, res, next) {
     try{
         const email = req.body.email;
@@ -89,8 +112,8 @@ let makeToken = (id,password) => {
                 }
             );
 
-            res.send({token : token});
-
+            // res.send({token : token});
+            return token;
         }else{
             return;
         }
