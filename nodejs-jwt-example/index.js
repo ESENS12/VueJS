@@ -39,6 +39,7 @@ app.get("/home", function(req, res, next){
     
 });
 
+
 app.use('/login', require('./routes/api/'))
 
 app.use(history())

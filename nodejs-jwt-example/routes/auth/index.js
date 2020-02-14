@@ -9,9 +9,52 @@ let jwt = require("jsonwebtoken");
 
 const SecretKey = "~!@#$THISISPRIVATEKEY";
 
-// vue sample
 router.post('/', function(req, res, next) {
-    console.log("/login [backend]");
+    try{
+        const email = req.body.email;
+        const password = req.body.password;
+
+        console.log('email : ' + email  + ", password: " + password);
+
+        if(email && password){
+            res.status(200).json({accessToken : "Hello " + email});
+        }else{
+            res.status(200).json({accessToken : "Hello World!"});
+        }
+        
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+});
+
+
+router.post('/login', function(req, res, next) {
+    try{
+        const email = req.body.email;
+        const password = req.body.password;
+
+        // console.log('email : ' + email  + ", password: " + password);
+        
+        if(email && password){
+
+            let token = makeToken(email,password);
+
+            if(token){
+                res.status(200).json({accessToken : token});
+            }
+            
+        }else{
+            res.status(200).json({accessToken : "Hello World!"});
+        }
+        
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+});
+
+router.get('/getSecretKey', function(req, res, next) {
     try{
         const email = req.body.email;
         const password = req.body.password;
@@ -27,33 +70,36 @@ router.post('/', function(req, res, next) {
         console.error(err);
         res.status(400).send("Error : " + err);
     }
-    
-
-    // res.json({
-        // isLogin : false
-    // })
-    //dev 일때는 json을 던져주자
-    // res.sendFile(path.join(__dirname, '../../public', 'index.html')); 
 });
 
 
-router.post("/postSample", function(req, res, next){
-    console.log("/postSample");
+
+let makeToken = (id,password) => {
     try{
-        const id = req.body.id;
-        const password = req.body.password;
 
         if(id && password){
-            console.log("id : " + id + ", password : " + password);
-            res.status(400).send("Okay!");
+
+            let token = jwt.sign({
+                userId: id,  
+                userPassword : password,
+            },
+                SecretKey,    // 비밀키
+                {
+                    expiresIn: '5m'    // 유효 시간은 5분(옵션)
+                }
+            );
+
+            res.send({token : token});
+
+        }else{
+            return;
         }
     
     }catch(err){
         console.log("Exception : ",err);
-        res.status(403).send("Need ID or Password!");
-    }
-    
-});
+        return;
+    }  
+}
 
 //파라메터 받아서 토큰 생성 후 리턴
 router.post("/signup", function(req,res,next){
@@ -106,8 +152,4 @@ function tokenTest(token){
         return false;
     }
 }
-
-
-router.use('/test', require('../../routes/api/testToken'));
-
 module.exports = router
