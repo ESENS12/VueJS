@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import config from '@/config'
 
 Vue.use(Vuex)
 
-const resourceHost = 'http://localhost:3000'
+// const resourceHost = 'http://localhost:3000'
 
 export default new Vuex.Store({
   state: {
@@ -16,10 +17,12 @@ export default new Vuex.Store({
   mutations: {
 
     LOGIN(state, { accessToken }) {
+      console.log("login[mutations]")
       state.accessToken = accessToken
 
       //로컬스토리지에 저장
       localStorage.accessToken = accessToken
+      
     },
 
     LOGOUT(state) {
@@ -30,6 +33,8 @@ export default new Vuex.Store({
   },
   actions: {
     LOGIN({ commit }, { email, password }) {
+      let resourceHost = config.requestHost;
+      console.log('login to : ' + config.requestHost);
       console.log("Login[Store] email : " + email + ", password : " + password);
       return axios.post(`${resourceHost}/auth/login`, { email, password })
         .then(({ data }) => {

@@ -69,6 +69,13 @@
 
         beforeCreate() {},
         data: () => ({
+            userData:{
+                email: "sjlee@fatoscorp.com",
+                firstName: "sens",
+                lastName: "lee",
+                password: "password",
+                uri : "APITOKENTEST",
+            },
             email: "",
             password: "",
             msg: ""
@@ -90,7 +97,17 @@
                 );
                 this.$store
                     .dispatch("LOGIN", { email, password })
-                    .then(() => this.redirect())
+                    .then(() => {
+                        this.$http
+                            .post("http://localhost:3000/api/sendMail", this.userData)
+                            .then(response => {
+                                // $http.post('/login/signin',this.payload)
+                                // this.b_isSendMail = true;
+                                console.log("response.data : " + response.data);
+                                this.redirect();
+                            });
+                        
+                    })
                     .catch(({ message }) => (this.msg = message));
             },
 
@@ -104,7 +121,7 @@
                 //     return qs;
                 // }, {});
                 // console.log("returnPath : " + returnPath);
-                this.$router.push('Main');
+                this.$router.push("Main");
 
                 // var options = {
                 //     audience: "audienceSample", //발급시 넣어준 options과 하나라도 값이 다르면 exception 발생
