@@ -29,14 +29,29 @@ app.all('/*', function (req, res, next) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(require('connect-history-api-fallback')());
-
-// app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/public'))
-// app.get('/', (req, res) => res.send("Hello world"))
-app.get('/', function (req, res, next) {
-    console.log("/");
-    // res.status(200).send("SendMail Ok");
-    res.sendFile(path.join(__dirname, '/public', 'index.html'));
+app.use('/auth', require('./routes/auth'))
+app.get('/apitoken',function(req, res, next){
+
+    console.log('/apitoken');
+    console.log(req);
+    console.log('body: ' + req.body);
+    let id = req.body.id;
+    let pass = req.body.pass;
+    console.log(JSON.parse(body)); 
+    console.log("id : " , id , ", pass : " + pass);
+    //검증 로직..
+    if(id && pass){
+
+        console.log("id : " , id , ", pass : " + pass);
+        res.send("SignIn Success!");
+
+    }else{
+        console.log("id : " , id , ", pass : " + pass);
+        res.status(404).send("Error!");
+
+    }
+
 });
 
 
