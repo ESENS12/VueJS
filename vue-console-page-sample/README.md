@@ -5,6 +5,8 @@
  - Login Page (https://github.com/ESENS12/VueJS/tree/master/vue-login-sample)
  - Dash Board (https://www.creative-tim.com/product/vuetify-material-dashboard)
  - Vuetify Dialog (https://github.com/ESENS12/VueJS/tree/master/vue-dialog-reuseable-sample)
+ - VueX Sample (https://github.com/ESENS12/VueJS/tree/master/vuex-sample)
+ - NodeMailer (https://github.com/ESENS12/VueJS/tree/master/nodejs-mailer-sample)
 
 # Project setup
 ```
@@ -12,7 +14,7 @@ vue create vue-console-page-sample && cd vue-console-page-sample && add vuetify
 ```
 
 ```
-yarn add axios vue-router
+yarn add axios vue-router vuex
 ```
 
 ```
