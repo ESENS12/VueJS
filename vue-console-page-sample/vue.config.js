@@ -8,7 +8,14 @@ module.exports = {
         pathRewrite: { 
           '^/sendMail': ''
         } 
-      } 
+      },
+      '/sendMailOk': { 
+        target: 'http://localhost:3000/sendMailOk',
+        changeOrigin: true, 
+        pathRewrite: { 
+          '^/sendMailOk': ''
+        } 
+      }  
     } 
   },
   publicPath: '',

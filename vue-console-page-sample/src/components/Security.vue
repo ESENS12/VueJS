@@ -30,6 +30,35 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <!-- Remove Confirm Dialog -->
+            <v-dialog v-model="warning_dialog" persistent max-width="600px">
+                <v-card>
+                    <v-card-title class="mx-auto">
+                        <span class="title">Delete</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12" sm="12" md="12">
+                                    <h3 class="content">
+                                        Are you Sure you want to delete this?
+                                    </h3>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey darken-1" @click="cancelRemove()"
+                            >CANCLE</v-btn
+                        >
+                        <v-btn color="red darken-1" @click="confirmRemove()"
+                            >DELETE</v-btn
+                        >
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
             <v-flex sm12 lg9 md9>
                 <material-card color="purple" title="Domain Name">
                     <v-row class="mx-auto">
@@ -66,7 +95,7 @@
                                                     medium
                                                     class="red fill-height justify-end align-end"
                                                     @click="
-                                                        removeDomain(row.item)
+                                                        showRemoveConfirm(0,row.item)
                                                     "
                                                 >
                                                     DELETE</v-btn
@@ -126,7 +155,7 @@
                                                 <v-btn
                                                     medium
                                                     class="red fill-height justify-end align-end"
-                                                    @click="removeIp(row.item)"
+                                                    @click="showRemoveConfirm(1,row.item)"
                                                 >
                                                     DELETE</v-btn
                                                 >
@@ -183,7 +212,7 @@
                                                     medium
                                                     class="red fill-height justify-end align-end"
                                                     @click="
-                                                        removeBundle(row.item)
+                                                        showRemoveConfirm(2,row.item)
                                                     "
                                                 >
                                                     DELETE</v-btn
@@ -241,10 +270,16 @@
             //   source: String,
         },
         data: () => ({
+            //삭제 대기 아이템
+            selectedItem:{
+                index :0,
+                item : null,
+            },
             API_item: [],
             IP_item: [],
             Bundle_item: [],
             dialog: false,
+            warning_dialog: false,
             ModalData: {
                 hint: "",
                 description: "",
@@ -356,6 +391,39 @@
                 );
             },
 
+            showRemoveConfirm(itemIndex,item){
+                this.selectedItem.index = itemIndex;
+                this.selectedItem.item = item ;
+                this.warning_dialog = true;
+            },
+            //remove confirm modal
+            confirmRemove() {
+                switch (this.selectedItem.index) {
+                    case 0:                 //domain
+                        {
+                            this.removeDomain(this.selectedItem.item);
+                        }
+                        break;
+                    case 1:                 //IP Address
+                        {
+                            this.removeIp(this.selectedItem.item);
+                          
+                        }
+                        break;
+                    case 2:                 //Bundle ID
+                        {
+                            this.removeBundle(this.selectedItem.item);
+                            
+                        }
+                        break;
+                }
+
+                this.warning_dialog = false;
+            },
+            cancelRemove() {
+                this.warning_dialog = false;
+            },
+
             openDialog(itemIndex) {
                 // console.log("openDialog! :" + itemIndex);
 
@@ -395,32 +463,31 @@
             saveDialog(hint, description, modalType) {
                 console.log("content :" + this.ModalData.content);
                 switch (modalType) {
-                    case 0:
+                    case 0:             //Domain Name
                         {
-                            //Domain Name
+                            
                             // this.ModalData.hint = "e.g) onemap.fatos.biz";
                             // this.ModalData.description = "Put Your Domain Name"
                             // this.ModalData.modalType = 0;
                         }
                         break;
-                    case 1:
+                    case 1:             //IP Address
                         {
-                            //IP Address
+                            
                             // this.ModalData.hint = "e.g) 192.168.0.1";
                             // this.ModalData.description = "Put Your Application Server Public IP Address"
                             // this.ModalData.modalType = 1;
                         }
                         break;
-                    case 2:
+                    case 2:             //Bundle ID
                         {
-                            //Bundle ID
+                            
                             // this.ModalData.hint = "e.g) biz.fatos.onemap";
                             // this.ModalData.description = "Put Your App Bundle ID"
                             // this.ModalData.modalType = 2;
                         }
                         break;
                 }
-
 
                 //검증 할것인지?, 하고나서 저장되었다고 toast 띄워주도록 하자
                 this.closeDialog();

@@ -77,6 +77,7 @@
 
 <script>
     import LoginPage from "@/components/LoginPage";
+    // import config from "@/config";
 
     export default {
         beforeMount() {
@@ -91,6 +92,8 @@
         },
 
         created() {
+            // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
+            // console.log("config host : ", config.requestHost);
             //개발중에는 로그인된걸로 치고 작업하자
             // this.onLogin();
         },

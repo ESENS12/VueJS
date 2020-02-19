@@ -11,6 +11,10 @@ import 'vuetify-dialog/dist/vuetify-dialog.css'
 
 import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
+import Vuex from 'vuex'
+import store from '@/store'
+import config from '@/config'
+
 
 const requireComponent = require.context(
   '@/components', true, /\.vue$/
@@ -29,6 +33,7 @@ requireComponent.keys().forEach(fileName => {
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 Vue.use(require('vue-chartist'));
+Vue.use(Vuex);
 
 Vue.use(VuetifyDialog, {
   context: {
@@ -40,8 +45,10 @@ new Vue({
   icons:{
     iconfont:'md',    
   },
-  
+  store,
   router:router,
   vuetify,
+  Vuex,
+  config,
   render: h => h(App)
 }).$mount('#app')
