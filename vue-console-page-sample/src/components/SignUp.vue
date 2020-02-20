@@ -52,7 +52,7 @@
                                         />
                                     </v-flex>
 
-                                    <v-flex xs6 md6>
+                                    <v-flex xs8 md8>
                                         <v-text-field
                                             v-model="userData.name"
                                             :rules="nameRules"
@@ -62,22 +62,23 @@
                                         />
                                     </v-flex>
 
-                                    <v-flex xs8 md8>
+                                    <v-flex xs4 md4>
+                                        <v-text-field
+                                            v-model="userData.country_code"
+                                            :rules="countryRules"
+                                            maxlength="2"
+                                            required
+                                            label="Country Code"
+                                            class="green-input"
+                                        />
+                                    </v-flex>
+
+                                    <v-flex xs12 md12>
                                         <v-text-field
                                             v-model="userData.email"
                                             :rules="emailRules"
                                             required
                                             label="Email Address"
-                                            class="green-input"
-                                        />
-                                    </v-flex>
-
-                                    <v-flex xs4 md4>
-                                        <v-text-field
-                                            v-model="userData.country_code"
-                                            :rules="countryRules"
-                                            required
-                                            label="Country Code"
                                             class="green-input"
                                         />
                                     </v-flex>
@@ -127,10 +128,6 @@
 </template>
 
 <script>
-    // const privateKey = "~!@#$THISISPRIVATEKEY";
-    // const jwt = require('jsonwebtoken');
-    // let userToken = '';
-
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -138,26 +135,11 @@
     export default {
         name: "SignUp",
 
-        beforeMount() {
-            // console.log('password : ' + password);
-        },
+        beforeMount() {},
 
         mounted() {},
 
-        created() {
-            // this.b_isSendMail = true
-            //https://maps.fatos.biz/auth/getApiToken
-            // let params = JSON.stringify({
-            //     id: `${this.userData.id}`,
-            //     pass: `${this.userData.password}`
-            // });
-            // console.log("params : " + params);
-            // this.$http
-            //     .post("https://betamaps.fatos.biz/auth/getApiToken", params)
-            //     .then(response => {
-            //         console.log("api_token : " + response.api_token);
-            //     });
-        },
+        created() {},
 
         beforeCreate() {},
 
@@ -176,16 +158,17 @@
             },
 
             valid: false,
-            // firstName: '',
-            // lastName:'',
-            // email: '',      //검증용
-            // password : '', //검증용
+
             emailRules: [
                 v => !!v || "E-mail is required",
                 v => /.+@.+\..+/.test(v) || "E-mail must be valid"
             ],
-            passwordRules: [v => !!v || "Password is required"],
-
+            passwordRules: [
+                v => !!v || "Password is required",
+                v =>
+                    /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/.test(v) ||
+                    "Password Must Contain (Numbers, Character) at least 6 legnth"
+            ],
             nameRules: [v => !!v || "Name is required"],
             countryRules: [
                 v => !!v || "CountryCode is required",
@@ -200,34 +183,47 @@
         methods: {
             checkForm() {
                 if (this.$refs.form.validate()) {
-                    const userEmail = this.userData.email;
-                    const pass = this.userData.pass;
 
-                    this.$store
-                        .dispatch("GETAPITOKEN", { userEmail, pass })
-                        .then(() => {
-                            let ApiToken = this.$store.getters.getApiToken;
-                            this.userData.api_token = ApiToken;
-                            this.signUp();
-                        })
-                        .catch(({ message }) => (this.msg = message));
+                    let ApiToken = this.$store.getters.getApiToken || "";
+
+                    if (!ApiToken) {
+                        this.$store
+                            .dispatch("GETAPITOKEN")
+                            .then(() => {
+                                // let ApiToken = this.$store.getters.getApiToken;
+                                this.userData.api_token = ApiToken;
+                                this.signUp();
+                            })
+                            .catch(({ message }) => (this.msg = message));
+                    }else{
+                        this.userData.api_token = ApiToken;
+                        this.signUp();
+                    }
                 }
             },
             signUp() {
-                console.log(config.requestHost);
+                
                 this.$http
                     .post(`${config.requestHost}/auth/addUser`, this.userData)
                     .then(({ data }) => {
-                        console.log("recieved signup data : " + data);
-                        this.sendMail();
+                        // console.info(data);
+                        // console.log("data.result : ", data.result);
+                        if (data.result == "FAIL") {
+                            let err_msg = data.message || "SignUp Failed!";
+                            this.$emit("snack-event", "error", err_msg);
+                        } else {
+                            this.sendMail();
+                        }
                     })
                     .catch(error => {
                         console.error(error);
+                        let err_msg = error.message || "SignUp Failed!";
+                        this.$emit("snack-event", "error", err_msg);
                     });
             },
 
             sendMail() {
-                console.log("sendMail");
+                // console.log("sendMail");
 
                 this.$http
                     .post(
@@ -239,30 +235,23 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log(
-                            "recieved getEmailConfirmToken data : " +
-                                data.confirm_token
-                        );
-
-                        //data.confirm_token;
+                        // console.log(
+                        //     "recieved getEmailConfirmToken data : " +
+                        //         data.confirm_token
+                        // );
 
                         this.$http
-                            .post(
-                                "http://localhost:3000/api/sendMail",
-        
-                                {
-                                    "email" : this.userData.email,
-                                    "api_token" : data.confirm_token
-                                }
-                                // this.userData
-                            )
+                            .post("/sendMail", {
+                                email: this.userData.email,
+                                api_token: data.confirm_token
+                            })
 
-                            .then(response => {
+                            .then( () => {
                                 // $http.post('/login/signin',this.payload)
                                 this.b_isSendMail = true;
-                                console.log(
-                                    "sendMail response.data : " + response.data
-                                );
+                                // console.log(
+                                //     "sendMail response.data : " + response.data
+                                // );
                             })
                             .catch(error => {
                                 console.error("sendMail Failed : " + error);
@@ -278,18 +267,6 @@
             goLoginPage() {
                 //   console.log("goLoginPage!");
                 this.$emit("signup-event");
-            },
-
-            async SignUp() {
-                console.log("SignUp!");
-            },
-
-            MakeToken() {
-                console.log("MakeToken!");
-            },
-
-            CheckAuth() {
-                console.log("CheckAuth!");
             }
         }
     };

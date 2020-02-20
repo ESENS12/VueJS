@@ -1,28 +1,26 @@
 <template>
     <v-app>
         <v-snackbar
-              :color = snackColor
-              :bottom= "true"
-              :right= "true"
-              v-model="snackbar"
-              dark
-            >
-              <v-icon
-                color="white"
-                class="mr-3"
-              >
+            :color="snackColor"
+            :bottom="true"
+            :right="true"
+            v-model="snackbar"
+            dark
+        >
+            <v-icon color="white" class="mr-3">
                 mdi-bell-plus
-              </v-icon>
-             <div>{{this.snackContent}}</div>
-              <v-icon
-                size="16"
-                @click="snackbar = false"
-              >
+            </v-icon>
+            <div>{{ this.snackContent }}</div>
+            <v-icon size="16" @click="snackbar = false">
                 mdi-close-circle
-              </v-icon>
+            </v-icon>
         </v-snackbar>
 
-        <loginPage v-if="!this.isLogin"  @snack-event="onSnack" @login-event="onLogin"></loginPage>
+        <loginPage
+            v-if="!this.isLogin"
+            @snack-event="onSnack"
+            @login-event="onLogin"
+        ></loginPage>
 
         <v-app id="keep" v-else>
             <!-- <v-app-bar app clipped-left color="amber">
@@ -89,12 +87,10 @@
                     </template>
                 </v-list>
             </v-navigation-drawer>
-            
+
             <v-content>
                 <router-view @snack-event="onSnack"></router-view>
             </v-content>
-
-            
         </v-app>
     </v-app>
 </template>
@@ -105,7 +101,6 @@
     //var ref = document.referrer;
 
     export default {
-    
         beforeMount() {
             // this.isLogin = true;
         },
@@ -120,6 +115,10 @@
         },
 
         created() {
+            let app_token = sessionStorage.app_token || "";
+            if (app_token) {
+                this.isLogin = true;
+            }
             //console.log("mounted!" , ref);
             // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
             // console.log("config host : ", config.requestHost);
@@ -136,13 +135,13 @@
             source: String
         },
         data: () => ({
-            snackColor : "error",
-            snackContent : "Something wrong!",
+            snackColor: "error",
+            snackContent: "Something wrong!",
             drawer: null,
             isLogin: false,
             selected: 0,
             responsive: false,
-            snackbar : false,
+            snackbar: false,
             //navigation drawer item list
             items: [
                 { icon: "mdi-key", text: "API Keys" },
@@ -161,11 +160,10 @@
             ]
         }),
         methods: {
-
-            onSnack(type, msg){
+            onSnack(type, msg) {
                 this.snackColor = type;
                 this.snackContent = msg;
-               this.snackbar = true;
+                this.snackbar = true;
             },
             onDrawer() {
                 // console.log('onDrawer Click! : ' + this.drawer);
@@ -188,8 +186,13 @@
             },
 
             onLogout() {
-                this.isLogin = false;
-                this.$router.replace({ name: "Login" });
+                this.$store
+                    .dispatch("LOGOUT")
+                    .then(() => {
+                        this.isLogin = false;
+                        this.$router.replace({ name: "Login" });
+                    })
+                    .catch(({ message }) => (this.msg = message));                
             },
 
             confirm: async function() {

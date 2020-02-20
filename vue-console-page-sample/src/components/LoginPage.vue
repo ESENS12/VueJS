@@ -1,17 +1,29 @@
 <template>
-    <v-container pa-0 fill-height fluid grid-list-xl>
+    <v-container wrap pa-0 fill-height fluid grid-list-xl>
         <v-layout justify-center wrap fill-height fluid>
             <!-- Left Side(Image or Logo) -->
-            <v-flex xs5 md5 pb-0>
+            <v-flex xs0 sm5 md5 pb-0>
                 <v-layout justify-center wrap fill-height align-content-center>
                     <img src="@/assets/fatos-logo.png" />
                 </v-layout>
             </v-flex>
 
             <!-- Login form -->
-            <v-flex xs6 md6 column d-flex align-content-center flex-wrap>
+            <v-flex
+                xs12
+                sm5
+                md6
+                column
+                mx-auto
+                d-flex
+                align-content-center
+                flex-wrap
+            >
                 <v-layout v-if="this.b_isSignUp">
-                    <SignUp @signup-event="signUp"></SignUp>
+                    <SignUp
+                        @snack-event="onSnack"
+                        @signup-event="signUp"
+                    ></SignUp>
                 </v-layout>
 
                 <v-layout v-else>
@@ -72,29 +84,6 @@
                                             SignUp
                                         </v-btn>
                                     </v-flex>
-                                    <!-- <v-flex
-                                        xs12
-                                        text-xs-right
-                                        fluid
-                                        row
-                                        id="#dropdown-example"
-                                        class="justify-end align-end"
-                                    >
-                                        <v-container id="dropdown-example-2">
-                                            <v-col cols="12">
-                                                <v-select
-                                                    ref="uri"
-                                                    v-model="API_SELECTED"
-                                                    :items="API_URI_LIST"
-                                                    :menu-props="{
-                                                        top: true,
-                                                        offsetY: true
-                                                    }"
-                                                    label="API_URI_LIST"
-                                                ></v-select>
-                                            </v-col>
-                                        </v-container>
-                                    </v-flex> -->
                                 </v-layout>
                             </v-container>
                         </v-form>
@@ -124,18 +113,6 @@
 
         created() {
             this.b_isSignUp = false;
-            let apitoken = this.$store.getters.getApiToken || "";
-            if (!apitoken) {
-                this.$store
-                    .dispatch("GETAPITOKEN", {
-                        userEmail: "email",
-                        pass: "pass"
-                    })
-                    .then(() => {
-                        console.log("api token 발급 성공");
-                    })
-                    .catch(({ message }) => (this.msg = message));
-            }
         },
 
         beforeCreate() {},
@@ -169,12 +146,25 @@
         methods: {
             checkForm() {
                 const uri = this.API_SELECTED;
-                console.log("uri : ", uri);
+                // console.log("uri : ", uri);
                 config.requestHost = uri;
 
                 if (this.$refs.form.validate()) {
+                    let ApiToken = this.$store.getters.getApiToken || "";
+
+                    if (!ApiToken) {
+                        this.$store
+                            .dispatch("GETAPITOKEN" )
+                            .then(() => {
+                                  this.Login();
+                            })
+                            .catch(({ message }) => (this.msg = message));
+                    } else {
+                         this.Login();
+                    }
+
                     // this.snackbar = true
-                    this.Login();
+                    // this.Login();
                 }
             },
 
@@ -187,15 +177,7 @@
                 const userEmail = this.email;
                 const password = this.password;
                 const apiToken = this.$store.getters.getApiToken;
-                console.log(
-                    "try login " +
-                        userEmail +
-                        "pass : " +
-                        password +
-                        ", api_token : " +
-                        apiToken
-                );
-                this.$router.app.$emit("snack-event");
+
                 this.$http
                     .post(
                         `${config.requestHost}/auth/login`,
@@ -208,10 +190,25 @@
                     )
                     .then(({ data }) => {
                         this.$emit("login-event");
-                        console.log("recieved login data : ", data);
+                        // console.log("recieved login data : ", data);
+
+                        var app_token = data.app_token;
+                        var ref_token = data.ref_token;
+
+                        this.$store
+                            .dispatch("LOGIN", {
+                                appToken: app_token,
+                                refToken: ref_token
+                            })
+                            .then(() => {})
+                            .catch(({ message }) => (this.msg = message));
                     })
                     .catch(error => {
-                        this.$emit("snack-event", "error", "Login Failed!");
+                        this.$emit(
+                            "snack-event",
+                            "error",
+                            "Login Failed Check Your Email or Password"
+                        );
                         console.error("login err", error);
                     });
 
@@ -223,14 +220,18 @@
             async SignUp() {
                 this.$http
                     .post(config.requestHost + "/auth/addUser", this.payload)
-                    .then(response => {
-                        console.log("response.data : " + response.data);
+                    .then(() => {
+                        // console.log("response.data : " + response.data);
                     })
                     .catch(err => {
                         console.error("signup err : " + err);
                     });
 
-                console.log("SignUp!");
+                // console.log("SignUp!");
+            },
+
+            onSnack(type, msg) {
+                this.$emit("snack-event", type, msg);
             },
 
             MakeToken() {

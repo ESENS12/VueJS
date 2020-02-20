@@ -14,117 +14,140 @@ myHeaders.append("Content-Type", "application/json");
 export default new Vuex.Store({
 
   state: {
-    accessToken: null,
-    config : config,
-    api_token : null,     //API 토큰
-    email_token : null,   //이메일 검증용 토큰
+    config: config,
+    api_token: null,     //API 토큰
+    app_token: null,   //app 토큰(유효시간 10분)
+    ref_token: null, //app_token 리프레시 용도(1일)
   },
 
   getters: {
-    getAccessToken: (state) => state.accessToken,
     getApiToken: (state) => state.api_token,
     getConfig: (state) => state.config,
-    getEmailToken: (state) => state.email_token,
+
+    getAppToken: (state) => state.app_token,
+    getRefToken: (state) => state.ref_token,
   },
 
   mutations: {
 
     SETAPIURI(state, { URI }) {
-      console.log('setAPITUI : ' + URI);
+      // console.log('setAPITUI : ' + URI);
       state.config.requestHost = URI
     },
 
-    GetEmailConfirmToken(state, { data }){
-      console.log('email token : ' + data.confirm_token);
-      state.email_token = data.confirm_token
-      localStorage.email_token = data.confirm_token;
+    GetEmailConfirmToken(state, { data }) {
+      // console.log('email token : ' + data.confirm_token);
+      state.email_token = data.confirm_token;
+      sessionStorage.email_token = data.confirm_token;
+    },
+
+
+    UpdateAppToken(state, { data }) {
+    
+      if (data.app_token) {
+        state.app_token = data.app_token;
+        sessionStorage.app_token = data.app_token;
+      }
+
     },
 
     GETAPITOKEN(state, { api_token }) {
+      // console.log('mutation GETAPITOKEN ', api_token);
       state.api_token = api_token
+      sessionStorage.setItem('saved', new Date().getTime())
 
       //로컬스토리지에 저장
-      localStorage.api_token = api_token
+      // localStorage.api_token = api_token
     },
 
 
-    LOGIN(state, { accessToken }) {
-      state.accessToken = accessToken
+    LOGIN(state, { appToken, refToken }) {
+      // console.log('mutation login', appToken, ", ", refToken);
+      state.app_token = appToken
+      state.ref_token = refToken
 
       //로컬스토리지에 저장
-      localStorage.accessToken = accessToken
+      sessionStorage.app_token = appToken
+      sessionStorage.ref_token = refToken
+      sessionStorage.setItem('saved', new Date().getTime())
     },
 
     LOGOUT(state) {
+        console.log("logout[mutataion]")
       // 토큰 정보 삭제
-      state.accessToken = null
-      delete localStorage.accessToken
+      state.app_token = null
+      state.ref_token = null
+      state.config = null
+      state.api_token = null
+
+      sessionStorage.clear()
+      // delete sessionStorage.app_token
+      // delete sessionStorage.ref_token
+
     },
   },
   actions: {
 
-    SETAPIURI({ commit }, { uri }){
+    SETAPIURI({ commit }, { uri }) {
 
       commit('SETAPIURI', uri)
-      console.log('SETAPIURI data : ' + uri);
-              
+      // console.log('SETAPIURI data : ' + uri);
+
     },
 
-    GETAPITOKEN({ commit }, { userEmail, pass }){
+
+    refreshAppToken({ commit }, { refToken }) {
       let resourceHost = config.requestHost;
 
-      console.log('userEmail : ' + userEmail, ', pass : ' + pass +" but currnet is only use fatosapi");
+      if (refToken) {
+        axios.post(`${resourceHost}/auth/refreshAppToken/`, { ref_token: refToken }, `${myHeaders}`)
+          .then(({ data }) => {
+            commit('UpdateAppToken', {data : data})
+          }
+          ).catch(error => {
+            console.error("err: " + error);
+          })
+      }
+    },
+
+    GETAPITOKEN({ commit } ) {
+      let resourceHost = config.requestHost;
       
-      return axios.post(`${resourceHost}/auth/getApiToken/`, {id:"fatosapi", pass:"tester"},`${myHeaders}`)
+      return axios.post(`${resourceHost}/auth/getApiToken/`, { id: "fatosapi", pass: "tester" }, `${myHeaders}`)
         .then(({ data }) => {
 
           commit('GETAPITOKEN', data)
-          console.log('recieved API_TOKEN data : ' + data.api_token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${data.api_token}`;
+          // console.log('recieved API_TOKEN data : ' + data.api_token);
+          // axios.defaults.headers.common['Authorization'] = `Bearer ${data.api_token}`;
         }
-        ).catch(error=>{
-          console.error("err: "+ error);
+        ).catch(error => {
+          console.error("err: " + error);
         })
     },
 
 
-    GetEmailConfirmToken({ commit }, { userEmail, api_token }){
+    GetEmailConfirmToken({ commit }, { userEmail, api_token }) {
       let resourceHost = config.requestHost;
 
-      console.log('getEmailConfirmToken : ' + userEmail, ', api_token : ' + api_token);
-      
-      return axios.post(`${resourceHost}/console/getEmailConfirmToken/`, {user_email:userEmail, api_token:api_token},`${myHeaders}`)
+      // console.log('getEmailConfirmToken : ' + userEmail, ', api_token : ' + api_token);
+
+      return axios.post(`${resourceHost}/console/getEmailConfirmToken/`, { user_email: userEmail, api_token: api_token }, `${myHeaders}`)
         .then(({ data }) => {
 
-          console.log('recieved getEmailConfirmToken data : ' + data.confirm_token);
+          // console.log('recieved getEmailConfirmToken data : ' + data.confirm_token);
           commit('GetEmailConfirmToken', data)
           // axios.defaults.headers.common['Authorization'] = `Bearer ${data.api_token}`;
         }
-        ).catch(error=>{
-          console.error("err: "+ error);
+        ).catch(error => {
+          console.error("err: " + error);
         })
     },
 
-    LOGIN({ commit }, {userEmail, password, apiToken }) {
-      
-      let resourceHost = config.requestHost;
-      console.log('login  : ' + userEmail, ', password : ' + password + ", apiToken :" + apiToken);
-
-      // userEmail = 'fatosapi'
-      // password = 'tester'
-
-      return axios.post(`${resourceHost}/auth/login`, {email:userEmail, pass:password, api_token:apiToken},`${myHeaders}`)
-        .then(({ data }) => {
-          
-          // console.log('recieved login data : ' + data.accessToken);
-          // axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
-          commit('LOGIN', data)
-          
-        }
-        ).catch(error=>{
-          console.error(error);
-        })
+    //로그인 후에 토큰정보 저장
+    LOGIN({ commit }, { appToken, refToken }) {
+      commit('LOGIN', { appToken: appToken, refToken: refToken })
     },
+
     LOGOUT({ commit }) {
       console.log('logout![store]');
       commit('LOGOUT')

@@ -7,8 +7,7 @@
                     title="API Lists"
                     text="Here is your list of FATOS API"
                 >
-
-                <!-- :hide-default-footer="true" -->
+                    <!-- :hide-default-footer="true" -->
                     <v-data-table
                         :headers="headers"
                         :items="API_item"
@@ -18,8 +17,12 @@
                     >
                         <template v-slot:item="row">
                             <tr>
-                                <td class="font-weight-bold">{{ row.item.api_name }}</td>
-                                <td :class="headers[1].class">{{ row.item.key }}</td>
+                                <td class="font-weight-bold">
+                                    {{ row.item.api_name }}
+                                </td>
+                                <td :class="headers[1].class">
+                                    {{ row.item.key }}
+                                </td>
                                 <td :class="headers[2].class">
                                     <v-btn
                                         medium
@@ -28,7 +31,7 @@
                                     >
                                         Copy</v-btn
                                     >
-                                  
+
                                     <v-btn
                                         medium
                                         class="green fill-height"
@@ -37,7 +40,7 @@
                                         Re-Gen Key</v-btn
                                     >
                                 </td>
-                            </tr> 
+                            </tr>
                         </template>
                         <template v-slot:no-data>
                             <v-btn color="primary" @click="initialize"
@@ -63,7 +66,7 @@
 
         created() {
             this.initialize();
-
+            
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플
             // this.$http.get('/sendMail')
             //     .then((response) => {
@@ -92,13 +95,13 @@
                 {
                     sortable: false,
                     text: "Key",
-                    value: "key",
+                    value: "key"
                     // class:"hidden-md-and-down"
                 },
                 {
                     sortable: false,
                     text: "",
-                    value: "buttons",
+                    value: "buttons"
                     // class:"hidden-md-and-down"
                 }
             ],
@@ -146,7 +149,7 @@
                 ];
             },
             CopyKey(item) {
-                console.log(item.key);
+                // console.log(item.key);
                 // let testingCodeToCopy = document.querySelector("#testing-code");
                 // testingCodeToCopy.setAttribute("type", "text");
                 // testingCodeToCopy.select();
@@ -157,12 +160,12 @@
 
                     dummy.value = item.key;
                     dummy.select();
-                    var successful = document.execCommand("copy");
+                    document.execCommand("copy");
                     document.body.removeChild(dummy);
-                    var msg = successful ? "successful" : "unsuccessful";
-                    console.log("code was copied : " + msg);
+                    // var msg = successful ? "successful" : "unsuccessful";
+                    // console.log("code was copied : " + msg);
                 } catch (err) {
-                    console.log("copy failed: " + err);
+                    console.error("copy failed: " + err);
                 }
 
                 /* unselect the range */
@@ -170,8 +173,7 @@
                 // window.getSelection().removeAllRanges();
             },
             RegenKey() {
-                console.log('Re-gen Key')
-
+                console.log("Re-gen Key");
             }
         }
     };
