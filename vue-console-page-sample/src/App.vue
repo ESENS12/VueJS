@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-snackbar
-              color="error"
+              :color = snackColor
               :bottom= "true"
               :right= "true"
               v-model="snackbar"
@@ -13,16 +13,16 @@
               >
                 mdi-bell-plus
               </v-icon>
-              <div>this is <b>SnackBar Test</b> With a global Uses</div>
+             <div>{{this.snackContent}}</div>
               <v-icon
                 size="16"
                 @click="snackbar = false"
               >
                 mdi-close-circle
               </v-icon>
-            </v-snackbar>
+        </v-snackbar>
 
-        <loginPage v-if="!this.isLogin" @login-event="onLogin"></loginPage>
+        <loginPage v-if="!this.isLogin"  @snack-event="onSnack" @login-event="onLogin"></loginPage>
 
         <v-app id="keep" v-else>
             <!-- <v-app-bar app clipped-left color="amber">
@@ -120,7 +120,6 @@
         },
 
         created() {
-            this.snackbar = true;
             //console.log("mounted!" , ref);
             // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
             // console.log("config host : ", config.requestHost);
@@ -137,6 +136,8 @@
             source: String
         },
         data: () => ({
+            snackColor : "error",
+            snackContent : "Something wrong!",
             drawer: null,
             isLogin: false,
             selected: 0,
@@ -161,7 +162,9 @@
         }),
         methods: {
 
-            onSnack(){
+            onSnack(type, msg){
+                this.snackColor = type;
+                this.snackContent = msg;
                this.snackbar = true;
             },
             onDrawer() {

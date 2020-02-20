@@ -106,9 +106,8 @@
 </template>
 
 <script>
-
-var myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
     // import SignIn from '@/components/SignIn';
     import SignUp from "@/components/SignUp";
@@ -125,20 +124,18 @@ myHeaders.append("Content-Type", "application/json");
 
         created() {
             this.b_isSignUp = false;
-
-            this.$store
-                .dispatch("GETAPITOKEN", { userEmail: "email", pass: "pass" })
-                .then(() => {
-                    console.log("api token 발급 성공");
-                })
-                .catch(({ message }) => (this.msg = message));
-
-            // 컴포넌트가 생성될 때, backend에 data 요청 샘플
-            // this.$http.post('/login/signin',this.payload)
-            //     .then((response) => {
-            //       console.log("response.data : " + response.data);
-            //       // this.payload = response.data
-            //     })
+            let apitoken = this.$store.getters.getApiToken || "";
+            if (!apitoken) {
+                this.$store
+                    .dispatch("GETAPITOKEN", {
+                        userEmail: "email",
+                        pass: "pass"
+                    })
+                    .then(() => {
+                        console.log("api token 발급 성공");
+                    })
+                    .catch(({ message }) => (this.msg = message));
+            }
         },
 
         beforeCreate() {},
@@ -198,7 +195,7 @@ myHeaders.append("Content-Type", "application/json");
                         ", api_token : " +
                         apiToken
                 );
-
+                this.$router.app.$emit("snack-event");
                 this.$http
                     .post(
                         `${config.requestHost}/auth/login`,
@@ -211,11 +208,11 @@ myHeaders.append("Content-Type", "application/json");
                     )
                     .then(({ data }) => {
                         this.$emit("login-event");
-                        console.log('recieved login data : ' , data);
+                        console.log("recieved login data : ", data);
                     })
                     .catch(error => {
-                        this.$emit("snack-event");
-                        console.error("login err" ,error);
+                        this.$emit("snack-event", "error", "Login Failed!");
+                        console.error("login err", error);
                     });
 
                 if (this.snackbar) {
