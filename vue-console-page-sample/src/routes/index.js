@@ -11,43 +11,71 @@ import Security from '@/components/Security'
 
 Vue.use(Router)
 
+const requireAuth = () => (from, to, next) => {
+  console.log('from : ' ,  from);
+  console.log('to : ' , to);
+  var ref = document.referrer;
+  console.log('ref : ' , ref);
+  
+  
+  next();
+  // console.log(" stored accesstoken " + this.$store.getAccessToken);
+  // const {accessToken} = localStorage
+  // console.log("accessToken : ",accessToken);
+  // if (accessToken) return next()
+  // next('/login')
+}
+
 const router = new Router({
  mode: 'history',
  routes: [
+
+  {
+    path: '/',
+    beforeEnter: requireAuth()
+  },
+
    {
-     path: '/api',
+     path: '/keys',
      name: 'API Keys',
-     component: APIKey
+     component: APIKey,
+     beforeEnter: requireAuth()
    },
    {
      path: '/login',
      name: 'login',
-     component: Login
+     component: Login,
+     beforeEnter: requireAuth()
    },
   {
     path: '/developer',
     name: 'Developer Page',
-    component: DeveloperPage
+    component: DeveloperPage,
+    beforeEnter: requireAuth()
   },
   {
     path: '/logout',
     name: 'Logout',
-    component: Logout
+    component: Logout,
+    beforeEnter: requireAuth()
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    beforeEnter: requireAuth()
   },
   {
     path: '/usage',
     name: 'Usage',
-    component: Usage
+    component: Usage,
+    beforeEnter: requireAuth()
   },
   {
     path: '/security',
     name: 'Security',
-    component: Security
+    component: Security,
+    beforeEnter: requireAuth()
   },
  ]
 })

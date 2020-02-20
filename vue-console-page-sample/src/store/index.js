@@ -93,11 +93,11 @@ export default new Vuex.Store({
 
       console.log('getEmailConfirmToken : ' + userEmail, ', api_token : ' + api_token);
       
-      return axios.post(`${resourceHost}/auth/getEmailConfirmToken/`, {user_email:userEmail, api_token:api_token},`${myHeaders}`)
+      return axios.post(`${resourceHost}/console/getEmailConfirmToken/`, {user_email:userEmail, api_token:api_token},`${myHeaders}`)
         .then(({ data }) => {
 
+          console.log('recieved getEmailConfirmToken data : ' + data.confirm_token);
           commit('GetEmailConfirmToken', data)
-          console.log('recieved getEmailConfirmToken data : ' + data.api_token);
           // axios.defaults.headers.common['Authorization'] = `Bearer ${data.api_token}`;
         }
         ).catch(error=>{
@@ -105,18 +105,19 @@ export default new Vuex.Store({
         })
     },
 
-    LOGIN({ commit }, {userEmail, password }) {
+    LOGIN({ commit }, {userEmail, password, apiToken }) {
       
       let resourceHost = config.requestHost;
+      console.log('login  : ' + userEmail, ', password : ' + password + ", apiToken :" + apiToken);
 
-      userEmail = 'fatosapi'
-      password = 'tester'
+      // userEmail = 'fatosapi'
+      // password = 'tester'
 
-      return axios.post(`${resourceHost}/auth/login`, {id:userEmail, pass:password},`${myHeaders}`)
+      return axios.post(`${resourceHost}/auth/login`, {email:userEmail, pass:password, api_token:apiToken},`${myHeaders}`)
         .then(({ data }) => {
           
-          console.log('recieved login data : ' + data.accessToken);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+          // console.log('recieved login data : ' + data.accessToken);
+          // axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
           commit('LOGIN', data)
           
         }
