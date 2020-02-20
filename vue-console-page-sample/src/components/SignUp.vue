@@ -44,32 +44,25 @@
                                 <v-layout wrap>
                                     <v-flex xs12 md12>
                                         <v-text-field
-                                            label="Company Name(Optional)"
+                                            v-model="userData.company_name"
+                                            label="Company Name"
                                             class="green-input"
+                                            :rules="companyRules"
+                                            required
                                         />
                                     </v-flex>
 
                                     <v-flex xs6 md6>
                                         <v-text-field
-                                            v-model="userData.firstName"
+                                            v-model="userData.name"
                                             :rules="nameRules"
                                             required
-                                            label="FirstName"
+                                            label="Name"
                                             class="green-input"
                                         />
                                     </v-flex>
 
-                                    <v-flex xs6 md6>
-                                        <v-text-field
-                                            v-model="userData.lastName"
-                                            :rules="nameRules"
-                                            required
-                                            label="LastName"
-                                            class="green-input"
-                                        />
-                                    </v-flex>
-
-                                    <v-flex xs12 md12>
+                                    <v-flex xs8 md8>
                                         <v-text-field
                                             v-model="userData.email"
                                             :rules="emailRules"
@@ -77,12 +70,21 @@
                                             label="Email Address"
                                             class="green-input"
                                         />
-                                        <!-- purple-input은 보라색이 적용되는데..다른색은 안되는지? 파란색만나옴 -->
+                                    </v-flex>
+
+                                    <v-flex xs4 md4>
+                                        <v-text-field
+                                            v-model="userData.country_code"
+                                            :rules="countryRules"
+                                            required
+                                            label="Country Code"
+                                            class="green-input"
+                                        />
                                     </v-flex>
 
                                     <v-flex xs12 md12>
                                         <v-text-field
-                                            v-model="userData.password"
+                                            v-model="userData.pass"
                                             :rules="passwordRules"
                                             required
                                             label="Password"
@@ -128,6 +130,10 @@
     // const privateKey = "~!@#$THISISPRIVATEKEY";
     // const jwt = require('jsonwebtoken');
     // let userToken = '';
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     import config from "@/config";
     export default {
         name: "SignUp",
@@ -160,11 +166,13 @@
         data: () => ({
             b_isSendMail: false,
             userData: {
+                company_name: "",
                 email: "",
-                firstName: "",
-                lastName: "",
-                password: "",
-                uri: ""
+                name: "",
+                api_token: "",
+                country_code: "",
+                pass: ""
+                // uri: ""
             },
 
             valid: false,
@@ -179,6 +187,11 @@
             passwordRules: [v => !!v || "Password is required"],
 
             nameRules: [v => !!v || "Name is required"],
+            countryRules: [
+                v => !!v || "CountryCode is required",
+                v => /^[0-9]+$/.test(v) || "Country Code Must be Number e.g) 82"
+            ],
+            companyRules: [v => !!v || "Comany Name required"],
 
             select: null,
             lazy: true
@@ -188,43 +201,77 @@
             checkForm() {
                 if (this.$refs.form.validate()) {
                     const userEmail = this.userData.email;
-                    const pass = this.userData.password;
+                    const pass = this.userData.pass;
 
                     this.$store
                         .dispatch("GETAPITOKEN", { userEmail, pass })
                         .then(() => {
                             let ApiToken = this.$store.getters.getApiToken;
-
-                            this.$store
-                                .dispatch("GetEmailConfirmToken", { userEmail, ApiToken })
-                                .then(() => {
-                                    //토큰정보 세팅
-                                    this.userData.uri =
-                                        config.requestHost +
-                                        "/auth/addUser/?token=" +
-                                        this.$store.getters.getEmailToken;
-                                    this.sendMail();
-                                })
-                                .catch(({ message }) => (this.msg = message));
-
+                            this.userData.api_token = ApiToken;
+                            this.signUp();
                         })
                         .catch(({ message }) => (this.msg = message));
-
                 }
+            },
+            signUp() {
+                console.log(config.requestHost);
+                this.$http
+                    .post(`${config.requestHost}/auth/addUser`, this.userData)
+                    .then(({ data }) => {
+                        console.log("recieved signup data : " + data);
+                        this.sendMail();
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             },
 
             sendMail() {
                 console.log("sendMail");
 
                 this.$http
-                    .post("/sendMail", this.userData)
-                    .then(response => {
-                        // $http.post('/login/signin',this.payload)
-                        this.b_isSendMail = true;
-                        console.log("response.data : " + response.data);
+                    .post(
+                        `${config.requestHost}/console/getEmailConfirmToken/`,
+                        {
+                            user_email: this.userData.email,
+                            api_token: this.userData.api_token
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log(
+                            "recieved getEmailConfirmToken data : " +
+                                data.confirm_token
+                        );
+
+                        //data.confirm_token;
+
+                        this.$http
+                            .post(
+                                "http://localhost:3000/api/sendMail",
+        
+                                {
+                                    "email" : this.userData.email,
+                                    "api_token" : data.confirm_token
+                                }
+                                // this.userData
+                            )
+
+                            .then(response => {
+                                // $http.post('/login/signin',this.payload)
+                                this.b_isSendMail = true;
+                                console.log(
+                                    "sendMail response.data : " + response.data
+                                );
+                            })
+                            .catch(error => {
+                                console.error("sendMail Failed : " + error);
+                            });
+
+                        // axios.defaults.headers.common['Authorization'] = `Bearer ${data.api_token}`;
                     })
                     .catch(error => {
-                        console.error("sendMail Failed : " + error);
+                        console.error("err: " + error);
                     });
             },
 

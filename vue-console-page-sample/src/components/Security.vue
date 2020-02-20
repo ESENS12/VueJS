@@ -12,6 +12,7 @@
                                 <v-col cols="12" sm="12" md="12">
                                     <v-text-field
                                         v-model="ModalData.content"
+                                        :rules="ModalData.rules"
                                         v-bind:label="ModalData.description"
                                         v-bind:hint="ModalData.hint"
                                     ></v-text-field>
@@ -60,6 +61,7 @@
             </v-dialog>
 
             <v-flex sm12 lg9 md9>
+
                 <material-card color="purple" title="Domain Name">
                     <v-row class="mx-auto">
                         <v-flex sm4 lg4 md4>
@@ -73,7 +75,7 @@
                         </v-flex>
 
                         <v-flex sm8 lg8 md8>
-                            <v-layout class="justify-end">
+                            <v-layout class="wrap justify-end">
                                 <v-data-table
                                     :headers="headers"
                                     :items="API_item"
@@ -83,23 +85,33 @@
                                     :hide-default-header="true"
                                 >
                                     <template v-slot:item="row">
-                                        <tr>
+                                        <tr height="50px" class="wrap">
                                             <td class="font-weight-bold">
+                                                <v-layout justify-center>
                                                 {{ row.item.api_name }}
+                                                </v-layout>
                                             </td>
-                                            <td class="justify-center">
+                                            
+                                            <td>
+                                                <v-layout justify-center>
                                                 {{ row.item.key }}
+                                                </v-layout>
                                             </td>
-                                            <td class="justify-center">
+                                            <td >
+                                                <v-layout justify-end mx-auto>
                                                 <v-btn
                                                     medium
                                                     class="red fill-height justify-end align-end"
                                                     @click="
-                                                        showRemoveConfirm(0,row.item)
+                                                        showRemoveConfirm(
+                                                            0,
+                                                            row.item
+                                                        )
                                                     "
                                                 >
                                                     DELETE</v-btn
                                                 >
+                                                </v-layout>
                                             </td>
                                         </tr>
                                     </template>
@@ -118,6 +130,8 @@
                     </v-layout>
                 </material-card>
 
+
+
                 <material-card color="grey" title="IP Adress">
                     <v-row class="mx-auto">
                         <v-flex sm4 lg4 md4>
@@ -132,7 +146,7 @@
                         </v-flex>
 
                         <v-flex sm8 lg8 md8>
-                            <v-layout class="justify-end">
+                            <v-layout class="wrap justify-end">
                                 <v-data-table
                                     :headers="headers"
                                     :items="IP_item"
@@ -142,29 +156,41 @@
                                     :hide-default-header="true"
                                 >
                                     <template v-slot:item="row">
-                                        <tr>
+                                        <tr height="50px" class="wrap"  >
                                             <td class="font-weight-bold">
+                                            <v-layout justify-center>
+
                                                 {{ row.item.api_name }}
+                                            </v-layout>
                                             </td>
-
-                                            <td class="justify-center">
+                                            <td >
+                                            <v-layout justify-center>
                                                 {{ row.item.key }}
+                                            </v-layout>
                                             </td>
-
-                                            <td class="justify-center">
+                                            <td>
+                                            <v-layout justify-end mx-auto>
                                                 <v-btn
                                                     medium
                                                     class="red fill-height justify-end align-end"
-                                                    @click="showRemoveConfirm(1,row.item)"
+                                                    @click="
+                                                        showRemoveConfirm(
+                                                            1,
+                                                            row.item
+                                                        )
+                                                    "
                                                 >
                                                     DELETE</v-btn
                                                 >
+                                            </v-layout>
                                             </td>
                                         </tr>
                                     </template>
                                 </v-data-table>
                             </v-layout>
                         </v-flex>
+
+
                     </v-row>
                     <v-layout>
                         <v-flex class="pb-0 pt-0">
@@ -199,24 +225,36 @@
                                     :hide-default-header="true"
                                 >
                                     <template v-slot:item="row">
-                                        <tr>
+                                        <tr height="50px" class="wrap">
                                             <td class="font-weight-bold">
+                                                 <v-layout justify-center>
+
                                                 {{ row.item.api_name }}
+                                                 </v-layout>
                                             </td>
-                                            <td class="justify-center">
+                                            <td >
+                                                 <v-layout justify-center>
+
                                                 {{ row.item.key }}
+                                                 </v-layout>
                                             </td>
 
-                                            <td class="justify-center">
+                                            <td >
+                                                 <v-layout justify-end mx-auto>
+
                                                 <v-btn
                                                     medium
                                                     class="red fill-height justify-end align-end"
                                                     @click="
-                                                        showRemoveConfirm(2,row.item)
+                                                        showRemoveConfirm(
+                                                            2,
+                                                            row.item
+                                                        )
                                                     "
                                                 >
                                                     DELETE</v-btn
                                                 >
+                                                 </v-layout>
                                             </td>
                                         </tr>
                                     </template>
@@ -270,10 +308,37 @@
             //   source: String,
         },
         data: () => ({
+            domainRules: [
+                v => !!v || "Domain is required",
+                v =>
+                    /^(((http(s?)):\/\/)?)([0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}(:[0-9]+)?(\/\S*)?$/.test(
+                        v
+                    ) ||
+                    "Domain must be valid e.g) developer.fatos.biz , https://developer.fatos.biz"
+            ],
+
+            bundleRules: [
+                v => !!v || "Bundle is required",
+                v =>
+                    /^[^((http(s?))://)]([0-9a-zA-Z-_]+\.)+[0-9a-zA-Z-_]{2,9}(:[0-9a-zA-Z-_]+)?(\/\S*)?$/.test(
+                        v
+                    ) ||
+                    "Bundle must be valid e.g) biz.fatos.developer, kr.fatos.tnavi"
+            ],
+            ipRules: [
+                v => !!v || "Bundle is required",
+                v =>
+                    /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(
+                        v
+                    ) || "ip address must be valid e.g) 192.168.0.1, 127.0.0.1"
+            ],
+
+            //passwordRules: [v => !!v || "Password is required"],
+            //  /^(?!:\/\/)([a-zA-Z0-9-]+\.){0,5}[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,64}?$/gi
             //삭제 대기 아이템
-            selectedItem:{
-                index :0,
-                item : null,
+            selectedItem: {
+                index: 0,
+                item: null
             },
             API_item: [],
             IP_item: [],
@@ -282,6 +347,7 @@
             warning_dialog: false,
             ModalData: {
                 hint: "",
+                rules: null,
                 description: "",
                 modalType: 0,
                 content: ""
@@ -391,29 +457,27 @@
                 );
             },
 
-            showRemoveConfirm(itemIndex,item){
+            showRemoveConfirm(itemIndex, item) {
                 this.selectedItem.index = itemIndex;
-                this.selectedItem.item = item ;
+                this.selectedItem.item = item;
                 this.warning_dialog = true;
             },
             //remove confirm modal
             confirmRemove() {
                 switch (this.selectedItem.index) {
-                    case 0:                 //domain
+                    case 0: //domain
                         {
                             this.removeDomain(this.selectedItem.item);
                         }
                         break;
-                    case 1:                 //IP Address
+                    case 1: //IP Address
                         {
                             this.removeIp(this.selectedItem.item);
-                          
                         }
                         break;
-                    case 2:                 //Bundle ID
+                    case 2: //Bundle ID
                         {
                             this.removeBundle(this.selectedItem.item);
-                            
                         }
                         break;
                 }
@@ -431,16 +495,17 @@
                     case 0:
                         {
                             //Domain Name
-
-                            this.ModalData.hint = "e.g) onemap.fatos.biz";
+                            this.ModalData.rules = this.domainRules;
+                            this.ModalData.hint = "Comfirm";
                             this.ModalData.description = "Put Your Domain Name";
                             this.ModalData.modalType = 0;
                         }
                         break;
                     case 1:
                         {
+                            this.ModalData.rules = this.ipRules;
                             //IP Address
-                            this.ModalData.hint = "e.g) 192.168.0.1";
+                            this.ModalData.hint = "Comfirm";
                             this.ModalData.description =
                                 "Put Your Application Server Public IP Address";
                             this.ModalData.modalType = 1;
@@ -448,8 +513,9 @@
                         break;
                     case 2:
                         {
+                            this.ModalData.rules = this.bundleRules;
                             //Bundle ID
-                            this.ModalData.hint = "e.g) biz.fatos.onemap";
+                            this.ModalData.hint = "Comfirm";
                             this.ModalData.description =
                                 "Put Your App Bundle ID";
                             this.ModalData.modalType = 2;
@@ -463,25 +529,22 @@
             saveDialog(hint, description, modalType) {
                 console.log("content :" + this.ModalData.content);
                 switch (modalType) {
-                    case 0:             //Domain Name
+                    case 0: //Domain Name
                         {
-                            
                             // this.ModalData.hint = "e.g) onemap.fatos.biz";
                             // this.ModalData.description = "Put Your Domain Name"
                             // this.ModalData.modalType = 0;
                         }
                         break;
-                    case 1:             //IP Address
+                    case 1: //IP Address
                         {
-                            
                             // this.ModalData.hint = "e.g) 192.168.0.1";
                             // this.ModalData.description = "Put Your Application Server Public IP Address"
                             // this.ModalData.modalType = 1;
                         }
                         break;
-                    case 2:             //Bundle ID
+                    case 2: //Bundle ID
                         {
-                            
                             // this.ModalData.hint = "e.g) biz.fatos.onemap";
                             // this.ModalData.description = "Put Your App Bundle ID"
                             // this.ModalData.modalType = 2;

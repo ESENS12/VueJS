@@ -1,5 +1,27 @@
 <template>
     <v-app>
+        <v-snackbar
+              color="error"
+              :bottom= "true"
+              :right= "true"
+              v-model="snackbar"
+              dark
+            >
+              <v-icon
+                color="white"
+                class="mr-3"
+              >
+                mdi-bell-plus
+              </v-icon>
+              <div>this is <b>SnackBar Test</b> With a global Uses</div>
+              <v-icon
+                size="16"
+                @click="snackbar = false"
+              >
+                mdi-close-circle
+              </v-icon>
+            </v-snackbar>
+
         <loginPage v-if="!this.isLogin" @login-event="onLogin"></loginPage>
 
         <v-app id="keep" v-else>
@@ -67,10 +89,12 @@
                     </template>
                 </v-list>
             </v-navigation-drawer>
-
+            
             <v-content>
-                <router-view></router-view>
+                <router-view @snack-event="onSnack"></router-view>
             </v-content>
+
+            
         </v-app>
     </v-app>
 </template>
@@ -78,12 +102,16 @@
 <script>
     import LoginPage from "@/components/LoginPage";
     // import config from "@/config";
+    //var ref = document.referrer;
 
     export default {
+    
         beforeMount() {
             // this.isLogin = true;
         },
         mounted() {
+            //console.log("query : " , this.$route.query);
+
             this.onResponsiveInverted();
             window.addEventListener("resize", this.onResponsiveInverted);
         },
@@ -92,6 +120,8 @@
         },
 
         created() {
+            this.snackbar = true;
+            //console.log("mounted!" , ref);
             // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
             // console.log("config host : ", config.requestHost);
             //개발중에는 로그인된걸로 치고 작업하자
@@ -111,7 +141,7 @@
             isLogin: false,
             selected: 0,
             responsive: false,
-
+            snackbar : false,
             //navigation drawer item list
             items: [
                 { icon: "mdi-key", text: "API Keys" },
@@ -130,6 +160,10 @@
             ]
         }),
         methods: {
+
+            onSnack(){
+               this.snackbar = true;
+            },
             onDrawer() {
                 // console.log('onDrawer Click! : ' + this.drawer);
                 this.drawer = !this.drawer;

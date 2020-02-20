@@ -106,9 +106,10 @@
 </template>
 
 <script>
-    // const privateKey = "~!@#$THISISPRIVATEKEY";
-    // const jwt = require('jsonwebtoken');
-    // let userToken = '';
+
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
     // import SignIn from '@/components/SignIn';
     import SignUp from "@/components/SignUp";
     import config from "@/config";
@@ -124,6 +125,14 @@
 
         created() {
             this.b_isSignUp = false;
+
+            this.$store
+                .dispatch("GETAPITOKEN", { userEmail: "email", pass: "pass" })
+                .then(() => {
+                    console.log("api token 발급 성공");
+                })
+                .catch(({ message }) => (this.msg = message));
+
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플
             // this.$http.post('/login/signin',this.payload)
             //     .then((response) => {
@@ -141,7 +150,7 @@
         props: {},
 
         data: () => ({
-          API_SELECTED :"https://betamaps.fatos.biz",
+            API_SELECTED: "https://betamaps.fatos.biz",
             API_URI_LIST: [
                 { text: "https://betamaps.fatos.biz" },
                 { text: "http://localhost:8080" },
@@ -162,13 +171,13 @@
 
         methods: {
             checkForm() {
-              const uri = this.API_SELECTED;
-                console.log('uri : ' , uri);
+                const uri = this.API_SELECTED;
+                console.log("uri : ", uri);
                 config.requestHost = uri;
-                
+
                 if (this.$refs.form.validate()) {
                     // this.snackbar = true
-                    this.Login()
+                    this.Login();
                 }
             },
 
@@ -179,26 +188,51 @@
 
             Login() {
                 const userEmail = this.email;
-                const pass = this.password;
+                const password = this.password;
+                const apiToken = this.$store.getters.getApiToken;
+                console.log(
+                    "try login " +
+                        userEmail +
+                        "pass : " +
+                        password +
+                        ", api_token : " +
+                        apiToken
+                );
 
-                this.$store
-                    .dispatch("LOGIN", {userEmail, pass })
-                    .then(() => {
-                        
+                this.$http
+                    .post(
+                        `${config.requestHost}/auth/login`,
+                        {
+                            email: userEmail,
+                            pass: password,
+                            api_token: apiToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
                         this.$emit("login-event");
-
+                        console.log('recieved login data : ' , data);
                     })
-                    .catch(({ message }) => (this.msg = message));
+                    .catch(error => {
+                        this.$emit("snack-event");
+                        console.error("login err" ,error);
+                    });
 
-                // this.$emit("login-event");
-                //todo   axios http post로 암호화된 id,password 보내고 응답처리
-                //현재는 우선 oK 됐다고 치고 다음화면으로.
                 if (this.snackbar) {
                     // this.$router.replace({name:"APIKey"});
                 }
             },
 
             async SignUp() {
+                this.$http
+                    .post(config.requestHost + "/auth/addUser", this.payload)
+                    .then(response => {
+                        console.log("response.data : " + response.data);
+                    })
+                    .catch(err => {
+                        console.error("signup err : " + err);
+                    });
+
                 console.log("SignUp!");
             },
 
