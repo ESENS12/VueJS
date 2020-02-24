@@ -61,7 +61,6 @@
             </v-dialog>
 
             <v-flex sm12 lg9 md9>
-
                 <material-card color="purple" title="Domain Name">
                     <v-row class="mx-auto">
                         <v-flex sm4 lg4 md4>
@@ -86,31 +85,25 @@
                                 >
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
-                                            <td class="font-weight-bold">
-                                                <v-layout justify-center>
-                                                {{ row.item.api_name }}
-                                                </v-layout>
-                                            </td>
-                                            
                                             <td>
-                                                <v-layout justify-center>
-                                                {{ row.item.key }}
+                                                <v-layout justify-end>
+                                                    {{ row.item.key }}
                                                 </v-layout>
                                             </td>
-                                            <td >
+                                            <td class="myTable">
                                                 <v-layout justify-end mx-auto>
-                                                <v-btn
-                                                    medium
-                                                    class="red fill-height justify-end align-end"
-                                                    @click="
-                                                        showRemoveConfirm(
-                                                            0,
-                                                            row.item
-                                                        )
-                                                    "
-                                                >
-                                                    DELETE</v-btn
-                                                >
+                                                    <v-btn
+                                                        medium
+                                                        class="red fill-height justify-end align-end"
+                                                        @click="
+                                                            showRemoveConfirm(
+                                                                0,
+                                                                row.item
+                                                            )
+                                                        "
+                                                    >
+                                                        DELETE</v-btn
+                                                    >
                                                 </v-layout>
                                             </td>
                                         </tr>
@@ -129,8 +122,6 @@
                         </v-flex>
                     </v-layout>
                 </material-card>
-
-
 
                 <material-card color="grey" title="IP Adress">
                     <v-row class="mx-auto">
@@ -156,41 +147,33 @@
                                     :hide-default-header="true"
                                 >
                                     <template v-slot:item="row">
-                                        <tr height="50px" class="wrap"  >
-                                            <td class="font-weight-bold">
-                                            <v-layout justify-center>
-
-                                                {{ row.item.api_name }}
-                                            </v-layout>
-                                            </td>
-                                            <td >
-                                            <v-layout justify-center>
-                                                {{ row.item.key }}
-                                            </v-layout>
-                                            </td>
+                                        <tr height="50px" class="wrap">
                                             <td>
-                                            <v-layout justify-end mx-auto>
-                                                <v-btn
-                                                    medium
-                                                    class="red fill-height justify-end align-end"
-                                                    @click="
-                                                        showRemoveConfirm(
-                                                            1,
-                                                            row.item
-                                                        )
-                                                    "
-                                                >
-                                                    DELETE</v-btn
-                                                >
-                                            </v-layout>
+                                                <v-layout justify-end>
+                                                    {{ row.item.key }}
+                                                </v-layout>
+                                            </td>
+                                            <td class="myTable">
+                                                <v-layout justify-end mx-auto>
+                                                    <v-btn
+                                                        medium
+                                                        class="red fill-height justify-end align-end"
+                                                        @click="
+                                                            showRemoveConfirm(
+                                                                1,
+                                                                row.item
+                                                            )
+                                                        "
+                                                    >
+                                                        DELETE</v-btn
+                                                    >
+                                                </v-layout>
                                             </td>
                                         </tr>
                                     </template>
                                 </v-data-table>
                             </v-layout>
                         </v-flex>
-
-
                     </v-row>
                     <v-layout>
                         <v-flex class="pb-0 pt-0">
@@ -226,35 +209,27 @@
                                 >
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
-                                            <td class="font-weight-bold">
-                                                 <v-layout justify-center>
-
-                                                {{ row.item.api_name }}
-                                                 </v-layout>
-                                            </td>
-                                            <td >
-                                                 <v-layout justify-center>
-
-                                                {{ row.item.key }}
-                                                 </v-layout>
+                                            <td class="myTable">
+                                                <v-layout justify-end>
+                                                    {{ row.item.key }}
+                                                </v-layout>
                                             </td>
 
-                                            <td >
-                                                 <v-layout justify-end mx-auto>
-
-                                                <v-btn
-                                                    medium
-                                                    class="red fill-height justify-end align-end"
-                                                    @click="
-                                                        showRemoveConfirm(
-                                                            2,
-                                                            row.item
-                                                        )
-                                                    "
-                                                >
-                                                    DELETE</v-btn
-                                                >
-                                                 </v-layout>
+                                            <td class="myTable">
+                                                <v-layout justify-end mx-auto>
+                                                    <v-btn
+                                                        medium
+                                                        class="red fill-height justify-end align-end"
+                                                        @click="
+                                                            showRemoveConfirm(
+                                                                2,
+                                                                row.item
+                                                            )
+                                                        "
+                                                    >
+                                                        DELETE</v-btn
+                                                    >
+                                                </v-layout>
                                             </td>
                                         </tr>
                                     </template>
@@ -355,17 +330,14 @@
             headers: [
                 {
                     sortable: false,
-                    text: "Domain Name",
-                    value: "api_name"
-                },
-                {
-                    sortable: false,
+                    divider: false,
                     text: "URL",
                     value: "key",
                     class: "key"
                 },
                 {
                     sortable: false,
+                    divider: false,
                     text: "",
                     value: "buttons",
                     class: "mydiv"
@@ -384,6 +356,7 @@
         }),
         methods: {
             initialize() {
+                console.log("initialize");
                 this.API_item = [
                     {
                         key: "fatosroute.southeastasia.cloudapp.azure.com"
@@ -481,8 +454,15 @@
                         }
                         break;
                 }
-
+                
                 this.warning_dialog = false;
+
+                if(this.API_item.length == 0 || this.IP_item.length == 0 || this.Bundle_item.length == 0){
+                    console.log('onsecurity event!');
+                    this.$emit('onSecurityEvent',true);
+                }
+
+                
             },
             cancelRemove() {
                 this.warning_dialog = false;
@@ -588,5 +568,16 @@
 
     .contents {
         align-self: flex-end;
+    }
+    .myTable {
+        border-left: 0px solid #dddddd;
+    }
+
+    table tr td {
+        border-left: 0px solid #dddddd;
+    }
+
+    table td + td {
+        border-left: 0px solid #dddddd;
     }
 </style>

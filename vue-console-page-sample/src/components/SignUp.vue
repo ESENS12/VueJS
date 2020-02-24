@@ -66,7 +66,7 @@
                                         <v-text-field
                                             v-model="userData.country_code"
                                             :rules="countryRules"
-                                            maxlength="2"
+                                            maxlength="3"
                                             required
                                             label="Country Code"
                                             class="green-input"

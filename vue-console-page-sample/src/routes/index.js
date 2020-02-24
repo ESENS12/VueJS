@@ -6,7 +6,7 @@ import APIKey from '@/components/APIKey'
 import Logout from '@/components/Logout'
 import Profile from '@/components/Profile'
 import Usage from '@/components/Usage'
-import DeveloperPage from '@/components/DeveloperPage'
+
 import Security from '@/components/Security'
 import store from '@/store'
 
@@ -14,17 +14,23 @@ Vue.use(Router)
 
 const requireAuth = () => (from, to, next) => {
 
-
-
   // console.log('from : ' ,  from);
   // console.log('to : ' , to);
   // var ref = document.referrer;
   // console.log('ref : ' , ref);
 
-  let hours = 2
+  let hours = 1
   let saved = sessionStorage.getItem('saved')
   if (saved && (new Date().getTime() - saved > hours * 60 * 60 * 1000)) {
-    sessionStorage.clear()
+  // if (saved && (new Date().getTime() - saved > 1000)) {
+      //로그아웃 처리해주는게 좋음
+    store
+      .dispatch("LOGOUT")
+      .then(() => {
+        // console.log("api token 발급 성공");
+        router.go();
+      })
+      .catch(({ message }) => (this.msg = message));
   }
 
   let apitoken = store.getters.getApiToken || "";
@@ -38,11 +44,13 @@ const requireAuth = () => (from, to, next) => {
   }
 
   let refToken = store.getters.getRefToken || "";
+  console.log('reftoken  : ' , refToken);
+
   if (refToken) {
     store
       .dispatch("refreshAppToken", { refToken })
       .then(() => {
-        // console.log("refreshAppToken end");
+        console.log("refreshAppToken end");
       })
       .catch(({ message }) => (this.msg = message));
   }
@@ -79,13 +87,13 @@ const router = new Router({
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()
     },
-    {
-      path: '/developer',
-      name: 'Developer Page',
-      component: DeveloperPage,
-      beforeEnter: requireAuth(),
-      beforeRouteUpdate: requireAuth()
-    },
+    // {
+    //   path: '/developer',
+    //   name: 'Developer Page',
+    //   component: DeveloperPage,
+    //   beforeEnter: requireAuth(),
+    //   beforeRouteUpdate: requireAuth()
+    // },
     {
       path: '/logout',
       name: 'Logout',

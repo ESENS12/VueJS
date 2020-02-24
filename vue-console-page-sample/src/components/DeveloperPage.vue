@@ -26,29 +26,36 @@
                             <img src="@/assets/maps.png" />
                         </v-avatar>
 
-                        <v-layout class="flex-column mx-auto fill-height justify-space-between align-content-space-around">
-                                    
-                        <v-card-text class="text-xs-center fill-height">
-                            <h4 class="card-title font-weight-bold">
-                                Maps
-                            </h4>
-                            <p class="card-description font-weight-black">
-                                Embed highly customized maps in your
-                                applications.
-                            </p>
-
-                            <v-spacer></v-spacer>
-
-                            <v-btn
-                                href="http://onemap.fatos.biz/map-control/bounds/"
-                                color="success"
-                                rounded
-                                class="font-weight mx-auto"
-                                >Go</v-btn
-                            >
-                        </v-card-text>
+                        <v-layout row wrap
+                            class="mx-auto fill-height justify-space-between align-content-space-between"
+                        >
+                                <v-flex>
+                                    <v-card-title class=" font-weight-bold"
+                                        >Maps</v-card-title
+                                    >
+                                </v-flex>
+                                <v-flex class="py-0 mb-12"> 
+                                    <v-card-text
+                                        class="card-description font-weight-black"
+                                    >
+                                        Embed highly customized maps in your
+                                        applications.
+                                    </v-card-text>
+                                </v-flex>
+                                <v-spacer></v-spacer>
+                                <v-flex  class="align-end fill-height justify-end">
+                                    <v-layout>
+                                        <v-spacer></v-spacer>
+                                    <v-btn
+                                        href="https://onemap.fatos.biz/map-control/bounds/"
+                                        color="success"
+                                        rounded
+                                        class="font-weight mx-auto"
+                                        >More</v-btn
+                                    >
+                                    </v-layout>
+                                </v-flex>
                         </v-layout>
-
                     </material-card>
                 </v-flex>
                 <v-flex ml-4 mr-4 mt-2 md4 sm6 lg3>
@@ -80,7 +87,7 @@
                                 color="success"
                                 rounded
                                 class="font-weight"
-                                >Go</v-btn
+                                >More</v-btn
                             >
                         </v-card-text>
                     </material-card>
@@ -113,7 +120,7 @@
                                 color="success"
                                 rounded
                                 class="font-weight"
-                                >Go</v-btn
+                                >More</v-btn
                             >
                         </v-card-text>
                     </material-card>
@@ -147,7 +154,7 @@
                                 color="success"
                                 rounded
                                 class="font-weight"
-                                >Go</v-btn
+                                >More</v-btn
                             >
                         </v-card-text>
                     </material-card>
@@ -180,7 +187,7 @@
                                 color="success"
                                 rounded
                                 class="font-weight"
-                                >Go</v-btn
+                                >More</v-btn
                             >
                         </v-card-text>
                     </material-card>

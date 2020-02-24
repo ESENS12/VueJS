@@ -43,7 +43,7 @@ export default new Vuex.Store({
 
 
     UpdateAppToken(state, { data }) {
-    
+      console.log('updateAppToken : ' , data );
       if (data.app_token) {
         state.app_token = data.app_token;
         sessionStorage.app_token = data.app_token;
@@ -52,17 +52,15 @@ export default new Vuex.Store({
     },
 
     GETAPITOKEN(state, { api_token }) {
-      // console.log('mutation GETAPITOKEN ', api_token);
+      console.log('mutation GETAPITOKEN ', api_token);
       state.api_token = api_token
-      sessionStorage.setItem('saved', new Date().getTime())
-
       //로컬스토리지에 저장
       // localStorage.api_token = api_token
     },
 
 
     LOGIN(state, { appToken, refToken }) {
-      // console.log('mutation login', appToken, ", ", refToken);
+      console.log('mutation login', appToken, ", ", refToken);
       state.app_token = appToken
       state.ref_token = refToken
 
@@ -73,7 +71,6 @@ export default new Vuex.Store({
     },
 
     LOGOUT(state) {
-        console.log("logout[mutataion]")
       // 토큰 정보 삭제
       state.app_token = null
       state.ref_token = null
@@ -149,7 +146,6 @@ export default new Vuex.Store({
     },
 
     LOGOUT({ commit }) {
-      console.log('logout![store]');
       commit('LOGOUT')
     },
   }

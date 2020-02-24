@@ -66,9 +66,23 @@
                             :key="i"
                             link
                         >
-                            <v-list-item-action>
+                            <v-list-item-action v-if="item.needAlert">
+                                <v-badge
+                                    color="error"
+                                    bordered
+                                    overlap
+                                    icon="mdi-alert-circle-check-outline"
+                                >
+                                    <v-icon>{{ item.icon }}</v-icon>
+                                </v-badge>
+
+                                <!-- <v-icon>{{ item.icon }}</!-->
+                            </v-list-item-action>
+
+                            <v-list-item-action v-else>
                                 <v-icon>{{ item.icon }}</v-icon>
                             </v-list-item-action>
+
                             <v-list-item-content>
                                 <v-list-item-title
                                     v-if="i === selected"
@@ -76,6 +90,7 @@
                                 >
                                     {{ item.text }}
                                 </v-list-item-title>
+
                                 <v-list-item-title
                                     v-else
                                     class="grey--text font-weight-bold"
@@ -83,13 +98,29 @@
                                     {{ item.text }}
                                 </v-list-item-title>
                             </v-list-item-content>
+                            <v-list-item-action> </v-list-item-action>
                         </v-list-item>
                     </template>
                 </v-list>
+                <v-layout class="justify-center align-end mt-12">
+                    <v-btn
+                        v-bind:href="this.developerUri"
+                        color="accent"
+                        @click="goDeveloper"
+                        minHeight="60px"
+                        minWidth="220px"
+                        class="font-weight-bold mx-auto mt-12"
+                    >
+                        DEVELOPER PAGE
+                        <v-icon large right dark
+                            >mdi-arrow-right-bold-box-outline</v-icon
+                        >
+                    </v-btn>
+                </v-layout>
             </v-navigation-drawer>
 
-            <v-content>
-                <router-view @snack-event="onSnack"></router-view>
+            <v-content class="pt-0">
+                <router-view @security-event="onSecurityEvent" @snack-event="onSnack"></router-view>
             </v-content>
         </v-app>
     </v-app>
@@ -97,7 +128,7 @@
 
 <script>
     import LoginPage from "@/components/LoginPage";
-    // import config from "@/config";
+    import config from "@/config";
     //var ref = document.referrer;
 
     export default {
@@ -115,15 +146,22 @@
         },
 
         created() {
+            this.developerUri = config.developerHost;
             let app_token = sessionStorage.app_token || "";
             if (app_token) {
                 this.isLogin = true;
+            } else {
+                this.isLogin = false;
             }
             //console.log("mounted!" , ref);
             // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
             // console.log("config host : ", config.requestHost);
             //개발중에는 로그인된걸로 치고 작업하자
             // this.onLogin();
+        },
+
+        goDeveloper() {
+            //config.uri 를 사용해야할지..
         },
 
         name: "App",
@@ -135,6 +173,7 @@
             source: String
         },
         data: () => ({
+            developerUri: "",
             snackColor: "error",
             snackContent: "Something wrong!",
             drawer: null,
@@ -144,14 +183,12 @@
             snackbar: false,
             //navigation drawer item list
             items: [
-                { icon: "mdi-key", text: "API Keys" },
-                { icon: "mdi-xml", text: "Developer Page" },
+                { icon: "mdi-key", text: "API Keys", needAlert: false },
+                { icon: "mdi-shield-lock", text: "Security", needAlert: true },
+                { icon: "mdi-chart-bar", text: "Usage", needAlert: false },
                 { divider: true },
-                { icon: "mdi-shield-lock", text: "Security" },
-                { icon: "mdi-chart-bar", text: "Usage" },
-                { divider: true },
-                { icon: "mdi-account", text: "Profile" },
-                { icon: "mdi-door", text: "Logout" }
+                { icon: "mdi-account", text: "Profile", needAlert: false },
+                { icon: "mdi-door", text: "Logout", needAlert: false }
 
                 // { icon: 'chat_bubble', text: 'Trash' },
                 // { icon: 'help', text: 'Help' },
@@ -160,6 +197,10 @@
             ]
         }),
         methods: {
+            //Security 설정 여부(경고 뱃지 show/hide 용)
+            onSecurityEvent(b_isNeedWarn){
+                console.log('onSecurity Event!' + b_isNeedWarn)
+            },
             onSnack(type, msg) {
                 this.snackColor = type;
                 this.snackContent = msg;
@@ -192,7 +233,7 @@
                         this.isLogin = false;
                         this.$router.replace({ name: "Login" });
                     })
-                    .catch(({ message }) => (this.msg = message));                
+                    .catch(({ message }) => (this.msg = message));
             },
 
             confirm: async function() {
