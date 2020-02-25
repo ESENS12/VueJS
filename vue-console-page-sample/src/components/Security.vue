@@ -77,7 +77,7 @@
                             <v-layout class="wrap justify-end">
                                 <v-data-table
                                     :headers="headers"
-                                    :items="API_item"
+                                    :items="URL_item"
                                     :calculate-widths="true"
                                     :dense="true"
                                     class="elevation-1 mb-0"
@@ -86,11 +86,11 @@
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
                                             <td>
-                                                <v-layout justify-end>
-                                                    {{ row.item.key }}
+                                                <v-layout justify-center>
+                                                    {{ row.item }}
                                                 </v-layout>
                                             </td>
-                                            <td class="myTable">
+                                             <td wrap width="1px">
                                                 <v-layout justify-end mx-auto>
                                                     <v-btn
                                                         medium
@@ -149,12 +149,13 @@
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
                                             <td>
-                                                <v-layout justify-end>
-                                                    {{ row.item.key }}
+                                                <v-layout justify-center>
+                                                    {{ row.item }}
                                                 </v-layout>
                                             </td>
-                                            <td class="myTable">
-                                                <v-layout justify-end mx-auto>
+                                            
+                                            <td wrap width="1px">
+                                                <v-layout justify-end wrap mx-auto>
                                                     <v-btn
                                                         medium
                                                         class="red fill-height justify-end align-end"
@@ -209,14 +210,14 @@
                                 >
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
-                                            <td class="myTable">
-                                                <v-layout justify-end>
-                                                    {{ row.item.key }}
+                                            <td>
+                                                <v-layout justify-center>
+                                                    {{ row.item }}
                                                 </v-layout>
                                             </td>
 
-                                            <td class="myTable">
-                                                <v-layout justify-end mx-auto>
+                                            <td wrap width="1px">
+                                                <v-layout justify-end >
                                                     <v-btn
                                                         medium
                                                         class="red fill-height justify-end align-end"
@@ -254,6 +255,9 @@
 
 <script>
     // import Archive from '@/contents/Archive';
+    import config from "@/config";
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
     export default {
         beforeMount() {
@@ -315,7 +319,7 @@
                 index: 0,
                 item: null
             },
-            API_item: [],
+            URL_item: [],
             IP_item: [],
             Bundle_item: [],
             dialog: false,
@@ -357,60 +361,358 @@
         methods: {
             initialize() {
                 console.log("initialize");
-                this.API_item = [
-                    {
-                        key: "fatosroute.southeastasia.cloudapp.azure.com"
-                    },
-                    {
-                        key: "fatostile.southeastasia.cloudapp.azure.com"
-                    },
-                    {
-                        key: "fatostileapac.southeastasia.cloudapp.azure.com"
-                    },
-                    {
-                        key: "fatosmap.southeastasia.cloudapp.azure.com"
-                    },
-                    {
-                        key: "fatostracker.southeastasia.cloudapp.azure.com"
-                    }
+
+                //sample data
+                this.URL_item = [
+                   ""
                 ];
 
                 this.IP_item = [
-                    {
-                        key: "40.119.205.206"
-                    },
-                    {
-                        key: "52.163.200.90"
-                    },
-                    {
-                        key: "13.76.4.241"
-                    }
+                   ""
                 ];
 
                 this.Bundle_item = [
-                    {
-                        key: "fatos.co.kr.fatosdemo"
-                    },
-                    {
-                        key: "kr.fatos.tnavi"
-                    },
-                    {
-                        key: "kr.fatos.tnavi.cdg"
-                    },
-                    {
-                        key: "com.nostra.s.nostraapi"
-                    },
-                    {
-                        key: "developers.fatos.biz"
-                    }
+                   ""
                 ];
+
+                //app토큰은 있는데 keyToken이 없을때(refresh한 경우)
+                if (
+                    this.$store.getters.getAppToken &&
+                    !this.$store.getters.getKeyToken
+                ) {
+                    this.$http
+                        .post(
+                            `${config.requestHost}/console/getRegisteredKeybyUser`,
+                            {
+                                app_token: this.$store.getters.getAppToken
+                            },
+                            `${myHeaders}`
+                        )
+                        .then(({ data }) => {
+                            //key token 재발급
+
+                            if (data.data.length == 0) {
+                                // todo 키가 없을 수 없는데(로그인시 발급 하도록 되어있음)... 없을때 처리?
+                                // this.GenerateNewKey();
+                                // this.userData = {};
+                            } else {
+                                this.$store
+                                    .dispatch("GETKEYTOKEN", {
+                                        key_token:
+                                            data.data[data.data.length - 1].id
+                                    })
+                                    .then(() => {
+                                        //데이터 세팅
+                                        this.requestGetServiceUrl();
+                                        this.requestGetServiceIpAddr();
+                                        this.requestGetServiceAppId();
+                                    })
+                                    .catch(
+                                        ({ message }) => (this.msg = message)
+                                    );
+                            }
+                        })
+                        .catch(error => {
+                            console.error("getRegistredKeybyUser err", error);
+                        });
+                } else {
+                    this.requestGetServiceUrl();
+                    this.requestGetServiceIpAddr();
+                    this.requestGetServiceAppId();
+                }
+            },
+
+            //key token 재발급
+            getKeyData() {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getRegisteredKeybyUser`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log(
+                            "recieved getRegisteredKeybyUser data : ",
+                            data.data.length
+                        );
+
+                        if (data.data.length == 0) {
+                            // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
+                            this.GenerateNewKey();
+                            this.userData = {};
+                        } else {
+                            console.log(
+                                "used key : ",
+                                data.data[data.data.length - 1].id
+                            );
+                            this.$store
+                                .dispatch("GETKEYTOKEN", {
+                                    key_token:
+                                        data.data[data.data.length - 1].id
+                                })
+                                .then(() => {
+                                    console.log("after getKeyToken[store]");
+                                    this.$emit("login-event");
+                                })
+                                .catch(({ message }) => (this.msg = message));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            },
+
+            /** /console/requestGetServiceUrl
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+                "result": "OK",
+                "service_url": [
+                    "fatos.biz",
+                    "google.com",
+                    "example.com"
+                ]
+                }
+             */
+            requestGetServiceUrl() {
+                console.log(
+                    "requestGetServiceUrl ",
+                    this.$store.getters.getKeyToken
+                );
+
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceUrl?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            // console.log("url response.data : ", response.data);
+                            this.URL_item = this.checkResultIsEmpty(
+                                response.data.service_url
+                            );
+
+                            // this.URL_item = response.data.service_url;
+                        } else {
+                            console.error(
+                                "requestGetServiceUrl error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("request Item failed : ", err);
+                    });
+            },
+
+            /** /console/requestGetServiceIpAddr
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+                "result": "OK",
+                "service_ipaddr": [
+                    "1.1.1.1",
+                    "2.2.2.2",
+                    "3.3.3.3"
+                ]
+                }
+             */
+            requestGetServiceIpAddr() {
+                console.log("requestGetServiceIpAddr");
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceIpAddr?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            console.log("ip response.data : ", response.data);
+                            this.IP_item = this.checkResultIsEmpty(
+                                response.data.service_ipaddr
+                            );
+                            // this.IP_item = response.data.service_ipaddr;
+                        } else {
+                            console.error(
+                                "requestGetServiceIpAddr error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestGetServiceIpAddr failed : ", err);
+                    });
+            },
+
+            /** /console/getServiceAppId
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+               "result": "OK",
+                "service_appid": [
+                    "biz.fatos.testapp",
+                    "biz.fatos.testapp1",
+                    "biz.fatos.testapp2"
+                ]
+                }
+             */
+            requestGetServiceAppId() {
+                console.log("requestGetServiceAppId");
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceAppId?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            // console.log("appId response.data : ", response.data);
+                            this.Bundle_item = this.checkResultIsEmpty(
+                                response.data.service_appid
+                            );
+                        } else {
+                            console.error(
+                                "requestGetServiceAppId error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestGetServiceAppId failed : ", err);
+                    });
+            },
+
+            /** /console/setServiceUrl
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * @bodyParam url_array : string 
+             * 
+             * @returns
+             *  {
+                "result":"OK",
+                "message":""
+                }
+             */
+            requestSetServiceUrl() {
+                console.log("requestSetServiceUrl");
+
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/setServiceUrl?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        { url_array: this.URL_item },
+                        `${myHeaders}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            console.log("response.data : ", response.data);
+                            // this.requestGetServiceUrl();
+                            // this.URL_item = response.data.service_url;
+                        } else {
+                            console.error(
+                                "requestSetServiceUrl error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestSetServiceUrl failed : ", err);
+                    });
+            },
+
+            /** /console/setServiceIpAddr
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * @bodyParam ip_array : string 
+             * 
+             * @returns
+             *  {
+                "result":"OK",
+                "message":""
+                }
+             */
+            requestSetServiceIpAddr() {
+                console.log("requestSetServiceIpAddr item : " ,this.IP_item);
+
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/setServiceIpAddr?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        { ip_array: this.IP_item },
+                        `${myHeaders}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            console.log("response.data : ", response.data);
+                            // this.URL_item = response.data.service_url;
+                            // this.requestGetServiceIpAddr();
+                        } else {
+                            console.error(
+                                "requestSetServiceIpAddr error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestSetServiceIpAddr failed : ", err);
+                    });
+            },
+
+            /** /console/setServiceAppId
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * @bodyParam id_array : string 
+             * 
+             * @returns
+             *  {
+                "result":"OK",
+                "message":""
+                }
+             */
+            requestSetServiceAppId() {
+                console.log("requestSetServiceAppId");
+
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/setServiceAppId?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        { id_array: this.Bundle_item },
+                        `${myHeaders}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            console.log("response.data : ", response.data);
+
+                            // this.URL_item = response.data.service_url;
+                            // this.requestGetServiceAppId();
+                        } else {
+                            console.error(
+                                "requestSetServiceAppId error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestSetServiceAppId failed : ", err);
+                    });
+            },
+
+            //getserviceUrl, getserviceIpAddr, getServiceAppId 의 초기값 result가 공백 배열로 오기떄문에 검증
+            checkResultIsEmpty(array) {
+                if (array.length == 1) {
+                    if (array[0] === "") {
+                        return [];
+                    }
+                }
+                return array; //검증 이상 없으면 그대로 리턴
             },
 
             removeDomain(item) {
                 console.log(
                     "removeDomain" +
-                        this.API_item.splice(this.API_item.indexOf(item), 1)
+                        this.URL_item.splice(this.URL_item.indexOf(item), 1)
                 );
+                this.requestSetServiceUrl();
             },
 
             removeIp(item) {
@@ -418,6 +720,7 @@
                     "removeIp" +
                         this.IP_item.splice(this.IP_item.indexOf(item), 1)
                 );
+                this.requestSetServiceIpAddr();
             },
 
             removeBundle(item) {
@@ -428,6 +731,7 @@
                             1
                         )
                 );
+                this.requestSetServiceAppId();
             },
 
             showRemoveConfirm(itemIndex, item) {
@@ -454,15 +758,17 @@
                         }
                         break;
                 }
-                
+
                 this.warning_dialog = false;
 
-                if(this.API_item.length == 0 || this.IP_item.length == 0 || this.Bundle_item.length == 0){
-                    console.log('onsecurity event!');
-                    this.$emit('onSecurityEvent',true);
+                if (
+                    this.URL_item.length == 0 ||
+                    this.IP_item.length == 0 ||
+                    this.Bundle_item.length == 0
+                ) {
+                    console.log("onsecurity event!");
+                    this.$emit("onSecurityEvent", true);
                 }
-
-                
             },
             cancelRemove() {
                 this.warning_dialog = false;
@@ -506,28 +812,26 @@
                 this.dialog = true;
             },
 
-            saveDialog(hint, description, modalType) {
-                console.log("content :" + this.ModalData.content);
-                switch (modalType) {
+            saveDialog() {
+                console.log("content :", this.ModalData.content);
+                console.log("modalType : ", this.ModalData.modalType);
+                switch (this.ModalData.modalType) {
                     case 0: //Domain Name
                         {
-                            // this.ModalData.hint = "e.g) onemap.fatos.biz";
-                            // this.ModalData.description = "Put Your Domain Name"
-                            // this.ModalData.modalType = 0;
+                            this.URL_item.push(this.ModalData.content);
+                            this.requestSetServiceUrl();
                         }
                         break;
                     case 1: //IP Address
                         {
-                            // this.ModalData.hint = "e.g) 192.168.0.1";
-                            // this.ModalData.description = "Put Your Application Server Public IP Address"
-                            // this.ModalData.modalType = 1;
+                            this.IP_item.push(this.ModalData.content);
+                            this.requestSetServiceIpAddr();
                         }
                         break;
                     case 2: //Bundle ID
                         {
-                            // this.ModalData.hint = "e.g) biz.fatos.onemap";
-                            // this.ModalData.description = "Put Your App Bundle ID"
-                            // this.ModalData.modalType = 2;
+                            this.Bundle_item.push(this.ModalData.content);
+                            this.requestSetServiceAppId();
                         }
                         break;
                 }
@@ -569,15 +873,13 @@
     .contents {
         align-self: flex-end;
     }
-    .myTable {
-        border-left: 0px solid #dddddd;
-    }
+    
 
     table tr td {
-        border-left: 0px solid #dddddd;
+        border-left: 1px solid #dddddd;
     }
 
     table td + td {
-        border-left: 0px solid #dddddd;
+        border-left: 1px solid #dddddd;
     }
 </style>

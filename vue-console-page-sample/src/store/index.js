@@ -18,12 +18,13 @@ export default new Vuex.Store({
     api_token: null,     //API 토큰
     app_token: null,   //app 토큰(유효시간 10분)
     ref_token: null, //app_token 리프레시 용도(1일)
+    key_token: null, //API KEY 토큰
   },
 
   getters: {
     getApiToken: (state) => state.api_token,
     getConfig: (state) => state.config,
-
+    getKeyToken : (state) => state.key_token,
     getAppToken: (state) => state.app_token,
     getRefToken: (state) => state.ref_token,
   },
@@ -42,30 +43,35 @@ export default new Vuex.Store({
     },
 
 
-    UpdateAppToken(state, { data }) {
+    UpdateAppToken(state, { data, resolve }) {
       console.log('updateAppToken : ' , data );
       if (data.app_token) {
+        resolve(true);
         state.app_token = data.app_token;
-        sessionStorage.app_token = data.app_token;
+        // sessionStorage.app_token = data.app_token;
       }
 
     },
 
     GETAPITOKEN(state, { api_token }) {
-      console.log('mutation GETAPITOKEN ', api_token);
+      // console.log('GETAPITOKEN[mutation] ', api_token);
       state.api_token = api_token
       //로컬스토리지에 저장
       // localStorage.api_token = api_token
     },
 
+    GETKEYTOKEN(state, { key_token }) {
+      console.log('GETKEYTOKEN[mutations] ', key_token);
+      state.key_token = key_token
+    },
 
     LOGIN(state, { appToken, refToken }) {
-      console.log('mutation login', appToken, ", ", refToken);
+      // console.log('mutation login', appToken, ", ", refToken);
       state.app_token = appToken
       state.ref_token = refToken
 
       //로컬스토리지에 저장
-      sessionStorage.app_token = appToken
+      // sessionStorage.app_token = appToken
       sessionStorage.ref_token = refToken
       sessionStorage.setItem('saved', new Date().getTime())
     },
@@ -93,13 +99,15 @@ export default new Vuex.Store({
     },
 
 
-    refreshAppToken({ commit }, { refToken }) {
+    refreshAppToken({ commit }, { refToken, resolve }) {
       let resourceHost = config.requestHost;
 
       if (refToken) {
         axios.post(`${resourceHost}/auth/refreshAppToken/`, { ref_token: refToken }, `${myHeaders}`)
           .then(({ data }) => {
-            commit('UpdateAppToken', {data : data})
+            commit('UpdateAppToken', {data : data, resolve:resolve})
+            console.log('getToken success[actions]');
+            
           }
           ).catch(error => {
             console.error("err: " + error);
@@ -120,6 +128,13 @@ export default new Vuex.Store({
         ).catch(error => {
           console.error("err: " + error);
         })
+    },
+
+    
+
+    GETKEYTOKEN({ commit } ,{key_token}) {
+      console.log('GETKEYTOKEN[actions] ', key_token);
+      commit('GETKEYTOKEN', { key_token : key_token})
     },
 
 

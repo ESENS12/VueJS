@@ -29,8 +29,8 @@
                 <v-layout v-else>
                     <material-card
                         color="blue"
-                        title="Login"
-                        text="Easily And Quick Login"
+                        title="SignIn"
+                        text="Easily And Quick SignIn"
                     >
                         <v-form
                             ref="form"
@@ -44,6 +44,7 @@
                                             v-model="email"
                                             :rules="emailRules"
                                             required
+                                            @keyup.13="checkForm"
                                             label="Email Address"
                                             class="green-input"
                                         />
@@ -54,6 +55,7 @@
                                         <v-text-field
                                             :rules="passwordRules"
                                             required
+                                            @keyup.13="checkForm"
                                             v-model="password"
                                             label="Password"
                                             type="password"
@@ -154,13 +156,13 @@
 
                     if (!ApiToken) {
                         this.$store
-                            .dispatch("GETAPITOKEN" )
+                            .dispatch("GETAPITOKEN")
                             .then(() => {
-                                  this.Login();
+                                this.Login();
                             })
                             .catch(({ message }) => (this.msg = message));
                     } else {
-                         this.Login();
+                        this.Login();
                     }
 
                     // this.snackbar = true
@@ -189,7 +191,7 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        this.$emit("login-event");
+                       
                         // console.log("recieved login data : ", data);
 
                         var app_token = data.app_token;
@@ -200,7 +202,10 @@
                                 appToken: app_token,
                                 refToken: ref_token
                             })
-                            .then(() => {})
+                            .then(() => {
+                                //app token 생성 후 key Data 확인
+                                this.getKeyData();
+                            })
                             .catch(({ message }) => (this.msg = message));
                     })
                     .catch(error => {
@@ -217,6 +222,73 @@
                 }
             },
 
+            getKeyData() {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getRegisteredKeybyUser`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log(
+                            "recieved getRegisteredKeybyUser data : ",
+                            data.data.length
+                        );
+
+                        if (data.data.length == 0) {    // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
+                            this.GenerateNewKey();
+                            this.userData = {};
+                        } else {
+                            console.log('used key : ',data.data[data.data.length-1].id );
+                            this.$store
+                                .dispatch("GETKEYTOKEN", {
+                                    key_token: data.data[data.data.length-1].id
+                                })
+                                .then(() => {
+                                    console.log("after getKeyToken[store]");
+                                    this.$emit("login-event");
+                                })
+                                .catch(({ message }) => (this.msg = message));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            },
+
+            GenerateNewKey() {
+                let siteId = -1; //site id
+                if (config.developerHost.includes("onemap")) {
+                    siteId = "34"; //onemap(sla)
+                } else if (config.developerHost.includes("nostramap")) {
+                    siteId = "26"; //nostramap(CDG)
+                } else {
+                    siteId = "1"; //fatos
+                }
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/generateNewKey?site_id=${siteId}&app_token=${this.$store.getters.getAppToken}`,
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log("generateNewKey Success : ", data);
+                        this.$store
+                            .dispatch("GETKEYTOKEN", {
+                                key_token: data.key
+                            })
+                            .then(() => {
+                                console.log("after generateNewKey[store]");
+                                this.$emit("login-event");
+                            })
+                            .catch(({ message }) => (this.msg = message));
+                    })
+                    .catch(err => {
+                        console.error("generateNew Key Error! : ", err);
+                    });
+            },
+
             async SignUp() {
                 this.$http
                     .post(config.requestHost + "/auth/addUser", this.payload)
@@ -230,6 +302,12 @@
                 // console.log("SignUp!");
             },
 
+            keyEvent(e) {
+                console.log("keyEvent ", e);
+                if (e.keyCode === 13) {
+                    this.checkForm();
+                }
+            },
             onSnack(type, msg) {
                 this.$emit("snack-event", type, msg);
             },

@@ -13,14 +13,14 @@ import store from '@/store'
 Vue.use(Router)
 
 const requireAuth = () => (from, to, next) => {
-
   // console.log('from : ' ,  from);
   // console.log('to : ' , to);
   // var ref = document.referrer;
   // console.log('ref : ' , ref);
-
+  console.log('requireAuth');
   let hours = 1
   let saved = sessionStorage.getItem('saved')
+
   if (saved && (new Date().getTime() - saved > hours * 60 * 60 * 1000)) {
   // if (saved && (new Date().getTime() - saved > 1000)) {
       //로그아웃 처리해주는게 좋음
@@ -43,19 +43,45 @@ const requireAuth = () => (from, to, next) => {
       .catch(({ message }) => (this.msg = message));
   }
 
-  let refToken = store.getters.getRefToken || "";
-  console.log('reftoken  : ' , refToken);
-
-  if (refToken) {
-    store
-      .dispatch("refreshAppToken", { refToken })
-      .then(() => {
-        console.log("refreshAppToken end");
-      })
-      .catch(({ message }) => (this.msg = message));
+  const getToken = function(){
+      return new Promise(function(resolve){
+        let refToken = store.getters.getRefToken || sessionStorage.ref_token;
+        // console.log('reftoken  : ' , refToken);
+      
+        store
+          .dispatch("refreshAppToken", { refToken:refToken , resolve: resolve })
+          .then(() => {
+            // resolve(true);
+            // console.log("refreshAppToken end");
+          })
+          .catch(({ message }) => (
+              this.msg = message
+              
+            ));
+      });
   }
 
-  next();
+  getToken().then(function (result){
+      if(result === true){
+          console.log('getToken success[route resolve]');
+          next();
+      }
+  });
+
+  // let refToken = store.getters.getRefToken || sessionStorage.ref_token;
+  // // console.log('reftoken  : ' , refToken);
+
+  // if (refToken) {
+  //   store
+  //     .dispatch("refreshAppToken", { refToken })
+  //     .then(() => {
+  //       // console.log("refreshAppToken end");
+  //     })
+  //     .catch(({ message }) => (this.msg = message));
+  // }
+
+
+  // next();
   // console.log(" stored accesstoken " + this.$store.getAccessToken);
   // const {accessToken} = localStorage
   // console.log("accessToken : ",accessToken);

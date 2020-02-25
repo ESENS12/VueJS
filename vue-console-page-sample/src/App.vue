@@ -120,7 +120,10 @@
             </v-navigation-drawer>
 
             <v-content class="pt-0">
-                <router-view @security-event="onSecurityEvent" @snack-event="onSnack"></router-view>
+                <router-view
+                    @security-event="onSecurityEvent"
+                    @snack-event="onSnack"
+                ></router-view>
             </v-content>
         </v-app>
     </v-app>
@@ -147,7 +150,7 @@
 
         created() {
             this.developerUri = config.developerHost;
-            let app_token = sessionStorage.app_token || "";
+            let app_token = sessionStorage.ref_token || "";
             if (app_token) {
                 this.isLogin = true;
             } else {
@@ -162,6 +165,12 @@
 
         goDeveloper() {
             //config.uri 를 사용해야할지..
+        },
+
+        watch: {
+            // $route(to) {
+                // document.title = "FATOS Console";
+            // }
         },
 
         name: "App",
@@ -198,8 +207,8 @@
         }),
         methods: {
             //Security 설정 여부(경고 뱃지 show/hide 용)
-            onSecurityEvent(b_isNeedWarn){
-                console.log('onSecurity Event!' + b_isNeedWarn)
+            onSecurityEvent(b_isNeedWarn) {
+                console.log("onSecurity Event!" + b_isNeedWarn);
             },
             onSnack(type, msg) {
                 this.snackColor = type;

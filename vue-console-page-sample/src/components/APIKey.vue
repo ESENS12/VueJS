@@ -5,7 +5,7 @@
                 <v-row>
                     <v-flex xs12 md6 py-0>
                         <material-card
-                            minHeight="300px"
+                            minHeight="316px"
                             color="purple"
                             title="Contact Information"
                             class="mb-0 mt-8"
@@ -20,9 +20,9 @@
                                             <v-card-text
                                                 class="justify-center text-left align-center h4 font-weight-bold"
                                             >
-                                                Contact Period :
+                                                Expire Date :
                                                 {{
-                                                    this.userData.contactPeriod
+                                                    this.userData.expireDate
                                                 }}</v-card-text
                                             >
                                         </v-flex>
@@ -33,6 +33,9 @@
                                                 Payment Plan :
 
                                                 <v-chip
+                                                    v-if="
+                                                        this.userData.userName
+                                                    "
                                                     color="primary"
                                                     class="ml-2"
                                                 >
@@ -46,7 +49,9 @@
                                                 class="justify-center text-left align-center h4 font-weight-bold"
                                             >
                                                 User :
-                                                {{ this.userData.userName }}</v-card-text
+                                                {{
+                                                    this.userData.userName
+                                                }}</v-card-text
                                             >
                                         </v-flex>
                                     </v-layout>
@@ -56,15 +61,17 @@
                     </v-flex>
                     <v-flex xs12 md6 py-0>
                         <material-card
-                            minHeight="300px"
+                            minHeight="316px"
                             color="blue"
                             title="API Key"
                             class="mb-0 mt-8"
                         >
                             <v-row>
                                 <v-flex>
-                                    <v-card-text class="mx-auto" xs12>
-                                        {{ this.userData.API_KEY }}
+                                    <v-card-text class="mx-auto " xs12>
+                                        <h3 class="font-weight-bold">
+                                            {{ this.userData.API_KEY }}
+                                        </h3>
                                     </v-card-text>
                                 </v-flex>
                                 <v-flex class="align-center">
@@ -80,7 +87,7 @@
                                             >
                                         </v-flex>
 
-                                        <v-flex class="align-center">
+                                        <!-- <v-flex class="align-center">
                                             <v-btn
                                                 medium
                                                 class="green fill-height align-center"
@@ -88,7 +95,7 @@
                                             >
                                                 RE-GENERATE KEY</v-btn
                                             >
-                                        </v-flex>
+                                        </v-flex> -->
                                     </v-layout>
                                 </v-flex>
                             </v-row>
@@ -120,11 +127,12 @@
                                 <v-flex sm12 xs12 md10 lg10>
                                     <v-data-table
                                         :headers="headers"
-                                        :items="API_item"
+                                        :items="userData.API_item"
                                         :calculate-widths="true"
                                         :dense="true"
+                                        :divider="true"
                                         :hide-default-footer="true"
-                                        class="wrap elevation-1 mb-0 py-2 mx-auto"
+                                        class="wrap elevation-1 mx-auto"
                                     >
                                         <template v-slot:item="column">
                                             <tr>
@@ -152,7 +160,24 @@
                                                         <v-icon
                                                             v-if="
                                                                 column.item
-                                                                    .map_SUBSCRIBE
+                                                                    .mobile_map_SUBSCRIBE
+                                                            "
+                                                            class=""
+                                                        >
+                                                            mdi-check-bold
+                                                        </v-icon>
+                                                    </v-layout>
+                                                </td>
+
+                                                <td
+                                                    :class="headers[1].class"
+                                                    width="100px"
+                                                >
+                                                    <v-layout justify-center>
+                                                        <v-icon
+                                                            v-if="
+                                                                column.item
+                                                                    .web_map_SUBSCRIBE
                                                             "
                                                             class=""
                                                         >
@@ -269,13 +294,12 @@
     export default {
         beforeMount() {
             // console.log('password : ' + password);
+            this.initialize();
         },
 
         mounted() {},
 
         created() {
-            this.initialize();
-
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플
             // this.$http.get('/sendMail')
             //     .then((response) => {
@@ -297,10 +321,9 @@
             userData: {
                 available: "100,000",
                 userName: "FATOS",
-                contactPeriod: "2020-02-20 ~ 2021-02-19",
+                expireDate: "",
                 API_item: {},
-                API_KEY:
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoiYmV0YW1hcHMuZmF0b3MuYml6IiwiZW1haWwiOiJnaGRsZGlkMTJAZ21haWwuY29tIiwiaWF0IjoxNTgyMjU3Mzg4LCJleHAiOjE1ODIyNTc5ODh9.c3LtspfY9YdzjEZxhbWExgPOgU9-jZUH6RX8m3S1CRE"
+                API_KEY: ""
             },
 
             headers: [
@@ -315,7 +338,14 @@
                 },
                 {
                     sortable: false,
-                    text: "Map",
+                    text: "Mobile Map",
+                    value: "subscsribe",
+                    align: "center",
+                    class: "myTable"
+                },
+                {
+                    sortable: false,
+                    text: "Web Map",
                     value: "subscsribe",
                     align: "center"
                 },
@@ -358,6 +388,45 @@
         methods: {
             Search: true,
 
+            /** /console/getRegisteredKeybyUser
+             * @bodyParam app_token : string
+             * 
+             * @returns
+             *  {
+                "result": "OK",
+                "data": [
+                    {
+                        "id": "4o0MLT-spU1_ldR2gVrmh80tMhWlxzJ7Rj9mlRPWvj0",
+                        "use": 1,
+                        "create_date": "2020-02-24T07:41:12.674Z",
+                        "email": "user@mail.com"
+                    },
+                    {
+                        "id": "t1WMprO-NF-bh8_yE5bCANSrY1NxA_Kq-NCva3w1K4I",
+                        "use": 0,
+                        "create_date": "2020-02-24T07:17:37.691Z",
+                        "email": "user@mail.com"
+                    }
+                ]
+            }
+             */
+
+            getKeyInfo() {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getKeyInfo`,
+                        {
+                            app_token: this.$store.getters.getAppToken,
+                            key: this.$store.getters.getKeyToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log("data :", data.data);
+                        this.setServiceAvailable(data.data);
+                    });
+            },
+
             getRegisteredKeyByUser() {
                 this.$http
                     .post(
@@ -372,14 +441,34 @@
                             "recieved getRegisteredKeybyUser data : ",
                             data.data.length
                         );
+
                         if (data.data.length == 0) {
+                            //등록된 키가 없으면 하나 생성해야한다.
 
                             this.userData = {};
+                        } else {
+                            this.userData.API_KEY =
+                                data.data[data.data.length - 1].id || "";
+                            this.userData.expireDate =
+                                data.data[data.data.length - 1].expireDate ||
+                                "unlimited";
 
-                        }else{
+                            this.$http
+                                .post(
+                                    `${config.requestHost}/console/getKeyInfo`,
+                                    {
+                                        app_token: this.$store.getters
+                                            .getAppToken,
+                                        key: this.userData.API_KEY
+                                    },
+                                    `${myHeaders}`
+                                )
+                                .then(({ data }) => {
+                                    console.log("data :", data.data);
+                                    this.setServiceAvailable(data.data);
+                                });
                             //TODO 유저데이터 세팅
                         }
-                        
 
                         // this.$store
                         //     .dispatch("LOGIN", {
@@ -399,6 +488,95 @@
                     });
             },
 
+            /**
+             * 
+             *  mobile_map_SUBSCRIBE: true,
+             *  web_map_SUBSCRIBE: true,
+                search_SUBSCRIBE: true,
+                geofencing_SUBSCRIBE: false,
+                routing_SUBSCRIBE: true,
+                analyze_SUBSCRIBE: true,
+                advanced_SUBSCRIBE: false
+            */
+            //키리스트 service_id 조회해서 사용가능 여부 체크
+            setServiceAvailable(keyList) {
+                for (let item of keyList) {
+                    let service_id = item.service_id || "";
+
+                    switch (service_id) {
+                        case "1":
+                            {
+                                //webmap
+                                this.userData.API_item[0].web_map_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "2":
+                            {
+                                //mobileMap
+                                this.userData.API_item[0].mobile_map_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "4":
+                            {
+                                //RP
+                                this.userData.API_item[0].routing_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "6":
+                            {
+                                //search
+                                this.userData.API_item[0].search_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "9":
+                            {
+                                //geofencing
+                                this.userData.API_item[0].geofencing_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "200":
+                            {
+                                //analyze
+                                this.userData.API_item[0].analyze_SUBSCRIBE = true;
+                            }
+                            break;
+                        case "11":
+                            {
+                                //adas
+                                this.userData.API_item[0].advanced_SUBSCRIBE = true;
+                            }
+                            break;
+                    }
+                }
+                console.log(this.userData.API_item[0]);
+            },
+
+            /**
+             *
+             *  1: Web Map
+             *  2: Mobile Map
+             *  3: Map Download
+             *  4: RP
+             *  5: RP Truck
+             *  6: Search POI
+             *  7: Forward Geocoding
+             *  8: Reverse Geocoding
+             *  9: Geofencing
+             *  10 : MM
+             *  11 : ADAS
+             *  12 : Fleet
+             *  1001 : Tracker
+             *  1002 : Tracker
+             *  1003 : Tracker
+             *  1004 : Tracker
+             *  100 : Tracking
+             *  200 : Analyze
+             *
+             *
+             *  표출항목
+             *
+             */
+
             //유저한테 등록된 키가 없을때 레이아웃 변경
             UserhasNotKey() {},
 
@@ -407,15 +585,17 @@
                 this.userData.API_item = [
                     {
                         usage: "Usage status",
-                        map_SUBSCRIBE: true,
+
+                        mobile_map_SUBSCRIBE: false,
+                        web_map_SUBSCRIBE: false,
                         search_SUBSCRIBE: true,
                         geofencing_SUBSCRIBE: false,
-                        routing_SUBSCRIBE: true,
-                        analyze_SUBSCRIBE: true,
+                        routing_SUBSCRIBE: false,
+                        analyze_SUBSCRIBE: false,
                         advanced_SUBSCRIBE: false
                     }
                 ];
-
+                // 로그인 이후에 얻어와서 관리하도록
                 this.getRegisteredKeyByUser();
             },
             CopyKey() {
@@ -423,7 +603,7 @@
                     var dummy = document.createElement("textarea");
                     document.body.appendChild(dummy);
 
-                    dummy.value = this.API_KEY;
+                    dummy.value = this.userData.API_KEY;
                     dummy.select();
                     document.execCommand("copy");
                     document.body.removeChild(dummy);
@@ -440,6 +620,7 @@
                 const res = await this.$dialog.confirm({
                     title: "Regenerate key",
                     text:
+                        // "Do you really want to Regenerate Key? Existing keys are deleted",
                         "Do you really want to Regenerate Key? Existing keys are deleted",
                     icon: "warning"
                 });
@@ -458,6 +639,14 @@
 </script>
 
 <style>
+    table th + th {
+        border-left: 100px solid #dddddd;
+    }
+
+    table td + td {
+        border-left: 100px solid #dddddd;
+    }
+
     #keep .v-navigation-drawer__border {
         display: none;
     }
@@ -470,14 +659,11 @@
         background-color: yellow;
     }
 
-    .background-yellow {
-        border-right: 1px solid #dddddd;
-    }
-    /* table th + th {
+    .myTable {
         border-left: 1px solid #dddddd;
     }
 
-    table td + td {
-        border-left: 1px solid #dddddd;
-    } */
+    .background-yellow {
+        border-right: 1px solid #dddddd;
+    }
 </style>

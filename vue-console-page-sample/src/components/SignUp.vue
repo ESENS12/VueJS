@@ -52,7 +52,7 @@
                                         />
                                     </v-flex>
 
-                                    <v-flex xs8 md8>
+                                    <v-flex xs12 md12>
                                         <v-text-field
                                             v-model="userData.name"
                                             :rules="nameRules"
@@ -62,7 +62,7 @@
                                         />
                                     </v-flex>
 
-                                    <v-flex xs4 md4>
+                                    <!-- <v-flex xs4 md4>
                                         <v-text-field
                                             v-model="userData.country_code"
                                             :rules="countryRules"
@@ -71,7 +71,7 @@
                                             label="Country Code"
                                             class="green-input"
                                         />
-                                    </v-flex>
+                                    </v-flex> -->
 
                                     <v-flex xs12 md12>
                                         <v-text-field
@@ -152,8 +152,8 @@
                 email: "",
                 name: "",
                 api_token: "",
-                country_code: "",
-                pass: ""
+                pass: "",
+                country_code : "82"
                 // uri: ""
             },
 
@@ -207,7 +207,7 @@
                     .post(`${config.requestHost}/auth/addUser`, this.userData)
                     .then(({ data }) => {
                         // console.info(data);
-                        // console.log("data.result : ", data.result);
+                        console.log("data.result : ", data);
                         if (data.result == "FAIL") {
                             let err_msg = data.message || "SignUp Failed!";
                             this.$emit("snack-event", "error", err_msg);
@@ -216,8 +216,8 @@
                         }
                     })
                     .catch(error => {
-                        console.error(error);
-                        let err_msg = error.message || "SignUp Failed!";
+                        console.log(error.response);
+                        let err_msg = error.response.data || "SignUp Failed!";
                         this.$emit("snack-event", "error", err_msg);
                     });
             },

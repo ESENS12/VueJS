@@ -39,21 +39,21 @@
                             <v-layout wrap>
                                 <v-flex xs12 md6>
                                     <v-text-field
-                                        v-model="company"
+                                        v-model="this.memo.company"
                                         label="Company"
                                     />
                                 </v-flex>
                                 <v-flex xs12 md6>
                                     <v-text-field
                                         class="purple-input"
-                                        v-model="user_name"
+                                        v-model="this.memo.user_name"
                                         label="User Name"
                                     />
                                 </v-flex>
                                 <v-flex xs12 md12>
                                     <v-text-field
-                                        v-model="user_mail"
-                                        label="Email Address(can't update)"
+                                        v-model="this.memo.user_mail"
+                                        label="Email Address(Can't Edit)"
                                         disabled
                                         class="purple-input"
                                     />
@@ -61,7 +61,7 @@
 
                                 <v-flex xs12 md12>
                                     <v-text-field
-                                        v-model="develop_mails"
+                                        v-model="this.memo.develop_mails"
                                         label="Development Team Email e.g) test@gmail.com, test2@gmail.com"
                                         class="purple-input"
                                     />
@@ -106,19 +106,13 @@
             //   source: String,
         },
         data: () => ({
-            user: {
-                email: "",
-                name: "",
-                api_token: "",
-                country_code: "11",
-                memo: ""
-            },
-            user_pass: "",
-            company: "",
-            user_name: "",
-            user_mail: "",
-            develop_mails: ""
-            // memo,
+            memo: {
+                company: "",
+                user_name: "",
+                user_mail: "",
+                develop_mails: ""
+                
+            }
         }),
         methods: {
             confirmPassword(password) {
@@ -144,9 +138,9 @@
                             if (result === "OK") {
                                 let userData = data.data[0];
                                 console.log("userData : ", userData);
-                                this.company = userData.company_name || "";
-                                this.user_name = userData.name || "";
-                                this.user_mail = userData.email || "";
+                                this.memo.company = userData.company_name || "";
+                                this.memo.user_name = userData.name || "";
+                                this.memo.user_mail = userData.email || "";
                             }
                         })
                         .catch(error => {
@@ -158,16 +152,34 @@
                 }
             },
 
+            /** /auth/setUser
+             * @bodyParam memo : json (optional)
+             * @bodyParam app_token : string
+             * @bodyParam api_token : string 
+             * 
+             * @returns
+             *  {
+                    "result": "OK"
+                }
+
+                or 
+
+                {
+                    "result": "FAIL",
+                    "message": "User authentication failed"
+                }
+             */
             updateProfile() {
-                this.user.company = this.company;
-                this.user.name = this.user_name;
-                this.user.email = this.user_mail;
-                this.user.memo = "memo";
+                
                 // let user = this.user;
                 this.$http
                     .put(
                         `${config.requestHost}/auth/setUser/`,
-                        { email: this.user.email, name: this.user.name, },
+                        {
+                            app_token: this.$store.getters.getAppToken,
+                            api_token: this.$store.getters.getApiToken,
+                            memo : this.memo
+                        },
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
@@ -175,6 +187,7 @@
                         let result = data.result || "";
 
                         if (result === "OK") {
+                            this.getUserInfo();
                             //  let userData = data.data[0];
                             //   this.company = userData.company_name || '';
                             //   this.user_name = userData.name || '';

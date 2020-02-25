@@ -16,6 +16,7 @@ import store from '@/store'
 import config from '@/config'
 
 
+document.title="FATOS Console"
 const requireComponent = require.context(
   '@/components', true, /\.vue$/
 );
@@ -29,7 +30,6 @@ requireComponent.keys().forEach(fileName => {
 
   Vue.component(componentName, componentConfig.default || componentConfig)
 });
-
 Vue.config.productionTip = false;
 Vue.prototype.$http = axios;
 Vue.use(require('vue-chartist'));
