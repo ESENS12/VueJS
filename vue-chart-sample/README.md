@@ -7,7 +7,7 @@
 # Project setup
 
 ```
-yarn add vuetify
+yarn add vuetify vue-chartjs chart.js
 ```
 
 ```
