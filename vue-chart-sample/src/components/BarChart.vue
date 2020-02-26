@@ -14,7 +14,8 @@ export default {
     options: {
       type: Object,
       default: null
-    }
+    },
+   
   },
   mounted () {
       console.log(this.chartdata);

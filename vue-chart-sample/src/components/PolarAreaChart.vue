@@ -1,10 +1,10 @@
 
 <script>
-import { Line } from 'vue-chartjs'
+import { PolarArea } from 'vue-chartjs'
 // const { reactiveProp } = mixins
 
 export default {
-  extends: Line,
+  extends: PolarArea,
 //   mixins: [reactiveProp],
   props: {
     chartdata: {
@@ -12,16 +12,17 @@ export default {
       default: null
     },
     options: {
+      startAngle: -Math.PI / 4,
       type: Object,
       default: null
-    },
-    data(){
-    return {
-      option:{
-         fill: false,
-      }
     }
   },
+  data(){
+    return {
+      option:{
+         startAngle: -Math.PI / 4,
+      }
+    }
   },
   mounted () {
       console.log(this.chartdata);

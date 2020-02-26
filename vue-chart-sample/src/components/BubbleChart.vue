@@ -1,10 +1,10 @@
 
 <script>
-import { Line } from 'vue-chartjs'
+import { Bubble } from 'vue-chartjs'
 // const { reactiveProp } = mixins
 
 export default {
-  extends: Line,
+  extends: Bubble,
 //   mixins: [reactiveProp],
   props: {
     chartdata: {
@@ -14,20 +14,13 @@ export default {
     options: {
       type: Object,
       default: null
-    },
-    data(){
-    return {
-      option:{
-         fill: false,
-      }
     }
-  },
   },
   mounted () {
       console.log(this.chartdata);
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
-    this.renderChart(this.chartdata, this.option)
+    this.renderChart(this.chartdata, this.options)
   },
   watch: {
   'chartdata' (to, from) {

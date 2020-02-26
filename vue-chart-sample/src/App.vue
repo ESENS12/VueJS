@@ -7,7 +7,7 @@
                         <div class="container">
                             <h3>Line Chart</h3>
                             <line-chart
-                                :chartdata="datacollection"
+                                :chartdata="datacollectionForLine"
                                 :options="options"
                             ></line-chart>
                         </div>
@@ -19,6 +19,15 @@
                                 :chartdata="datacollection"
                                 :options="options"
                             ></bar-chart>
+                        </div>
+                    </v-col>
+                    <v-col>
+                        <div class="container">
+                            <h3>PolarArea Chart</h3>
+                            <PolarAreaChart
+                                :chartdata="datacollectionForPolar"
+                                :options="options"
+                            ></PolarAreaChart>
                         </div>
                     </v-col>
                 </v-row>
@@ -43,6 +52,15 @@
                             ></DoughnutChart>
                         </div>
                     </v-col>
+                    <v-col>
+                        <div class="container">
+                            <h3>Bubble Chart</h3>
+                            <BubbleChart
+                                :chartdata="datacollectionForBubble"
+                                :options="options"
+                            ></BubbleChart>
+                        </div>
+                    </v-col>
                 </v-row>
             </v-content>
         </v-layout>
@@ -55,6 +73,8 @@
     import BarChart from "./components/BarChart";
     import HorizontalBarChart from "./components/HorizontalBarChart";
     import DoughnutChart from "./components/DoughnutChart";
+    import BubbleChart from "./components/BubbleChart";
+    import PolarAreaChart from "./components/PolarAreaChart";
 
     export default {
         name: "App",
@@ -63,11 +83,13 @@
             LineChart,
             BarChart,
             HorizontalBarChart,
-            DoughnutChart
+            DoughnutChart,
+            BubbleChart,
+            PolarAreaChart
         },
 
         data: () => ({
-          textInside:"Doughnut Chart",
+            textInside: "Doughnut Chart",
             datacollection: {
                 //Data to be represented on x-axis
                 labels: [
@@ -89,10 +111,113 @@
                         label: "Data One",
                         backgroundColor: "#f87979",
                         pointBackgroundColor: "white",
-                        borderWidth: 1,
+                        borderWidth: 5,
+                        fill:false,
+                        borderColor:"#3e8787",
+                        showLine:true,
                         pointBorderColor: "#249EBF",
                         //Data to be represented on y-axis
                         data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100]
+                    },
+
+                    {
+                        borderColor:"rgba(255, 0, 0, 0.5)",
+                        label: "Data Two",
+                        backgroundColor: "#36A2EB",
+                        pointBackgroundColor: "white",
+                        borderWidth: 5,
+                        fill:false,
+                        showLine:true,
+                        pointBorderColor: "rgba(255, 0, 0,0.55)",
+                        //Data to be represented on y-axis
+                        data: [25, 10, 44, 62, 10, 15, 20, 40, 25, 70, 44, 10]
+                    }
+                ]
+            },
+
+            datacollectionForLine: {
+                //Data to be represented on x-axis
+                labels: [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"
+                ],
+                datasets: [
+                    {
+                        label: "Data One",
+                        pointBackgroundColor: "white",
+                        borderWidth: 5,
+                        fill:false,
+                        borderColor:"#3e8787",
+                        showLine:true,
+                        pointBorderColor: "#249EBF",
+                        //Data to be represented on y-axis
+                        data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100]
+                    },
+
+                    {
+                      label: "Data Two",
+                        pointBackgroundColor: "white",
+                        borderWidth: 5,
+                        fill:false,
+                        borderColor:"#36A2EB",
+                        showLine:true,
+                        pointBorderColor: "#36A2EB",
+                        //Data to be represented on y-axis
+                        data: [25, 10, 2, 23, 10, 15, 20, 12, 25, 3, 32, 10]
+                    }
+                ]
+            },
+
+            datacollectionForBubble: {
+                //Data to be represented on x-axis
+                labels: ["January", "February"],
+                datasets: [
+                    {
+                        label: "Data One",
+                        backgroundColor: "#f87979",
+                        pointBackgroundColor: "white",
+                        borderWidth: 1,
+                        pointBorderColor: "#249EBF",
+                        //Data to be represented on y-axis
+                        data: [{ x: 40, y: 1, r: 10 }]
+                    },
+
+                    {
+                        label: "Data Two",
+                        backgroundColor: "#36A2EB",
+                        pointBackgroundColor: "white",
+                        borderWidth: 1,
+                        pointBorderColor: "#249EBF",
+                        //Data to be represented on y-axis
+                        data: [{ x: 25, y: 10, r: 15 }]
+                    },
+                    {
+                        label: "Data Three",
+                        backgroundColor: "#579aac",
+                        pointBackgroundColor: "white",
+                        borderWidth: 1,
+                        pointBorderColor: "#249EBF",
+                        //Data to be represented on y-axis
+                        data: [{ x: 36, y: 3.5, r: 9 }]
+                    },
+                    {
+                        label: "Data Four",
+                        backgroundColor: "#3e8787",
+                        pointBackgroundColor: "white",
+                        borderWidth: 1,
+                        pointBorderColor: "#249EBF",
+                        //Data to be represented on y-axis
+                        data: [{ x: 32, y: 5, r: 7 }]
                     }
                 ]
             },
@@ -112,6 +237,26 @@
                     }
                 ]
             },
+
+            datacollectionForPolar: {
+                //Data to be represented on x-axis
+                labels: ["Android", "iOS", "Window", "Linux"],
+                datasets: [
+                    {
+                        data: [45, 80, 27, 10, 4, 11, 5, 22],
+                        backgroundColor: [
+                            "rgba(255, 0, 0, 0.5)",
+                            "rgba(100, 255, 0, 0.5)",
+                            "rgba(0, 100, 255, 0.5)",
+                            "rgba(200, 50, 255, 0.5)",
+                            "rgba(255, 0, 0, 0.5)",
+                            "rgba(100, 255, 0, 0.5)",
+                            "rgba(0, 100, 255, 0.5)",
+                            "rgba(200, 50, 255, 0.5)"
+                        ]
+                    }
+                ]
+            }
 
             // options: {
             //     elements: {
