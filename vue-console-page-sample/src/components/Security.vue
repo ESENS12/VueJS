@@ -76,12 +76,18 @@
                         <v-flex sm8 lg8 md8>
                             <v-layout class="wrap justify-end">
                                 <v-data-table
+                                    
                                     :headers="headers"
                                     :items="URL_item"
+                                    :items-per-page="5"
                                     :calculate-widths="true"
                                     :dense="true"
                                     class="elevation-1 mb-0"
                                     :hide-default-header="true"
+                                    :footer-props="{
+                                        firstIcon: 'mdi-arrow-collapse-left',
+                                        lastIcon: 'mdi-arrow-collapse-right'
+                                    }"
                                 >
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
@@ -90,7 +96,7 @@
                                                     {{ row.item }}
                                                 </v-layout>
                                             </td>
-                                             <td wrap width="1px">
+                                            <td wrap width="1px">
                                                 <v-layout justify-end mx-auto>
                                                     <v-btn
                                                         medium
@@ -140,11 +146,18 @@
                             <v-layout class="wrap justify-end">
                                 <v-data-table
                                     :headers="headers"
+                                    id="table"
                                     :items="IP_item"
+                                    :items-per-page="5"
                                     :calculate-widths="true"
                                     :dense="true"
                                     class="elevation-1 mb-0"
                                     :hide-default-header="true"
+                                    :footer-props="{
+                                        dark,
+                                        firstIcon: 'mdi-arrow-collapse-left',
+                                        lastIcon: 'mdi-arrow-collapse-right'
+                                    }"
                                 >
                                     <template v-slot:item="row">
                                         <tr height="50px" class="wrap">
@@ -153,9 +166,13 @@
                                                     {{ row.item }}
                                                 </v-layout>
                                             </td>
-                                            
+
                                             <td wrap width="1px">
-                                                <v-layout justify-end wrap mx-auto>
+                                                <v-layout
+                                                    justify-end
+                                                    wrap
+                                                    mx-auto
+                                                >
                                                     <v-btn
                                                         medium
                                                         class="red fill-height justify-end align-end"
@@ -203,6 +220,7 @@
                                 <v-data-table
                                     :headers="headers"
                                     :items="Bundle_item"
+                                    :items-per-page="5"
                                     :calculate-widths="true"
                                     :dense="true"
                                     class="elevation-1 mb-0"
@@ -217,7 +235,7 @@
                                             </td>
 
                                             <td wrap width="1px">
-                                                <v-layout justify-end >
+                                                <v-layout justify-end>
                                                     <v-btn
                                                         medium
                                                         class="red fill-height justify-end align-end"
@@ -360,20 +378,15 @@
         }),
         methods: {
             initialize() {
+                this.$emit("loading-event",true);
                 console.log("initialize");
 
                 //sample data
-                this.URL_item = [
-                   ""
-                ];
+                this.URL_item = [""];
 
-                this.IP_item = [
-                   ""
-                ];
+                this.IP_item = [""];
 
-                this.Bundle_item = [
-                   ""
-                ];
+                this.Bundle_item = [""];
 
                 //app토큰은 있는데 keyToken이 없을때(refresh한 경우)
                 if (
@@ -573,6 +586,7 @@
                             this.Bundle_item = this.checkResultIsEmpty(
                                 response.data.service_appid
                             );
+                            this.$emit("loading-event",false);
                         } else {
                             console.error(
                                 "requestGetServiceAppId error : ",
@@ -634,7 +648,7 @@
                 }
              */
             requestSetServiceIpAddr() {
-                console.log("requestSetServiceIpAddr item : " ,this.IP_item);
+                console.log("requestSetServiceIpAddr item : ", this.IP_item);
 
                 this.$http
                     .post(
@@ -873,7 +887,6 @@
     .contents {
         align-self: flex-end;
     }
-    
 
     table tr td {
         border-left: 1px solid #dddddd;
@@ -882,4 +895,8 @@
     table td + td {
         border-left: 1px solid #dddddd;
     }
+    #table > .v-data-footer .v-icon {
+     color: lightgray;
+    }
+    
 </style>

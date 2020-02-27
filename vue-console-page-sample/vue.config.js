@@ -19,9 +19,10 @@ module.exports = {
     } 
   },
   publicPath: '',
-  outputDir: '../nodejs-mailer-sample/public',
+  outputDir: '../console_backend/public',
 
     "transpileDependencies": [
       "vuetify"
-    ]
+    ],
+    productionSourceMap: false
 }

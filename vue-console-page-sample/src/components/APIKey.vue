@@ -549,6 +549,7 @@
                     }
                 }
                 console.log(this.userData.API_item[0]);
+                this.$emit("loading-event",false);
             },
 
             /**
@@ -582,6 +583,7 @@
 
             initialize() {
                 //샘플 페이지 데이터
+                this.$emit("loading-event",true);
                 this.userData.API_item = [
                     {
                         usage: "Usage status",

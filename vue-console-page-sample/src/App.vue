@@ -16,6 +16,14 @@
             </v-icon>
         </v-snackbar>
 
+        <loading
+            :loader="dots"
+            :active.sync="isLoading"
+            :can-cancel="true"
+            :on-cancel="false"
+            :is-full-page="true"
+        ></loading>
+
         <loginPage
             v-if="!this.isLogin"
             @snack-event="onSnack"
@@ -121,6 +129,7 @@
 
             <v-content class="pt-0">
                 <router-view
+                    @loading-event="onLoading"
                     @security-event="onSecurityEvent"
                     @snack-event="onSnack"
                 ></router-view>
@@ -132,6 +141,8 @@
 <script>
     import LoginPage from "@/components/LoginPage";
     import config from "@/config";
+    import Loading from "vue-loading-overlay";
+    import "vue-loading-overlay/dist/vue-loading.css";
     //var ref = document.referrer;
 
     export default {
@@ -169,19 +180,21 @@
 
         watch: {
             // $route(to) {
-                // document.title = "FATOS Console";
+            // document.title = "FATOS Console";
             // }
         },
 
         name: "App",
         components: {
-            LoginPage
+            LoginPage,
+            Loading
         },
 
         props: {
             source: String
         },
         data: () => ({
+            isLoading: false,
             developerUri: "",
             snackColor: "error",
             snackContent: "Something wrong!",
@@ -206,6 +219,11 @@
             ]
         }),
         methods: {
+            //로딩이벤트
+            onLoading(bIsLoading) {
+                console.log("onLoading : ", bIsLoading);
+                this.isLoading = bIsLoading;
+            },
             //Security 설정 여부(경고 뱃지 show/hide 용)
             onSecurityEvent(b_isNeedWarn) {
                 console.log("onSecurity Event!" + b_isNeedWarn);

@@ -7,7 +7,6 @@
                     <img src="@/assets/fatos-logo.png" />
                 </v-layout>
             </v-flex>
-
             <!-- Login form -->
             <v-flex
                 xs12
@@ -93,6 +92,13 @@
                 </v-layout>
             </v-flex>
         </v-layout>
+         <loading
+            :loader="dots"
+            :active.sync="isLoading"
+            :can-cancel="true"
+            :on-cancel="false"
+            :is-full-page="true"
+        ></loading>
     </v-container>
 </template>
 
@@ -104,11 +110,16 @@
     import SignUp from "@/components/SignUp";
     import config from "@/config";
 
+    import Loading from "vue-loading-overlay";
+    import "vue-loading-overlay/dist/vue-loading.css";
+
     export default {
         name: "LoginPage",
 
         beforeMount() {
+            // this.$emit("loading-event",true);
             // console.log('password : ' + password);
+            // this.isLoading = true;
         },
 
         mounted() {},
@@ -120,12 +131,14 @@
         beforeCreate() {},
 
         components: {
-            SignUp
+            SignUp,
+            Loading
         },
 
         props: {},
 
         data: () => ({
+            isLoading : false,
             API_SELECTED: "https://betamaps.fatos.biz",
             API_URI_LIST: [
                 { text: "https://betamaps.fatos.biz" },
@@ -153,12 +166,14 @@
 
                 if (this.$refs.form.validate()) {
                     let ApiToken = this.$store.getters.getApiToken || "";
-
+                    this.isLoading = true;
                     if (!ApiToken) {
                         this.$store
                             .dispatch("GETAPITOKEN")
                             .then(() => {
+                                
                                 this.Login();
+                                
                             })
                             .catch(({ message }) => (this.msg = message));
                     } else {
@@ -176,6 +191,8 @@
             },
 
             Login() {
+                // this.$emit("loading-event",true);
+
                 const userEmail = this.email;
                 const password = this.password;
                 const apiToken = this.$store.getters.getApiToken;
@@ -213,7 +230,10 @@
                             "snack-event",
                             "error",
                             "Login Failed Check Your Email or Password"
+                            
                         );
+                        this.isLoading = false;
+                        // this.$emit("loading-event",false);
                         console.error("login err", error);
                     });
 
@@ -248,9 +268,11 @@
                                 })
                                 .then(() => {
                                     console.log("after getKeyToken[store]");
+                                    this.isLoading = false;
                                     this.$emit("login-event");
                                 })
                                 .catch(({ message }) => (this.msg = message));
+                                
                         }
                     })
                     .catch(error => {

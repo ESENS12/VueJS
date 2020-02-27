@@ -39,20 +39,20 @@
                             <v-layout wrap>
                                 <v-flex xs12 md6>
                                     <v-text-field
-                                        v-model="this.memo.company"
+                                        v-model="company"
                                         label="Company"
                                     />
                                 </v-flex>
                                 <v-flex xs12 md6>
                                     <v-text-field
                                         class="purple-input"
-                                        v-model="this.memo.user_name"
+                                        v-model="user_name"
                                         label="User Name"
                                     />
                                 </v-flex>
                                 <v-flex xs12 md12>
                                     <v-text-field
-                                        v-model="this.memo.user_mail"
+                                        v-model="user_mail"
                                         label="Email Address(Can't Edit)"
                                         disabled
                                         class="purple-input"
@@ -61,7 +61,7 @@
 
                                 <v-flex xs12 md12>
                                     <v-text-field
-                                        v-model="this.memo.develop_mails"
+                                        v-model="develop_mails"
                                         label="Development Team Email e.g) test@gmail.com, test2@gmail.com"
                                         class="purple-input"
                                     />
@@ -97,7 +97,9 @@
         name: "Profile",
 
         created() {
+           
             this.getUserInfo();
+            
         },
         components: {
             // Archive,
@@ -106,13 +108,10 @@
             //   source: String,
         },
         data: () => ({
-            memo: {
-                company: "",
-                user_name: "",
-                user_mail: "",
-                develop_mails: ""
-                
-            }
+            company: "",
+            user_name: "",
+            user_mail: "",
+            develop_mails: ""
         }),
         methods: {
             confirmPassword(password) {
@@ -138,9 +137,10 @@
                             if (result === "OK") {
                                 let userData = data.data[0];
                                 console.log("userData : ", userData);
-                                this.memo.company = userData.company_name || "";
-                                this.memo.user_name = userData.name || "";
-                                this.memo.user_mail = userData.email || "";
+                                this.company = userData.company_name || "";
+                                this.user_name = userData.name || "";
+                                this.user_mail = userData.email || "";
+                                this.develop_mails = userData.develop_mails || "";
                             }
                         })
                         .catch(error => {
@@ -170,7 +170,7 @@
                 }
              */
             updateProfile() {
-                
+                console.log('this.develop_mails : ' , this.develop_mails);
                 // let user = this.user;
                 this.$http
                     .put(
@@ -178,14 +178,14 @@
                         {
                             app_token: this.$store.getters.getAppToken,
                             api_token: this.$store.getters.getApiToken,
-                            memo : this.memo
+                            memo : this.develop_mails      //develop mail만 memo로 전송
                         },
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
                         console.log("Data : ", data);
                         let result = data.result || "";
-
+                        
                         if (result === "OK") {
                             this.getUserInfo();
                             //  let userData = data.data[0];

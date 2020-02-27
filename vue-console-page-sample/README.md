@@ -7,6 +7,7 @@
  - Vuetify Dialog (https://github.com/ESENS12/VueJS/tree/master/vue-dialog-reuseable-sample)
  - VueX Sample (https://github.com/ESENS12/VueJS/tree/master/vuex-sample)
  - NodeMailer (https://github.com/ESENS12/VueJS/tree/master/nodejs-mailer-sample)
+ - vue-loading-overlay (https://github.com/ankurk91/vue-loading-overlay)
 
 # Project setup
 ```
@@ -14,7 +15,7 @@ vue create vue-console-page-sample && cd vue-console-page-sample && add vuetify
 ```
 
 ```
-yarn add axios vue-router vuex
+yarn add axios vue-router vuex vue-loading-overlay
 ```
 
 ```
