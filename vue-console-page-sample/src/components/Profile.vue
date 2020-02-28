@@ -114,13 +114,11 @@
             develop_mails: ""
         }),
         methods: {
-            confirmPassword(password) {
-                password = password || "";
-                console.log("confirm Password ", password);
-                // if(password){
-
-                // }
-            },
+            // confirmPassword(password) {
+            //     password = password || "";
+            //     // console.log("confirm Password ", password);
+                
+            // },
 
             //사용자 정보 조회
             getUserInfo() {
@@ -136,11 +134,11 @@
                             let result = data.result || "";
                             if (result === "OK") {
                                 let userData = data.data[0];
-                                console.log("userData : ", userData);
+                                // console.log("userData : ", userData);
                                 this.company = userData.company_name || "";
                                 this.user_name = userData.name || "";
                                 this.user_mail = userData.email || "";
-                                this.develop_mails = userData.develop_mails || "";
+                                this.develop_mails = userData.memo || "";
                             }
                         })
                         .catch(error => {
@@ -170,7 +168,7 @@
                 }
              */
             updateProfile() {
-                console.log('this.develop_mails : ' , this.develop_mails);
+                // console.log('this.develop_mails : ' , this.develop_mails);
                 // let user = this.user;
                 this.$http
                     .put(
@@ -183,7 +181,7 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log("Data : ", data);
+                        // console.log("Data : ", data);
                         let result = data.result || "";
                         
                         if (result === "OK") {

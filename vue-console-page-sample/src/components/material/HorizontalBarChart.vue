@@ -29,12 +29,12 @@ export default {
   },
   
   mounted () {
-      console.log(this.chartdata);
+      // console.log(this.chartdata);
     this.renderChart(this.chartdata, this.option)
   },
   watch: {
-  'chartdata' (to, from) {
-      console.log(to,from);
+  'chartdata' () {
+      // console.log(to,from);
     this.renderChart(this.chartdata, this.option)
   }
 },

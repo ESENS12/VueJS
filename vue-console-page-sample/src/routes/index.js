@@ -68,6 +68,11 @@ const requireAuth = () => (from, to, next) => {
       }
   });
 
+
+
+  urlMapping(from,to);
+
+
   // let refToken = store.getters.getRefToken || sessionStorage.ref_token;
   // // console.log('reftoken  : ' , refToken);
 
@@ -88,6 +93,16 @@ const requireAuth = () => (from, to, next) => {
   // if (accessToken) return next()
   // next('/login')
 }
+
+
+const urlMapping = (from, to) => {
+  console.log("urlMapping");
+  console.log('from : ' ,  from);
+  console.log('to : ' , to);
+  var ref = document.referrer;
+  console.log("ref :", ref);
+}
+
 
 const router = new Router({
   mode: 'history',

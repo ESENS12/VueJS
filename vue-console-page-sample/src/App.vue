@@ -57,7 +57,7 @@
                 persistent
                 mobile-break-point="991"
             >
-                <v-img class="ma-10 mt-2" src=@/assets/fatos-logo.png />
+                <v-img class="ma-10 mt-2" :src="require(`@/assets/${siteName}.png`)" />
                 <v-list dense>
                     <!-- Itmes -->
                     <template v-for="(item, i) in items" class="transparent">
@@ -79,7 +79,7 @@
                                     color="error"
                                     bordered
                                     overlap
-                                    icon="mdi-alert-circle-check-outline"
+                                    :content="badgeCnt"
                                 >
                                     <v-icon>{{ item.icon }}</v-icon>
                                 </v-badge>
@@ -114,6 +114,7 @@
                     <v-btn
                         v-bind:href="this.developerUri"
                         color="accent"
+                        target="_blank"
                         @click="goDeveloper"
                         minHeight="60px"
                         minWidth="220px"
@@ -129,6 +130,7 @@
 
             <v-content class="pt-0">
                 <router-view
+
                     @loading-event="onLoading"
                     @security-event="onSecurityEvent"
                     @snack-event="onSnack"
@@ -147,6 +149,7 @@
 
     export default {
         beforeMount() {
+             this.siteName = config.siteName
             // this.isLogin = true;
         },
         mounted() {
@@ -160,6 +163,7 @@
         },
 
         created() {
+            // console.log("document: ",document);
             this.developerUri = config.developerHost;
             let app_token = sessionStorage.ref_token || "";
             if (app_token) {
@@ -194,6 +198,8 @@
             source: String
         },
         data: () => ({
+            siteName : "fatos",
+            badgeCnt : 0,
             isLoading: false,
             developerUri: "",
             snackColor: "error",
@@ -206,7 +212,7 @@
             //navigation drawer item list
             items: [
                 { icon: "mdi-key", text: "API Keys", needAlert: false },
-                { icon: "mdi-shield-lock", text: "Security", needAlert: true },
+                { icon: "mdi-shield-lock", text: "Security", needAlert: false },
                 { icon: "mdi-chart-bar", text: "Usage", needAlert: false },
                 { divider: true },
                 { icon: "mdi-account", text: "Profile", needAlert: false },
@@ -221,12 +227,18 @@
         methods: {
             //로딩이벤트
             onLoading(bIsLoading) {
-                console.log("onLoading : ", bIsLoading);
+                // console.log("onLoading : ", bIsLoading);
                 this.isLoading = bIsLoading;
             },
             //Security 설정 여부(경고 뱃지 show/hide 용)
-            onSecurityEvent(b_isNeedWarn) {
-                console.log("onSecurity Event!" + b_isNeedWarn);
+            onSecurityEvent(index) {
+                // console.log("onSecurity Event!" + index);
+                if(index>0){
+                    this.items[1].needAlert=true;
+                }else{
+                    this.items[1].needAlert=false;
+                }
+                this.badgeCnt = index;
             },
             onSnack(type, msg) {
                 this.snackColor = type;

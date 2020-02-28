@@ -1,6 +1,18 @@
 <template>
     <v-container fill-height fluid grid-list-xl>
         <v-layout justify-center wrap>
+            <v-flex lg12 xs12 md12>
+                <v-layout row wrap justify-end class="justify-end">
+                    <v-flex md12 xs12 lg12>
+                        <DatePicker
+                            startDate="this.start_date"
+                            endDate="this.end_date"
+                            @date-changed="dateChanged"
+                            class="myCalendar"
+                        ></DatePicker>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
             <!-- 카드 레이아웃 -->
             <v-flex sm6 xs12 md6 lg3>
                 <material-stats-card
@@ -10,7 +22,7 @@
                     v-model="this.web_usage"
                     small-value="calls"
                     sub-icon="mdi-calendar"
-                    sub-text="Last 24 Hours"
+                    sub-text="Total Usage"
                 />
             </v-flex>
             <v-flex sm6 xs12 md6 lg3>
@@ -21,7 +33,7 @@
                     v-model="this.mobile_usage"
                     small-value="calls"
                     sub-icon="mdi-calendar"
-                    sub-text="Last 24 Hours"
+                    sub-text="Total Usage"
                 />
             </v-flex>
             <v-flex sm6 xs12 md6 lg3>
@@ -32,7 +44,7 @@
                     v-model="this.other_usage"
                     small-value="calls"
                     sub-icon="mdi-calendar"
-                    sub-text="Last 24 Hours"
+                    sub-text="Total Usage"
                 />
             </v-flex>
             <v-flex sm6 xs12 md6 lg3>
@@ -43,7 +55,7 @@
                     v-model="this.total_usage"
                     small-value="calls"
                     sub-icon="mdi-calendar"
-                    sub-text="Last 24 Hours"
+                    sub-text="Total Usage"
                 />
             </v-flex>
 
@@ -55,12 +67,26 @@
                             <v-layout class="align-center justify-center">
                                 <v-flex>
                                     <doughnut-chart
+                                        v-if="
+                                            datacollectionForMobile.datasets
+                                                .data
+                                        "
                                         :width="200"
                                         :height="150"
                                         :styles="myStyles"
                                         :chartdata="datacollectionForMobile"
                                         :options="optionsForLine"
                                     ></doughnut-chart>
+                                    <div v-else>
+                                        <v-layout
+                                            class="justify-center text-center"
+                                        >
+                                            <v-text class="h3">
+                                                No data has been used for the
+                                                selected period.
+                                            </v-text>
+                                        </v-layout>
+                                    </div>
                                 </v-flex>
                             </v-layout>
                         </material-card>
@@ -72,12 +98,26 @@
                             <v-layout class="align-center ">
                                 <v-flex>
                                     <doughnut-chart
+                                        v-if="
+                                            datacollectionForWeb.datasets.data
+                                        "
                                         :width="200"
                                         :height="150"
                                         :styles="myStyles"
                                         :chartdata="datacollectionForWeb"
                                         :options="optionsForLine"
                                     ></doughnut-chart>
+
+                                    <div v-else>
+                                        <v-layout
+                                            class="justify-center text-center"
+                                        >
+                                            <v-text class="h3">
+                                                No data has been used for the
+                                                selected period.
+                                            </v-text>
+                                        </v-layout>
+                                    </div>
                                 </v-flex>
                             </v-layout>
                         </material-card>
@@ -86,32 +126,73 @@
             </v-flex>
 
             <!-- 차트 레이아웃 -->
-            <v-flex md9 sm12 lg9>
-                <material-card color="info" title="Total Service Usage" class="wrap py-0">
+            <v-flex md12 sm12 lg12>
+                <material-card
+                    color="info"
+                    title="Total Service Usage"
+                    class="wrap py-0"
+                >
+                    <v-row class="justify-end mx-auto">
+                        <v-tabs right class="justify-end mx-auto">
+                            <v-tab class="tab" @click="changeTab(0)">Day</v-tab>
+                            <v-tab class="tab" @click="changeTab(1)"
+                                >Month</v-tab
+                            >
+                            <v-tab class="tab" @click="changeTab(2)"
+                                >Year</v-tab
+                            >
+                        </v-tabs>
+                    </v-row>
+
                     <div class="container align-center fill-height">
                         <v-layout class="align-center justify-center">
-                                <line-chart
-                                    
-                                    :styles="total_service_usage"
-                                    :chartdata="datacollectionForLine"
-                                    :options="optionsForLine"
-                                ></line-chart>
+                            <line-chart
+                                v-if="this.total_service_data.datasets.data"
+                                :width="450"
+                                :height="300"
+                                :styles="total_service_usage"
+                                :chartdata="total_service_data"
+                                :options="optionsForLine"
+                            ></line-chart>
+                            <div v-else>
+                                <v-layout class="justify-center text-center">
+                                    <v-text class="h3">
+                                        No data has been used for the selected
+                                        period.
+                                    </v-text>
+                                </v-layout>
+                            </div>
                         </v-layout>
                     </div>
                 </material-card>
             </v-flex>
-            <v-flex md9 sm12 lg9>
-                <material-card color="red" title="Top Service Usage" class="pt-0">
+            <v-flex md12 sm12 lg12>
+                <material-card
+                    color="red"
+                    title="Top Service Usage"
+                    class="pt-0"
+                >
                     <div class="container align-center">
                         <v-layout class="align-center justify-center">
                             <v-flex lg8 sm12 md8 pa-0>
                                 <horizontal-bar-chart
+                                    v-if="TopServiceData.datasets.data"
                                     :width="450"
                                     :height="300"
                                     :styles="myStyles"
                                     :chartdata="TopServiceData"
                                     :options="optionsForLine"
                                 ></horizontal-bar-chart>
+                                <div v-else>
+                                    <v-layout
+                                        class="justify-center text-center"
+                                    >
+                                        <v-text class="h3">
+                                            No data has been used for the
+                                            selected period.
+                                        </v-text>
+                                    </v-layout>
+                                </div>
                             </v-flex>
                         </v-layout>
                     </div>
@@ -125,16 +206,28 @@
     import LineChart from "@/components/material/LineChart";
     import DoughnutChart from "@/components/material/DoughnutChart";
     import HorizontalBarChart from "@/components/material/HorizontalBarChart";
+    import DatePicker from "@/components/material/DatePicker";
+    import config from "@/config";
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
     export default {
         name: "Usage",
         data() {
             return {
+                showStartPicker: false,
+                showEndPicker: false,
+                start_date: null, //조회 시작일
+                end_date: null, //조회 종료일
+                dateFormatted: null,
+                usageServiceType: 2, //조회 옵션(0:일, 1:월, 2:연)
+
                 datacollectionForMobile: {
                     labels: ["Android", "iOS", "Windows", "Other"],
                     datasets: [
                         {
-                            data: [50, 23, 15, 32],
+                            data: [],
                             backgroundColor: [
                                 "#a2d6c4",
                                 "#36A2EB",
@@ -146,16 +239,24 @@
                 },
 
                 datacollectionForWeb: {
-                    labels: ["Chrome", "FireFox", "Safari", "IE", "Other"],
+                    labels: [
+                        "Chrome",
+                        "FireFox",
+                        "Safari",
+                        "IE",
+                        "edge",
+                        "other"
+                    ],
                     datasets: [
                         {
-                            data: [50, 23, 15, 32, 22],
+                            data: [],
                             backgroundColor: [
                                 "#a2d6c4",
                                 "#36A2EB",
                                 "#3e8787",
                                 "#579aac",
-                                "#A436FF"
+                                "#A436FF",
+                                "#d600ff"
                             ]
                         }
                     ]
@@ -178,7 +279,7 @@
                             fill: false,
                             showLine: true,
                             //Data to be represented on y-axis
-                            data: [3333, 1521, 33, 952, 2300]
+                            data: []
                         }
                     ]
                 },
@@ -190,15 +291,15 @@
                             right: 0,
                             top: 0,
                             bottom: 0
-                        },
+                        }
                     }
                 },
-                other_usage: "1,203",
-                total_usage: "2,423",
-                web_usage: "839",
-                mobile_usage: "612",
+                other_usage: "0",
+                total_usage: "0",
+                web_usage: "0",
+                mobile_usage: "0",
 
-                datacollectionForLine: {
+                total_service_data: {
                     labels: [
                         "January",
                         "February",
@@ -235,7 +336,10 @@
                                 48,
                                 70,
                                 86,
-                                87
+                                87,
+
+                                //라스트데이터가 조금 더 크면 graph scale이 좀 더 괜찮아보임
+                                100
                             ]
                         },
 
@@ -313,200 +417,322 @@
                             pointBackgroundColor: "white",
                             borderWidth: 3,
                             fill: false,
-                            borderColor: "#A436FF",
+                            borderColor: "#ff9100",
                             showLine: true,
-                            pointBorderColor: "#A436FF",
+                            pointBorderColor: "#ff9100",
                             //Data to be represented on y-axis
                             data: [11, 7, 2, 5, 22, 4, 37, 55, 25, 2, 58, 10]
                         }
                     ]
-                },
-
-                dailySalesChart: {
-                    data: {
-                        labels: ["M", "T", "W", "T", "F", "S", "S"],
-                        series: [[12, 17, 7, 17, 23, 18, 38]]
-                    },
-                    options: {
-                        lineSmooth: this.$chartist.Interpolation.cardinal({
-                            tension: 0
-                        }),
-                        low: 0,
-                        high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-                        chartPadding: {
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0
-                        }
-                    }
-                },
-                dataCompletedTasksChart: {
-                    data: {
-                        labels: [
-                            "12am",
-                            "3pm",
-                            "6pm",
-                            "9pm",
-                            "12pm",
-                            "3am",
-                            "6am",
-                            "9am"
-                        ],
-                        series: [[230, 750, 450, 300, 280, 240, 200, 190]]
-                    },
-                    options: {
-                        lineSmooth: this.$chartist.Interpolation.cardinal({
-                            tension: 0
-                        }),
-                        low: 0,
-                        high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-                        chartPadding: {
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0
-                        }
-                    }
-                },
-                emailsSubscriptionChart: {
-                    data: {
-                        labels: [
-                            "Ja",
-                            "Fe",
-                            "Ma",
-                            "Ap",
-                            "Mai",
-                            "Ju",
-                            "Jul",
-                            "Au",
-                            "Se",
-                            "Oc",
-                            "No",
-                            "De"
-                        ],
-                        series: [
-                            [
-                                542,
-                                443,
-                                320,
-                                780,
-                                553,
-                                453,
-                                326,
-                                434,
-                                568,
-                                610,
-                                756,
-                                895
-                            ]
-                        ]
-                    },
-                    options: {
-                        axisX: {
-                            showGrid: false
-                        },
-                        low: 0,
-                        high: 1000,
-                        chartPadding: {
-                            top: 0,
-                            right: 5,
-                            bottom: 0,
-                            left: 0
-                        }
-                    },
-                    responsiveOptions: [
-                        [
-                            "screen and (max-width: 640px)",
-                            {
-                                seriesBarDistance: 5,
-                                axisX: {
-                                    labelInterpolationFnc: function(value) {
-                                        return value[0];
-                                    }
-                                }
-                            }
-                        ]
-                    ]
-                },
-                headers: [
-                    {
-                        sortable: false,
-                        text: "ID",
-                        value: "id"
-                    },
-                    {
-                        sortable: false,
-                        text: "Name",
-                        value: "name"
-                    },
-                    {
-                        sortable: false,
-                        text: "Salary",
-                        value: "salary",
-                        align: "right"
-                    },
-                    {
-                        sortable: false,
-                        text: "Country",
-                        value: "country",
-                        align: "right"
-                    },
-                    {
-                        sortable: false,
-                        text: "City",
-                        value: "city",
-                        align: "right"
-                    }
-                ],
-                items: [
-                    {
-                        name: "Dakota Rice",
-                        country: "Niger",
-                        city: "Oud-Tunrhout",
-                        salary: "$35,738"
-                    },
-                    {
-                        name: "Minerva Hooper",
-                        country: "Curaçao",
-                        city: "Sinaai-Waas",
-                        salary: "$23,738"
-                    },
-                    {
-                        name: "Sage Rodriguez",
-                        country: "Netherlands",
-                        city: "Overland Park",
-                        salary: "$56,142"
-                    },
-                    {
-                        name: "Philip Chanley",
-                        country: "Korea, South",
-                        city: "Gloucester",
-                        salary: "$38,735"
-                    },
-                    {
-                        name: "Doris Greene",
-                        country: "Malawi",
-                        city: "Feldkirchen in Kārnten",
-                        salary: "$63,542"
-                    }
-                ],
-                tabs: 0,
-                list: {
-                    0: false,
-                    1: false,
-                    2: false
                 }
             };
         },
         components: {
             LineChart,
             HorizontalBarChart,
-            DoughnutChart
+            DoughnutChart,
+            DatePicker
         },
+
+        created() {
+            this.$emit("loading-event", true);
+            this.getToday();
+            this.getRegisteredKeyByUser();
+        },
+
         methods: {
+
+            getToday() {
+                var today = new Date();
+                var dd = String(today.getDate()).padStart(2, "0");
+                var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                var yyyy = today.getFullYear();
+
+                this.end_date = yyyy + "-" + mm + "-" + dd;
+                this.start_date = yyyy - 1 + "-" + mm + "-" + dd;
+            },
+
+            dateChanged(start_date, end_date) {
+                // console.log(
+                //     "dateChanged(usage) : ",
+                //     start_date,
+                //     ", ",
+                //     end_date
+                // );
+                this.start_date = start_date;
+                this.end_date = end_date;
+                this.getUsageServiceType();
+            },
+
             complete(index) {
                 this.list[index] = !this.list[index];
+            },
+
+            changeTab(index) {
+                // console.log("changeTab :", index);
+                this.usageServiceType = index;
+                this.getUsageServiceType();
+                // switch (index) {
+                //     case 0:
+                //         {
+
+                //             // DAY
+                //         }
+                //         break;
+                //     case 1:
+                //         {
+                //             // MONTH
+                //         }
+                //         break;
+                //     case 2:
+                //         {
+                //             // YEAR
+                //         }
+                //         break;
+                // }
+            },
+
+            formatDate(date) {
+                if (!date) return null;
+
+                const [year, month, day] = date.split("-");
+                return `${month}/${day}/${year}`;
+            },
+
+            //userKey값 받아온다. apptoken은 router에서 항상 받아서 넘어오므로..
+            getRegisteredKeyByUser() {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getRegisteredKeybyUser`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log(
+                        //     "recieved getRegisteredKeybyUser data : ",
+                        //     data.data.length
+                        // );
+
+                        if (data.data.length == 0) {
+                            //등록된 키가 없으면 ..? 로그아웃? 키 만료일 체크?
+                            // this.userData = {};
+                            this.$emit(
+                                "snack-event",
+                                "error",
+                                "You don't have Key.."
+                            );
+                        } else {
+                            // console.log(
+                            //     "key Token : ",
+                            //     data.data[data.data.length - 1].id
+                            // );
+                            this.$store
+                                .dispatch("GETKEYTOKEN", {
+                                    key_token:
+                                        data.data[data.data.length - 1].id || ""
+                                })
+                                .then(() => {
+                                    this.getUsageDeviceType();
+                                    this.getUsageServiceType();
+                                    this.getUsageMobile();
+                                    this.getUsageBrowser();
+                                })
+                                .catch(({ message }) => (this.msg = message));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            },
+
+            /** /console/getUsageDevice
+             * @pathParam end_date : string 
+             * @pathParam start_date : string 
+             * @pathParam app_token : string 
+             * @pathParam key : string 
+             * 
+             * @returns
+                {
+                    "result": "OK",
+                    "data": {
+                        "isDesktop": 0,
+                        "isMobile": 0,
+                        "Other": 0,
+                        "total": 0
+                    }
+                }
+             */
+
+            getUsageDeviceType() {
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getUsageDeviceType?end_date=${this.end_date}&start_date=${this.start_date}&app_token=${this.$store.getters.getAppToken}&key=${this.$store.getters.getKeyToken}`,
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        this.other_usage = data.data.Other;
+                        this.web_usage = data.data.isDesktop;
+                        this.mobile_usage = data.data.isMobile;
+                        this.total_usage = data.data.total;
+
+                        // console.log("getUsageDevice data :", data.data);
+                    })
+                    .catch(error => {
+                        console.error("getUsageDevice Failed : " + error);
+                    })
+                    .then(() => {
+                        this.$emit("loading-event", false);
+                    });
+            },
+
+            /** /console/getUsageServiceType
+             * @pathParam end_date : string 
+             * @pathParam start_date : string 
+             * @pathParam app_token : string 
+             * @pathParam date_type : number    //0:일별, 1:월별, 2:년 
+             * @pathParam key : string 
+             * 
+             * @returns
+                {
+                    "result": "OK",
+                    "data": [
+                        {
+                            "date": "2020-02-25",
+                            "sum": "11392",
+                            "service_id": "1"
+                        },
+                        {
+                            "date": "2020-02-26",
+                            "sum": "350",
+                            "service_id": "1"
+                        }
+                    ]
+                }
+             */
+
+            getUsageServiceType() {
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getUsageServiceType?date_type=${this.usageServiceType}&end_date=${this.end_date}&start_date=${this.start_date}&app_token=${this.$store.getters.getAppToken}&key=${this.$store.getters.getKeyToken}`,
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        console.log("getUsageServiceType data :", data);
+                        // labels 에 날짜 , year,month,day...
+                        // date....
+                        this.total_service_data = {};
+                        // this.total_service_data;
+                        //total_service_data: {
+                        //     labels: [
+                        //         "January",
+                        //         "February",
+                        //         "March",
+                        //         "April",
+                        //         "May",
+                        //         "June",
+                        //         "July",
+                        //         "August",
+                        //         "September",
+                        //         "October",
+                        //         "November",
+                        //         "December"
+                        //     ],
+                        //         {
+                        //             label: "MAP",
+                        //             pointBackgroundColor: "white",
+                        //             borderWidth: 3,
+                        //             fill: false,
+                        //             borderColor: "#4E36FF",
+                        //             showLine: true,
+                        //             pointBorderColor: "#4E36FF",
+                        //             //Data to be represented on y-axis
+                        //             data: [2, 9, 2, 23, 10, 15, 20, 12, 42, 31, 32, 41]
+                        //         },
+                        //}
+                    });
+            },
+
+            /** /console/getUsageMobile
+             * @pathParam end_date : string 
+             * @pathParam start_date : string 
+             * @pathParam app_token : string 
+             * @pathParam key : string 
+             * 
+             * @returns
+                {
+                    "result": "OK",
+                    "data": {
+                        "android": 0,
+                        "ios": 0,
+                        "window": 0,
+                        "other": 0,
+                        "total": 0
+                    }
+                }
+             */
+
+            getUsageMobile() {
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getUsageMobile?end_date=${this.end_date}&start_date=${this.start_date}&app_token=${this.$store.getters.getAppToken}&key=${this.$store.getters.getKeyToken}`,
+
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        this.datacollectionForMobile.datasets.data[0] =
+                            data.data.android;
+                        this.datacollectionForMobile.datasets.data[1] =
+                            data.data.ios;
+                        this.datacollectionForMobile.datasets.data[2] =
+                            data.data.window;
+                        this.datacollectionForMobile.datasets.data[3] =
+                            data.data.other;
+
+                        // console.log("getUsageMobile data :", data.data);
+                    });
+            },
+
+            /** /console/getUsageBrowser
+             * @pathParam end_date : string 
+             * @pathParam start_date : string 
+             * @pathParam app_token : string 
+             * @pathParam key : string 
+             * 
+             * @returns
+                {
+                    "result": "OK",
+                    "data": {
+                        "chrome": "6506",
+                        "firefox": "5077",
+                        "safari": "763",
+                        "explor": 0,
+                        "edge": 0,
+                        "other": 0,
+                        "total": 12346
+                    }
+                }
+             */
+
+            getUsageBrowser() {
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getUsageBrowser?end_date=${this.end_date}&start_date=${this.start_date}&app_token=${this.$store.getters.getAppToken}&key=${this.$store.getters.getKeyToken}`,
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log("getUsageBrowser data :", data.data);
+
+                        this.datacollectionForWeb.datasets.data[0] =
+                            data.data.android;
+                        this.datacollectionForWeb.datasets.data[1] =
+                            data.data.ios;
+                        this.datacollectionForWeb.datasets.data[2] =
+                            data.data.window;
+                        this.datacollectionForWeb.datasets.data[3] =
+                            data.data.other;
+                    });
             }
         },
         computed: {
@@ -527,6 +753,14 @@
                     marginLeft: "auto",
                     marginRight: "auto"
                 };
+            },
+            computedDateFormatted() {
+                return this.formatDate(this.date);
+            }
+        },
+        watch: {
+            date() {
+                this.dateFormatted = this.formatDate(this.date);
             }
         }
     };
@@ -534,5 +768,32 @@
 <style scoped>
     .chartcard {
         height: 10%;
+    }
+
+    .myCalendar td {
+        padding: 4px 0 !important;
+        height: unset !important;
+    }
+    .myCalendar th {
+        padding: 4px 0 !important;
+        height: unset !important;
+    }
+
+    .myCalendar td button {
+        padding: 4px 0 !important;
+        height: unset !important;
+    }
+
+    .myCalendar td button div {
+        height: unset !important;
+        color: black;
+    }
+
+    .myCalendar tr {
+        height: unset !important;
+    }
+
+    .myCalendar tr:hover {
+        background: #fff !important;
     }
 </style>

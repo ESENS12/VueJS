@@ -26,7 +26,6 @@
     border-top: $tooltip-border solid $white;
     border-right: $tooltip-border solid transparent;
     border-bottom: 0;
-    border-left: $tooltip-border solid transparent;
   }
 
   &.bottom:after{
@@ -34,7 +33,6 @@
     border-top: 0;
     border-right: $tooltip-border solid transparent;
     border-bottom: $tooltip-border solid $white;
-    border-left: $tooltip-border solid transparent;
   }
   &.left:after{
     margin-right: 0;
@@ -42,7 +40,6 @@
     top: $tooltip-top-border-pos;
     border-top: $tooltip-border solid transparent;
     border-bottom: $tooltip-border solid transparent;
-    border-left: $tooltip-border solid $white;
   }
   &.right:after{
     margin-left: 0;

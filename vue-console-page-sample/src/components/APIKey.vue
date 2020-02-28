@@ -10,53 +10,47 @@
                             title="Contact Information"
                             class="mb-0 mt-8"
                         >
-                            <v-form>
-                                <v-container py-0>
-                                    <v-layout
-                                        wrap
-                                        class="justify-space-between align-content-space-between mx-auto pa-0"
+                            <v-layout
+                                wrap
+                                class="justify-space-between align-content-space-between mx-auto pa-0"
+                            >
+                                <v-flex xs12 pa-0>
+                                    <v-card-text
+                                        class="justify-center text-left align-center h4 font-weight-bold"
                                     >
-                                        <v-flex xs12 pa-0>
-                                            <v-card-text
-                                                class="justify-center text-left align-center h4 font-weight-bold"
-                                            >
-                                                Expire Date :
-                                                {{
-                                                    this.userData.expireDate
-                                                }}</v-card-text
-                                            >
-                                        </v-flex>
-                                        <v-flex xs12 pa-0>
-                                            <v-card-text
-                                                class="justify-center text-left align-center h4 font-weight-bold"
-                                            >
-                                                Payment Plan :
+                                        Expire Date :
+                                        {{
+                                            this.userData.expireDate
+                                        }}</v-card-text
+                                    >
+                                </v-flex>
+                                <v-flex xs12 pa-0>
+                                    <v-card-text
+                                        class="justify-center text-left align-center h4 font-weight-bold"
+                                    >
+                                        Payment Plan :
 
-                                                <v-chip
-                                                    v-if="
-                                                        this.userData.userName
-                                                    "
-                                                    color="primary"
-                                                    class="ml-2"
-                                                >
-                                                    Premium
-                                                </v-chip>
-                                            </v-card-text>
-                                        </v-flex>
+                                        <v-chip
+                                            v-if="this.userData.userName"
+                                            color="primary"
+                                            class="ml-2"
+                                        >
+                                            Premium
+                                        </v-chip>
+                                    </v-card-text>
+                                </v-flex>
 
-                                        <v-flex xs12 pa-0>
-                                            <v-card-text
-                                                class="justify-center text-left align-center h4 font-weight-bold"
-                                            >
-                                                User :
-                                                {{
-                                                    this.userData.userName
-                                                }}</v-card-text
-                                            >
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                            </v-form>
+                                <v-flex xs12 pa-0>
+                                    <v-card-text
+                                        class="justify-center text-left align-center h4 font-weight-bold"
+                                    >
+                                        User :
+                                        {{
+                                            this.userData.userName
+                                        }}</v-card-text
+                                    >
+                                </v-flex>
+                            </v-layout>
                         </material-card>
                     </v-flex>
                     <v-flex xs12 md6 py-0>
@@ -67,14 +61,16 @@
                             class="mb-0 mt-8"
                         >
                             <v-row>
-                                <v-flex>
+                                <v-flex md12 class="align-center">
                                     <v-card-text class="mx-auto " xs12>
-                                        <h3 class="font-weight-bold">
+                                        <h3
+                                            class="font-weight-bold text-center"
+                                        >
                                             {{ this.userData.API_KEY }}
                                         </h3>
                                     </v-card-text>
                                 </v-flex>
-                                <v-flex class="align-center">
+                                <v-flex md12 class="align-center">
                                     <v-layout>
                                         <v-spacer></v-spacer>
                                         <v-flex class="align-center">
@@ -86,16 +82,6 @@
                                                 Copy</v-btn
                                             >
                                         </v-flex>
-
-                                        <!-- <v-flex class="align-center">
-                                            <v-btn
-                                                medium
-                                                class="green fill-height align-center"
-                                                @click="RegenKey()"
-                                            >
-                                                RE-GENERATE KEY</v-btn
-                                            >
-                                        </v-flex> -->
                                     </v-layout>
                                 </v-flex>
                             </v-row>
@@ -130,9 +116,8 @@
                                         :items="userData.API_item"
                                         :calculate-widths="true"
                                         :dense="true"
-                                        :divider="true"
                                         :hide-default-footer="true"
-                                        class="wrap elevation-1 mx-auto"
+                                        class="wrap elevation-1 mx-auto mytable"
                                     >
                                         <template v-slot:item="column">
                                             <tr>
@@ -332,56 +317,64 @@
                     sortable: false,
                     text: "API type",
                     value: "usage",
-                    class:
-                        "background-yellow justify-center align-center v-card-text",
-                    align: "center"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
+                    divider: true,
                     sortable: false,
                     text: "Mobile Map",
                     value: "subscsribe",
                     align: "center",
-                    class: "myTable"
+                    class: "my-header"
                 },
                 {
+                    divider: true,
                     sortable: false,
                     text: "Web Map",
                     value: "subscsribe",
-                    align: "center"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
+                    divider: true,
                     sortable: false,
                     text: "Search",
                     value: "subscsribe",
-                    align: "center"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
+                    divider: true,
                     sortable: false,
                     text: "Geofencing",
                     value: "subscsribe",
-                    align: "center"
-                    // class:"hidden-md-and-down"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
+                    divider: true,
+
                     sortable: false,
                     text: "Routing",
                     value: "subscsribe",
-                    align: "center"
-                    // class:"hidden-md-and-down"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
+                    divider: true,
                     sortable: false,
                     text: "Analyze",
                     value: "subscsribe",
-                    align: "center"
-                    // class:"hidden-md-and-down"
+                    align: "center",
+                    class: "my-header"
                 },
                 {
                     sortable: false,
                     text: "Advanced Map",
                     value: "subscsribe",
-                    align: "center"
-                    // class:"hidden-md-and-down"
+                    align: "center",
+                    class: "my-header"
                 }
             ]
         }),
@@ -422,7 +415,7 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log("data :", data.data);
+                        // console.log("data :", data.data);
                         this.setServiceAvailable(data.data);
                     });
             },
@@ -437,10 +430,10 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log(
-                            "recieved getRegisteredKeybyUser data : ",
-                            data.data.length
-                        );
+                        // console.log(
+                        //     "recieved getRegisteredKeybyUser data : ",
+                        //     data.data.length
+                        // );
 
                         if (data.data.length == 0) {
                             //등록된 키가 없으면 하나 생성해야한다.
@@ -464,7 +457,7 @@
                                     `${myHeaders}`
                                 )
                                 .then(({ data }) => {
-                                    console.log("data :", data.data);
+                                    // console.log("data :", data.data);
                                     this.setServiceAvailable(data.data);
                                 });
                             //TODO 유저데이터 세팅
@@ -548,8 +541,8 @@
                             break;
                     }
                 }
-                console.log(this.userData.API_item[0]);
-                this.$emit("loading-event",false);
+                // console.log(this.userData.API_item[0]);
+                this.$emit("loading-event", false);
             },
 
             /**
@@ -583,7 +576,7 @@
 
             initialize() {
                 //샘플 페이지 데이터
-                this.$emit("loading-event",true);
+                this.$emit("loading-event", true);
                 this.userData.API_item = [
                     {
                         usage: "Usage status",
@@ -617,7 +610,7 @@
             },
 
             RegenKey: async function() {
-                console.log("Re-gen Key");
+                // console.log("Re-gen Key");
 
                 const res = await this.$dialog.confirm({
                     title: "Regenerate key",
@@ -640,15 +633,7 @@
     };
 </script>
 
-<style>
-    table th + th {
-        border-left: 100px solid #dddddd;
-    }
-
-    table td + td {
-        border-left: 100px solid #dddddd;
-    }
-
+<style scoped>
     #keep .v-navigation-drawer__border {
         display: none;
     }
@@ -661,11 +646,10 @@
         background-color: yellow;
     }
 
-    .myTable {
-        border-left: 1px solid #dddddd;
-    }
-
-    .background-yellow {
+    .my-header:not(:last-child) {
         border-right: 1px solid #dddddd;
+    }
+    .my-header :last-child {
+        border-right: 0px;
     }
 </style>

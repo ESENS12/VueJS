@@ -2,9 +2,11 @@
     <v-container wrap pa-0 fill-height fluid grid-list-xl>
         <v-layout justify-center wrap fill-height fluid>
             <!-- Left Side(Image or Logo) -->
-            <v-flex xs0 sm5 md5 pb-0>
+            <v-flex xs0 sm5 md5 pb-0 class="background-yellow">
                 <v-layout justify-center wrap fill-height align-content-center>
-                    <img src="@/assets/fatos-logo.png" />
+                    <!-- <img src="@/assets/onemap_logo.jpg" /> -->
+                    <img :src="require(`@/assets/${siteName}.png`)" />
+                    
                 </v-layout>
             </v-flex>
             <!-- Login form -->
@@ -117,6 +119,7 @@
         name: "LoginPage",
 
         beforeMount() {
+            this.siteName = config.siteName
             // this.$emit("loading-event",true);
             // console.log('password : ' + password);
             // this.isLoading = true;
@@ -138,6 +141,7 @@
         props: {},
 
         data: () => ({
+            siteName : "fatos",
             isLoading : false,
             API_SELECTED: "https://betamaps.fatos.biz",
             API_URI_LIST: [
@@ -159,6 +163,10 @@
         }),
 
         methods: {
+            getIconSrc(){
+                console.log("siteName : ",config.iconPath);
+                return config.iconPath; 
+            },
             checkForm() {
                 const uri = this.API_SELECTED;
                 // console.log("uri : ", uri);

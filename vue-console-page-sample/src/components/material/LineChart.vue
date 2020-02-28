@@ -25,14 +25,14 @@ export default {
   },
   },
   mounted () {
-      console.log(this.chartdata);
+      // console.log(this.chartdata);
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.renderChart(this.chartdata, this.option )
   },
   watch: {
-  'chartdata' (to, from) {
-      console.log(to,from);
+  'chartdata' () {
+      // console.log(to,from);
     this.renderChart(this.chartdata, this.option)
   }
 },

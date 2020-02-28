@@ -207,7 +207,7 @@
                     .post(`${config.requestHost}/auth/addUser`, this.userData)
                     .then(({ data }) => {
                         // console.info(data);
-                        console.log("data.result : ", data);
+                        // console.log("data.result : ", data);
                         if (data.result == "FAIL") {
                             let err_msg = data.message || "SignUp Failed!";
                             this.$emit("snack-event", "error", err_msg);
@@ -216,7 +216,7 @@
                         }
                     })
                     .catch(error => {
-                        console.log(error.response);
+                        // console.log(error.response);
                         let err_msg = error.response.data || "SignUp Failed!";
                         this.$emit("snack-event", "error", err_msg);
                     });

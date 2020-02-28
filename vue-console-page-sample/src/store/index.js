@@ -16,9 +16,9 @@ export default new Vuex.Store({
   state: {
     config: config,
     api_token: null,     //API 토큰
-    app_token: null,   //app 토큰(유효시간 10분)
-    ref_token: null, //app_token 리프레시 용도(1일)
-    key_token: null, //API KEY 토큰
+    app_token: null,    //app 토큰(유효시간 10분)
+    ref_token: null,    //app_token 리프레시 용도(1일)
+    key_token: null,    //API KEY 토큰
   },
 
   getters: {

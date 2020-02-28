@@ -507,7 +507,7 @@
                             this.URL_item = this.checkResultIsEmpty(
                                 response.data.service_url
                             );
-
+                            this.CheckSecurityAlert();
                             // this.URL_item = response.data.service_url;
                         } else {
                             console.error(
@@ -547,6 +547,7 @@
                             this.IP_item = this.checkResultIsEmpty(
                                 response.data.service_ipaddr
                             );
+                            this.CheckSecurityAlert();
                             // this.IP_item = response.data.service_ipaddr;
                         } else {
                             console.error(
@@ -587,6 +588,7 @@
                                 response.data.service_appid
                             );
                             this.$emit("loading-event",false);
+                            this.CheckSecurityAlert();
                         } else {
                             console.error(
                                 "requestGetServiceAppId error : ",
@@ -622,6 +624,7 @@
                     .then(response => {
                         if (response.data.result === "OK") {
                             console.log("response.data : ", response.data);
+                            this.CheckSecurityAlert();
                             // this.requestGetServiceUrl();
                             // this.URL_item = response.data.service_url;
                         } else {
@@ -659,6 +662,7 @@
                     .then(response => {
                         if (response.data.result === "OK") {
                             console.log("response.data : ", response.data);
+                            this.CheckSecurityAlert();
                             // this.URL_item = response.data.service_url;
                             // this.requestGetServiceIpAddr();
                         } else {
@@ -696,7 +700,7 @@
                     .then(response => {
                         if (response.data.result === "OK") {
                             console.log("response.data : ", response.data);
-
+                            this.CheckSecurityAlert();
                             // this.URL_item = response.data.service_url;
                             // this.requestGetServiceAppId();
                         } else {
@@ -774,15 +778,33 @@
                 }
 
                 this.warning_dialog = false;
-
-                if (
-                    this.URL_item.length == 0 ||
-                    this.IP_item.length == 0 ||
-                    this.Bundle_item.length == 0
-                ) {
-                    console.log("onsecurity event!");
-                    this.$emit("onSecurityEvent", true);
+                this.CheckSecurityAlert();
+                // if (
+                //     this.URL_item.length == 0 ||
+                //     this.IP_item.length == 0 ||
+                //     this.Bundle_item.length == 0
+                // ) {
+                //     console.log("onsecurity event!");
+                //     this.$emit("onSecurityEvent", true);
+                // }
+            },
+            
+            //경고 알림 뱃지 체크
+            CheckSecurityAlert(){
+                console.log("CheckSecurityAlert");
+                let cnt = 0;
+                if(this.URL_item.length < 1){
+                    cnt += 1;
                 }
+                if(this.IP_item.length < 1){
+                    cnt += 1;
+                }
+                if(this.Bundle_item.length < 1){
+                    cnt += 1;
+                }
+
+                this.$emit("security-event", cnt);
+
             },
             cancelRemove() {
                 this.warning_dialog = false;
@@ -888,13 +910,7 @@
         align-self: flex-end;
     }
 
-    table tr td {
-        border-left: 1px solid #dddddd;
-    }
-
-    table td + td {
-        border-left: 1px solid #dddddd;
-    }
+   
     #table > .v-data-footer .v-icon {
      color: lightgray;
     }

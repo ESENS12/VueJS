@@ -15,7 +15,6 @@ import Vuex from 'vuex'
 import store from '@/store'
 import config from '@/config'
 
-
 document.title="FATOS Console"
 const requireComponent = require.context(
   '@/components', true, /\.vue$/
