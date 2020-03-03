@@ -14,6 +14,9 @@ import camelCase from 'lodash/camelCase'
 import Vuex from 'vuex'
 import store from '@/store'
 import config from '@/config'
+import 'babel-polyfill'
+import '@mdi/font/css/materialdesignicons.css'
+
 
 document.title="FATOS Console"
 const requireComponent = require.context(
@@ -30,6 +33,8 @@ requireComponent.keys().forEach(fileName => {
   Vue.component(componentName, componentConfig.default || componentConfig)
 });
 Vue.config.productionTip = false;
+Vue.config.silent = true;
+
 Vue.prototype.$http = axios;
 Vue.use(require('vue-chartist'));
 Vue.use(Vuex);

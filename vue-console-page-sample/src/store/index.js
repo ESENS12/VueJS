@@ -44,7 +44,7 @@ export default new Vuex.Store({
 
 
     UpdateAppToken(state, { data, resolve }) {
-      console.log('updateAppToken : ' , data );
+      // console.log('updateAppToken : ' , data );
       if (data.app_token) {
         resolve(true);
         state.app_token = data.app_token;
@@ -61,7 +61,7 @@ export default new Vuex.Store({
     },
 
     GETKEYTOKEN(state, { key_token }) {
-      console.log('GETKEYTOKEN[mutations] ', key_token);
+      // console.log('GETKEYTOKEN[mutations] ', key_token);
       state.key_token = key_token
     },
 
@@ -106,7 +106,7 @@ export default new Vuex.Store({
         axios.post(`${resourceHost}/auth/refreshAppToken/`, { ref_token: refToken }, `${myHeaders}`)
           .then(({ data }) => {
             commit('UpdateAppToken', {data : data, resolve:resolve})
-            console.log('getToken success[actions]');
+            // console.log('getToken success[actions]');
             
           }
           ).catch(error => {
@@ -133,7 +133,7 @@ export default new Vuex.Store({
     
 
     GETKEYTOKEN({ commit } ,{key_token}) {
-      console.log('GETKEYTOKEN[actions] ', key_token);
+      // console.log('GETKEYTOKEN[actions] ', key_token);
       commit('GETKEYTOKEN', { key_token : key_token})
     },
 

@@ -1,14 +1,14 @@
 <template>
-    <v-container fill-height fluid grid-list-xl md12 class="pt-0">
+    <v-container fill-height fluid grid-list-xl md12 >
         <v-layout wrap md12>
-            <v-col md12 class="pt-0">
+            <v-col md12 >
                 <v-row>
                     <v-flex xs12 md6 py-0>
                         <material-card
                             minHeight="316px"
                             color="purple"
                             title="Contact Information"
-                            class="mb-0 mt-8"
+                            class="mb-0 mt-8 font-"
                         >
                             <v-layout
                                 wrap
@@ -285,6 +285,7 @@
         mounted() {},
 
         created() {
+            this.getUserInfo();
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플
             // this.$http.get('/sendMail')
             //     .then((response) => {
@@ -481,6 +482,48 @@
                     });
             },
 
+
+            //유저정보 세팅
+            getUserInfo(){
+                this.$http
+                    .post(
+                        `${config.requestHost}/auth/getUserInfo`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log(
+                        //     "recieved getUserInfo data : ",
+                        //     data.data.length
+                        // );
+                        // console.log("recieved getUserInfo data : ", data.data);
+                        if (data.data.length == 0) {
+                            //등록된 키가 없으면 ..? 로그아웃? 키 만료일 체크?
+                            // this.userData = {};
+                            this.$emit(
+                                "snack-event",
+                                "error",
+                                "You don't have Key.."
+                            );
+                        } else {
+                            // console.log(
+                            //     "key Token : ",
+                            //     data.data[data.data.length - 1].id
+                            // );
+
+                            //userName이 없을때 사이트명으로 넣어준다.
+                            this.userData.userName = data.data[0].name || config.siteName;
+                            // console.log("create_date : ", data.data[0].create_date.substring(0,10));
+                            
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            },
+
             /**
              * 
              *  mobile_map_SUBSCRIBE: true,
@@ -652,4 +695,5 @@
     .my-header :last-child {
         border-right: 0px;
     }
+    
 </style>

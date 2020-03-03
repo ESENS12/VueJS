@@ -57,7 +57,10 @@
                 persistent
                 mobile-break-point="991"
             >
-                <v-img class="ma-10 mt-2" :src="require(`@/assets/${siteName}.png`)" />
+                <v-img
+                    class="ma-10 mt-2"
+                    :src="require(`@/assets/${siteName}.png`)"
+                />
                 <v-list dense>
                     <!-- Itmes -->
                     <template v-for="(item, i) in items" class="transparent">
@@ -112,10 +115,9 @@
                 </v-list>
                 <v-layout class="justify-center align-end mt-12">
                     <v-btn
-                        v-bind:href="this.developerUri"
+                        href="https://onemap.fatos.biz"
                         color="accent"
                         target="_blank"
-                        @click="goDeveloper"
                         minHeight="60px"
                         minWidth="220px"
                         class="font-weight-bold mx-auto mt-12"
@@ -124,13 +126,13 @@
                         <v-icon large right dark
                             >mdi-arrow-right-bold-box-outline</v-icon
                         >
+                        
                     </v-btn>
                 </v-layout>
             </v-navigation-drawer>
 
             <v-content class="pt-0">
                 <router-view
-
                     @loading-event="onLoading"
                     @security-event="onSecurityEvent"
                     @snack-event="onSnack"
@@ -147,9 +149,12 @@
     import "vue-loading-overlay/dist/vue-loading.css";
     //var ref = document.referrer;
 
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     export default {
         beforeMount() {
-             this.siteName = config.siteName
+            this.siteName = config.siteName;
             // this.isLogin = true;
         },
         mounted() {
@@ -165,17 +170,66 @@
         created() {
             // console.log("document: ",document);
             this.developerUri = config.developerHost;
+            // console.log("developerUri : ", this.developerUri);
             let app_token = sessionStorage.ref_token || "";
             if (app_token) {
                 this.isLogin = true;
             } else {
                 this.isLogin = false;
             }
-            //console.log("mounted!" , ref);
-            // console.log("requestHost : ", this.$store.getters.getConfig.requestHost);
-            // console.log("config host : ", config.requestHost);
-            //개발중에는 로그인된걸로 치고 작업하자
-            // this.onLogin();
+
+            this.getKeyData();
+
+            this.URL_item = [""];
+
+            this.IP_item = [""];
+
+            this.Bundle_item = [""];
+
+            //app토큰은 있는데 keyToken이 없을때(refresh한 경우)
+            // if (
+            //     this.$store.getters.getAppToken &&
+            //     !this.$store.getters.getKeyToken
+            // ) {
+            //     this.$http
+            //         .post(
+            //             `${config.requestHost}/console/getRegisteredKeybyUser`,
+            //             {
+            //                 app_token: this.$store.getters.getAppToken
+            //             },
+            //             `${myHeaders}`
+            //         )
+            //         .then(({ data }) => {
+            //             //key token 재발급
+
+            //             if (data.data.length == 0) {
+            //                 // todo 키가 없을 수 없는데(로그인시 발급 하도록 되어있음)... 없을때 처리?
+            //                 // this.GenerateNewKey();
+            //                 // this.userData = {};
+            //             } else {
+            //                 this.$store
+            //                     .dispatch("GETKEYTOKEN", {
+            //                         key_token:
+            //                             data.data[data.data.length - 1].id
+            //                     })
+            //                     .then(() => {
+            //                         //데이터 세팅
+            //                         this.requestGetServiceUrl();
+            //                         this.requestGetServiceIpAddr();
+            //                         this.requestGetServiceAppId();
+            //                     })
+            //                     .catch(({ message }) => (this.msg = message));
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error("getRegistredKeybyUser err", error);
+            //         });
+            // } else {
+            //     this.requestGetServiceUrl();
+            //     this.requestGetServiceIpAddr();
+            //     this.requestGetServiceAppId();
+            // }
+           
         },
 
         goDeveloper() {
@@ -198,8 +252,11 @@
             source: String
         },
         data: () => ({
-            siteName : "fatos",
-            badgeCnt : 0,
+            URL_item: [],
+            IP_item: [],
+            Bundle_item: [],
+            siteName: "fatos",
+            badgeCnt: 0,
             isLoading: false,
             developerUri: "",
             snackColor: "error",
@@ -233,10 +290,10 @@
             //Security 설정 여부(경고 뱃지 show/hide 용)
             onSecurityEvent(index) {
                 // console.log("onSecurity Event!" + index);
-                if(index>0){
-                    this.items[1].needAlert=true;
-                }else{
-                    this.items[1].needAlert=false;
+                if (index > 0) {
+                    this.items[1].needAlert = true;
+                } else {
+                    this.items[1].needAlert = false;
                 }
                 this.badgeCnt = index;
             },
@@ -254,6 +311,49 @@
                 this.isLogin = true;
                 //첫페이지
                 this.$router.replace({ name: this.items[0].text });
+
+                if (
+                this.$store.getters.getAppToken &&
+                !this.$store.getters.getKeyToken
+            ) {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getRegisteredKeybyUser`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        //key token 재발급
+
+                        if (data.data.length == 0) {
+                            // todo 키가 없을 수 없는데(로그인시 발급 하도록 되어있음)... 없을때 처리?
+                            // this.GenerateNewKey();
+                            // this.userData = {};
+                        } else {
+                            this.$store
+                                .dispatch("GETKEYTOKEN", {
+                                    key_token:
+                                        data.data[data.data.length - 1].id
+                                })
+                                .then(() => {
+                                    //데이터 세팅
+                                    this.requestGetServiceUrl();
+                                    this.requestGetServiceIpAddr();
+                                    this.requestGetServiceAppId();
+                                })
+                                .catch(({ message }) => (this.msg = message));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            } else {
+                this.requestGetServiceUrl();
+                this.requestGetServiceIpAddr();
+                this.requestGetServiceAppId();
+            }
             },
             onItemClick(index) {
                 // console.log('onItemCLick : ' + index);
@@ -299,7 +399,199 @@
                 } else {
                     this.responsive = false;
                 }
-            }
+            },
+
+            //key token 재발급
+            getKeyData() {
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getRegisteredKeybyUser`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log(
+                        //     "recieved getRegisteredKeybyUser data : ",
+                        //     data.data.length
+                        // );
+
+                        if (data.data.length == 0) {
+                            // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
+                        } else {
+                            // console.log(
+                            //     "used key : ",
+                            //     data.data[data.data.length - 1].id
+                            // );
+                            this.$store
+                                .dispatch("GETKEYTOKEN", {
+                                    key_token:
+                                        data.data[data.data.length - 1].id
+                                })
+                                .then(() => {
+                                    // console.log("after getKeyToken[store]");
+                                    this.$emit("login-event");
+                                })
+                                .catch(({ message }) => (this.msg = message));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
+            },
+
+            /** /console/requestGetServiceUrl
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+                "result": "OK",
+                "service_url": [
+                    "fatos.biz",
+                    "google.com",
+                    "example.com"
+                ]
+                }
+             */
+            requestGetServiceUrl() {
+                // console.log(
+                //     "requestGetServiceUrl ",
+                //     this.$store.getters.getKeyToken
+                // );
+
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceUrl?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            // console.log("url response.data : ", response.data);
+                            this.URL_item = this.checkResultIsEmpty(
+                                response.data.service_url
+                            );
+                            this.CheckSecurityAlert();
+                            // this.URL_item = response.data.service_url;
+                        } else {
+                            console.error(
+                                "requestGetServiceUrl error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("request Item failed : ", err);
+                    });
+            },
+
+            /** /console/requestGetServiceIpAddr
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+                "result": "OK",
+                "service_ipaddr": [
+                    "1.1.1.1",
+                    "2.2.2.2",
+                    "3.3.3.3"
+                ]
+                }
+             */
+            requestGetServiceIpAddr() {
+                // console.log("requestGetServiceIpAddr");
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceIpAddr?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            // console.log("ip response.data : ", response.data);
+                            this.IP_item = this.checkResultIsEmpty(
+                                response.data.service_ipaddr
+                            );
+                            this.CheckSecurityAlert();
+                            // this.IP_item = response.data.service_ipaddr;
+                        } else {
+                            console.error(
+                                "requestGetServiceIpAddr error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(err => {
+                        console.error("requestGetServiceIpAddr failed : ", err);
+                    });
+            },
+
+            /** /console/getServiceAppId
+             * @pathParam key : string
+             * @pathParam app_token : string
+             * 
+             * @returns
+             *  {
+               "result": "OK",
+                "service_appid": [
+                    "biz.fatos.testapp",
+                    "biz.fatos.testapp1",
+                    "biz.fatos.testapp2"
+                ]
+                }
+             */
+            requestGetServiceAppId() {
+                // console.log("requestGetServiceAppId");
+                this.$http
+                    .get(
+                        `${config.requestHost}/console/getServiceAppId?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                    )
+                    .then(response => {
+                        if (response.data.result === "OK") {
+                            // console.log("appId response.data : ", response.data);
+                            this.Bundle_item = this.checkResultIsEmpty(
+                                response.data.service_appid
+                            );
+                            this.$emit("loading-event", false);
+                            this.CheckSecurityAlert();
+                        } else {
+                            console.error(
+                                "requestGetServiceAppId error : ",
+                                response
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error("requestGetServiceAppId err", error);
+                    });
+            },
+
+            //경고 알림 뱃지 체크
+            CheckSecurityAlert() {
+                // console.log("CheckSecurityAlert");
+                let cnt = 0;
+                if (this.URL_item.length < 1) {
+                    cnt += 1;
+                }
+                if (this.IP_item.length < 1) {
+                    cnt += 1;
+                }
+                if (this.Bundle_item.length < 1) {
+                    cnt += 1;
+                }
+                this.onSecurityEvent(cnt);
+                // this.$emit("security-event", cnt);
+            },
+
+            //getserviceUrl, getserviceIpAddr, getServiceAppId 의 초기값 result가 공백 배열로 오기떄문에 검증
+            checkResultIsEmpty(array) {
+                if (array.length == 1) {
+                    if (array[0] === "") {
+                        return [];
+                    }
+                }
+                return array; //검증 이상 없으면 그대로 리턴
+            },
+
         }
     };
 </script>

@@ -18,9 +18,11 @@
         mounted() {
             this.renderChart(this.chartdata, this.options);
         },
+        
         watch: {
             chartdata() {
                 // console.log(to,from);
+                // console.log("this.chartData(watch) : " , this.chartdata);
                 this.renderChart(this.chartdata, this.options);
             }
         }

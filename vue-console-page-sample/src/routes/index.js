@@ -3,12 +3,11 @@ import Router from 'vue-router'
 // import Index from '@/components/HelloWorld'
 import Login from '@/components/LoginPage'
 import APIKey from '@/components/APIKey'
-import Logout from '@/components/Logout'
 import Profile from '@/components/Profile'
 import Usage from '@/components/Usage'
-
 import Security from '@/components/Security'
 import store from '@/store'
+// import config from "@/config";
 
 Vue.use(Router)
 
@@ -17,13 +16,13 @@ const requireAuth = () => (from, to, next) => {
   // console.log('to : ' , to);
   // var ref = document.referrer;
   // console.log('ref : ' , ref);
-  console.log('requireAuth');
+  // console.log('requireAuth');
   let hours = 1
   let saved = sessionStorage.getItem('saved')
 
   if (saved && (new Date().getTime() - saved > hours * 60 * 60 * 1000)) {
-  // if (saved && (new Date().getTime() - saved > 1000)) {
-      //로그아웃 처리해주는게 좋음
+    // if (saved && (new Date().getTime() - saved > 1000)) {
+    //로그아웃 처리해주는게 좋음
     store
       .dispatch("LOGOUT")
       .then(() => {
@@ -43,34 +42,34 @@ const requireAuth = () => (from, to, next) => {
       .catch(({ message }) => (this.msg = message));
   }
 
-  const getToken = function(){
-      return new Promise(function(resolve){
-        let refToken = store.getters.getRefToken || sessionStorage.ref_token;
-        // console.log('reftoken  : ' , refToken);
-      
-        store
-          .dispatch("refreshAppToken", { refToken:refToken , resolve: resolve })
-          .then(() => {
-            // resolve(true);
-            // console.log("refreshAppToken end");
-          })
-          .catch(({ message }) => (
-              this.msg = message
-              
-            ));
-      });
+  const getToken = function () {
+    return new Promise(function (resolve) {
+      let refToken = store.getters.getRefToken || sessionStorage.ref_token;
+      // console.log('reftoken  : ' , refToken);
+
+      store
+        .dispatch("refreshAppToken", { refToken: refToken, resolve: resolve })
+        .then(() => {
+          // resolve(true);
+          // console.log("refreshAppToken end");
+        })
+        .catch(({ message }) => (
+          this.msg = message
+
+        ));
+    });
   }
 
-  getToken().then(function (result){
-      if(result === true){
-          console.log('getToken success[route resolve]');
-          next();
-      }
+  getToken().then(function (result) {
+    if (result === true) {
+      // console.log('getToken success[route resolve]');
+      next();
+    }
   });
 
 
 
-  urlMapping(from,to);
+  // urlMapping(from, to);
 
 
   // let refToken = store.getters.getRefToken || sessionStorage.ref_token;
@@ -94,14 +93,16 @@ const requireAuth = () => (from, to, next) => {
   // next('/login')
 }
 
-
-const urlMapping = (from, to) => {
-  console.log("urlMapping");
-  console.log('from : ' ,  from);
-  console.log('to : ' , to);
-  var ref = document.referrer;
-  console.log("ref :", ref);
-}
+// const urlMapping = (from, to) => {
+//   const host = window.location.host;
+//   const parts = host.split('.');
+//   console.log("parts : ", parts);
+//   console.log("urlMapping");
+//   console.log('from : ', from);
+//   console.log('to : ', to);
+//   var ref = document.referrer;
+//   console.log("ref :", ref);
+//}
 
 
 const router = new Router({
@@ -125,20 +126,6 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login,
-      beforeEnter: requireAuth(),
-      beforeRouteUpdate: requireAuth()
-    },
-    // {
-    //   path: '/developer',
-    //   name: 'Developer Page',
-    //   component: DeveloperPage,
-    //   beforeEnter: requireAuth(),
-    //   beforeRouteUpdate: requireAuth()
-    // },
-    {
-      path: '/logout',
-      name: 'Logout',
-      component: Logout,
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()
     },

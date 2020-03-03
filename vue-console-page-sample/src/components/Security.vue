@@ -285,6 +285,7 @@
         mounted() {},
 
         created() {
+            console.log(' security created!');
             this.initialize();
 
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플

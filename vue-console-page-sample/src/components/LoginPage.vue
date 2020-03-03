@@ -1,12 +1,25 @@
 <template>
-    <v-container wrap pa-0 fill-height fluid grid-list-xl>
-        <v-layout justify-center wrap fill-height fluid>
+    <v-container
+        wrap
+        pa-0
+        fluid
+        grid-list-xl
+        align-center
+        mx-auto
+        class="justify-center fill-height fluid align-center"
+    >
+        <v-layout
+            justify-center
+            wrap
+            fluid
+            align-center
+            class="justify-center align-center"
+        >
             <!-- Left Side(Image or Logo) -->
             <v-flex xs0 sm5 md5 pb-0 class="background-yellow">
-                <v-layout justify-center wrap fill-height align-content-center>
+                <v-layout justify-center wrap align-content-center>
                     <!-- <img src="@/assets/onemap_logo.jpg" /> -->
                     <img :src="require(`@/assets/${siteName}.png`)" />
-                    
                 </v-layout>
             </v-flex>
             <!-- Login form -->
@@ -94,7 +107,7 @@
                 </v-layout>
             </v-flex>
         </v-layout>
-         <loading
+        <loading
             :loader="dots"
             :active.sync="isLoading"
             :can-cancel="true"
@@ -119,7 +132,7 @@
         name: "LoginPage",
 
         beforeMount() {
-            this.siteName = config.siteName
+            this.siteName = config.siteName;
             // this.$emit("loading-event",true);
             // console.log('password : ' + password);
             // this.isLoading = true;
@@ -141,8 +154,8 @@
         props: {},
 
         data: () => ({
-            siteName : "fatos",
-            isLoading : false,
+            siteName: "fatos",
+            isLoading: false,
             API_SELECTED: "https://betamaps.fatos.biz",
             API_URI_LIST: [
                 { text: "https://betamaps.fatos.biz" },
@@ -163,9 +176,9 @@
         }),
 
         methods: {
-            getIconSrc(){
-                console.log("siteName : ",config.iconPath);
-                return config.iconPath; 
+            getIconSrc() {
+                // console.log("siteName : ", config.iconPath);
+                return config.iconPath;
             },
             checkForm() {
                 const uri = this.API_SELECTED;
@@ -179,9 +192,7 @@
                         this.$store
                             .dispatch("GETAPITOKEN")
                             .then(() => {
-                                
                                 this.Login();
-                                
                             })
                             .catch(({ message }) => (this.msg = message));
                     } else {
@@ -216,9 +227,17 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                       
                         // console.log("recieved login data : ", data);
-
+                        if (!data.app_token) {
+                            if (data.includes("unverified email")) {
+                                this.$emit(
+                                    "snack-event",
+                                    "error",
+                                    "Unverified Email"
+                                );
+                                this.isLoading = false;
+                            }
+                        }
                         var app_token = data.app_token;
                         var ref_token = data.ref_token;
 
@@ -238,7 +257,6 @@
                             "snack-event",
                             "error",
                             "Login Failed Check Your Email or Password"
-                            
                         );
                         this.isLoading = false;
                         // this.$emit("loading-event",false);
@@ -260,27 +278,31 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log(
-                            "recieved getRegisteredKeybyUser data : ",
-                            data.data.length
-                        );
+                        // console.log(
+                        //     "recieved getRegisteredKeybyUser data : ",
+                        //     data.data.length
+                        // );
 
-                        if (data.data.length == 0) {    // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
+                        if (data.data.length == 0) {
+                            // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
                             this.GenerateNewKey();
                             this.userData = {};
                         } else {
-                            console.log('used key : ',data.data[data.data.length-1].id );
+                            // console.log(
+                            //     "used key : ",
+                            //     data.data[data.data.length - 1].id
+                            // );
                             this.$store
                                 .dispatch("GETKEYTOKEN", {
-                                    key_token: data.data[data.data.length-1].id
+                                    key_token:
+                                        data.data[data.data.length - 1].id
                                 })
                                 .then(() => {
-                                    console.log("after getKeyToken[store]");
+                                    // console.log("after getKeyToken[store]");
                                     this.isLoading = false;
                                     this.$emit("login-event");
                                 })
                                 .catch(({ message }) => (this.msg = message));
-                                
                         }
                     })
                     .catch(error => {
@@ -303,13 +325,13 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log("generateNewKey Success : ", data);
+                        // console.log("generateNewKey Success : ", data);
                         this.$store
                             .dispatch("GETKEYTOKEN", {
                                 key_token: data.key
                             })
                             .then(() => {
-                                console.log("after generateNewKey[store]");
+                                // console.log("after generateNewKey[store]");
                                 this.$emit("login-event");
                             })
                             .catch(({ message }) => (this.msg = message));
@@ -333,7 +355,7 @@
             },
 
             keyEvent(e) {
-                console.log("keyEvent ", e);
+                // console.log("keyEvent ", e);
                 if (e.keyCode === 13) {
                     this.checkForm();
                 }
@@ -343,11 +365,11 @@
             },
 
             MakeToken() {
-                console.log("MakeToken!");
+                // console.log("MakeToken!");
             },
 
             CheckAuth() {
-                console.log("CheckAuth!");
+                // console.log("CheckAuth!");
             }
         }
     };

@@ -1,7 +1,7 @@
 <template>
     <v-layout>
         <v-row class="justify-end mx-auto">
-            <v-col cols="12" sm="6" md="3" lg="3" xs="6">
+            <v-col cols="12" sm="12" md="6" lg="6" xs="12">
                 <v-menu
                     ref="start_menu"
                     v-model="start_menu"
@@ -36,7 +36,7 @@
                     </v-date-picker>
                 </v-menu>
             </v-col>
-            <v-col cols="12" sm="6" md="3" lg="3" xs="6">
+            <v-col cols="12" sm="12" md="6" lg="6" xs="12">
                 <v-menu
                     ref="end_menu"
                     v-model="end_menu"
@@ -76,13 +76,17 @@
 </template>
 
 <script>
+    import config from "@/config";
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
     export default {
         name: "DatePickerSample",
         created() {
             this.getToday();
-            this.dateChanged();
+            
         },
-        
 
         data: () => ({
             end_date: "",
@@ -99,7 +103,46 @@
                 var yyyy = today.getFullYear();
 
                 this.end_date = yyyy + "-" + mm + "-" + dd;
-                this.start_date = yyyy - 1 + "-" + mm + "-" + dd;
+                // this.start_date = yyyy - 1 + "-" + mm + "-" + dd;
+
+                this.$http
+                    .post(
+                        `${config.requestHost}/auth/getUserInfo`,
+                        {
+                            app_token: this.$store.getters.getAppToken
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log(
+                        //     "recieved getUserInfo data : ",
+                        //     data.data.length
+                        // );
+                        // console.log("recieved getUserInfo data : ", data.data);
+                        if (data.data.length == 0) {
+                            //등록된 키가 없으면 ..? 로그아웃? 키 만료일 체크?
+                            // this.userData = {};
+                            this.$emit(
+                                "snack-event",
+                                "error",
+                                "You don't have Key.."
+                            );
+                        } else {
+                            // console.log(
+                            //     "key Token : ",
+                            //     data.data[data.data.length - 1].id
+                            // );
+                            // console.log("create_date : ", data.data[0].create_date.substring(0,10));
+                            this.start_date = data.data[0].create_date.substring(
+                                0,
+                                10
+                            );
+                            this.dateChanged();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("getRegistredKeybyUser err", error);
+                    });
             },
 
             dateChanged() {

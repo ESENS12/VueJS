@@ -1,5 +1,6 @@
 module.exports = {
-
+  
+  productionSourceMap: false,
   devServer: {
     proxy: { 
       '/sendMail': { 
@@ -18,11 +19,11 @@ module.exports = {
       }  
     } 
   },
+  
   publicPath: '',
   outputDir: '../console_backend/public',
 
     "transpileDependencies": [
       "vuetify"
     ],
-    productionSourceMap: false
 }
