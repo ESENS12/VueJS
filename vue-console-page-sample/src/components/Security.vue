@@ -60,6 +60,20 @@
                 </v-card>
             </v-dialog>
 
+            <!-- content area -->
+            <v-flex md12 pb-0>
+                <v-layout class="justify-center align-center pb-0">
+                    <v-flex md9 pb-0>
+                        <v-select
+                            :items="keys"
+                            v-model="selectedKey"
+                            label="API keys"
+                            v-on:change="changeKey"
+                            solo
+                        ></v-select>
+                    </v-flex>
+                </v-layout>
+            </v-flex>
             <v-flex sm12 lg9 md9>
                 <material-card color="purple" title="Domain Name">
                     <v-row class="mx-auto">
@@ -76,7 +90,6 @@
                         <v-flex sm8 lg8 md8>
                             <v-layout class="wrap justify-end">
                                 <v-data-table
-                                    
                                     :headers="headers"
                                     :items="URL_item"
                                     :items-per-page="5"
@@ -285,7 +298,6 @@
         mounted() {},
 
         created() {
-            console.log(' security created!');
             this.initialize();
 
             // 컴포넌트가 생성될 때, backend에 data 요청 샘플
@@ -375,12 +387,14 @@
                     key:
                         "YIX904XeQyH9KQFGaKffeMJUKnoaYtMGpXDGG2HU6VX4LfE5BH(OZTye6sGzMcN)JSXXtnXnaBGLylhlQjjuP"
                 }
-            ]
+            ],
+            //key_token
+            keys: [],
+            selectedKey: ""
         }),
         methods: {
             initialize() {
-                this.$emit("loading-event",true);
-                console.log("initialize");
+                this.$emit("loading-event", true);
 
                 //sample data
                 this.URL_item = [""];
@@ -390,10 +404,7 @@
                 this.Bundle_item = [""];
 
                 //app토큰은 있는데 keyToken이 없을때(refresh한 경우)
-                if (
-                    this.$store.getters.getAppToken &&
-                    !this.$store.getters.getKeyToken
-                ) {
+                if (this.$store.getters.getAppToken && !this.selectedKey) {
                     this.$http
                         .post(
                             `${config.requestHost}/console/getRegisteredKeybyUser`,
@@ -410,20 +421,27 @@
                                 // this.GenerateNewKey();
                                 // this.userData = {};
                             } else {
-                                this.$store
-                                    .dispatch("GETKEYTOKEN", {
-                                        key_token:
-                                            data.data[data.data.length - 1].id
-                                    })
-                                    .then(() => {
-                                        //데이터 세팅
-                                        this.requestGetServiceUrl();
-                                        this.requestGetServiceIpAddr();
-                                        this.requestGetServiceAppId();
-                                    })
-                                    .catch(
-                                        ({ message }) => (this.msg = message)
-                                    );
+                                this.keys = data.data.map(x => x.id);
+                                this.selectedKey = this.keys[0];
+                                //todo  key 없을때 예외처리?
+                                this.requestGetServiceUrl();
+                                this.requestGetServiceIpAddr();
+                                this.requestGetServiceAppId();
+
+                                // this.$store
+                                //     .dispatch("GETKEYTOKEN", {
+                                //         key_token:
+                                //             data.data[data.data.length - 1].id
+                                //     })
+                                //     .then(() => {
+                                //         //데이터 세팅
+                                //         this.requestGetServiceUrl();
+                                //         this.requestGetServiceIpAddr();
+                                //         this.requestGetServiceAppId();
+                                //     })
+                                //     .catch(
+                                //         ({ message }) => (this.msg = message)
+                                //     );
                             }
                         })
                         .catch(error => {
@@ -434,6 +452,15 @@
                     this.requestGetServiceIpAddr();
                     this.requestGetServiceAppId();
                 }
+            },
+
+            //api key 선택 변경되었을 때,
+            changeKey(item) {
+                this.selectedKey = item;
+
+                this.requestGetServiceUrl();
+                this.requestGetServiceIpAddr();
+                this.requestGetServiceAppId();
             },
 
             //key token 재발급
@@ -447,28 +474,20 @@
                         `${myHeaders}`
                     )
                     .then(({ data }) => {
-                        console.log(
-                            "recieved getRegisteredKeybyUser data : ",
-                            data.data.length
-                        );
-
                         if (data.data.length == 0) {
                             // 현재 키가 없으면 새로 생성 요청(site는 config에 있는놈으로 자동 세팅)
                             this.GenerateNewKey();
                             this.userData = {};
                         } else {
-                            console.log(
-                                "used key : ",
-                                data.data[data.data.length - 1].id
-                            );
+                            this.keys = data.data.map(x => x.id);
+
                             this.$store
                                 .dispatch("GETKEYTOKEN", {
                                     key_token:
                                         data.data[data.data.length - 1].id
                                 })
                                 .then(() => {
-                                    console.log("after getKeyToken[store]");
-                                    this.$emit("login-event");
+                                    //this.$emit("login-event");
                                 })
                                 .catch(({ message }) => (this.msg = message));
                         }
@@ -493,14 +512,9 @@
                 }
              */
             requestGetServiceUrl() {
-                console.log(
-                    "requestGetServiceUrl ",
-                    this.$store.getters.getKeyToken
-                );
-
                 this.$http
                     .get(
-                        `${config.requestHost}/console/getServiceUrl?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                        `${config.requestHost}/console/getServiceUrl?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
@@ -508,7 +522,7 @@
                             this.URL_item = this.checkResultIsEmpty(
                                 response.data.service_url
                             );
-                            this.CheckSecurityAlert();
+
                             // this.URL_item = response.data.service_url;
                         } else {
                             console.error(
@@ -537,18 +551,16 @@
                 }
              */
             requestGetServiceIpAddr() {
-                console.log("requestGetServiceIpAddr");
                 this.$http
                     .get(
-                        `${config.requestHost}/console/getServiceIpAddr?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                        `${config.requestHost}/console/getServiceIpAddr?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
-                            console.log("ip response.data : ", response.data);
                             this.IP_item = this.checkResultIsEmpty(
                                 response.data.service_ipaddr
                             );
-                            this.CheckSecurityAlert();
+
                             // this.IP_item = response.data.service_ipaddr;
                         } else {
                             console.error(
@@ -577,10 +589,9 @@
                 }
              */
             requestGetServiceAppId() {
-                console.log("requestGetServiceAppId");
                 this.$http
                     .get(
-                        `${config.requestHost}/console/getServiceAppId?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`
+                        `${config.requestHost}/console/getServiceAppId?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
@@ -588,8 +599,7 @@
                             this.Bundle_item = this.checkResultIsEmpty(
                                 response.data.service_appid
                             );
-                            this.$emit("loading-event",false);
-                            this.CheckSecurityAlert();
+                            this.$emit("loading-event", false);
                         } else {
                             console.error(
                                 "requestGetServiceAppId error : ",
@@ -614,17 +624,14 @@
                 }
              */
             requestSetServiceUrl() {
-                console.log("requestSetServiceUrl");
-
                 this.$http
                     .post(
-                        `${config.requestHost}/console/setServiceUrl?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        `${config.requestHost}/console/setServiceUrl?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`,
                         { url_array: this.URL_item },
                         `${myHeaders}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
-                            console.log("response.data : ", response.data);
                             this.CheckSecurityAlert();
                             // this.requestGetServiceUrl();
                             // this.URL_item = response.data.service_url;
@@ -652,17 +659,14 @@
                 }
              */
             requestSetServiceIpAddr() {
-                console.log("requestSetServiceIpAddr item : ", this.IP_item);
-
                 this.$http
                     .post(
-                        `${config.requestHost}/console/setServiceIpAddr?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        `${config.requestHost}/console/setServiceIpAddr?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`,
                         { ip_array: this.IP_item },
                         `${myHeaders}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
-                            console.log("response.data : ", response.data);
                             this.CheckSecurityAlert();
                             // this.URL_item = response.data.service_url;
                             // this.requestGetServiceIpAddr();
@@ -690,17 +694,14 @@
                 }
              */
             requestSetServiceAppId() {
-                console.log("requestSetServiceAppId");
-
                 this.$http
                     .post(
-                        `${config.requestHost}/console/setServiceAppId?key=${this.$store.getters.getKeyToken}&app_token=${this.$store.getters.getAppToken}`,
+                        `${config.requestHost}/console/setServiceAppId?key=${this.selectedKey}&app_token=${this.$store.getters.getAppToken}`,
                         { id_array: this.Bundle_item },
                         `${myHeaders}`
                     )
                     .then(response => {
                         if (response.data.result === "OK") {
-                            console.log("response.data : ", response.data);
                             this.CheckSecurityAlert();
                             // this.URL_item = response.data.service_url;
                             // this.requestGetServiceAppId();
@@ -727,29 +728,33 @@
             },
 
             removeDomain(item) {
-                console.log(
-                    "removeDomain" +
-                        this.URL_item.splice(this.URL_item.indexOf(item), 1)
-                );
+                this.URL_item.splice(this.URL_item.indexOf(item), 1);
+
+                // console.log(
+                //     "removeDomain" +
+                //         this.URL_item.splice(this.URL_item.indexOf(item), 1)
+                // );
                 this.requestSetServiceUrl();
             },
 
             removeIp(item) {
-                console.log(
-                    "removeIp" +
-                        this.IP_item.splice(this.IP_item.indexOf(item), 1)
-                );
+                this.IP_item.splice(this.IP_item.indexOf(item), 1);
+                // console.log(
+                //     "removeIp" +
+                //         this.IP_item.splice(this.IP_item.indexOf(item), 1)
+                // );
                 this.requestSetServiceIpAddr();
             },
 
             removeBundle(item) {
-                console.log(
-                    "remove bundle" +
-                        this.Bundle_item.splice(
-                            this.Bundle_item.indexOf(item),
-                            1
-                        )
-                );
+                this.Bundle_item.splice(this.Bundle_item.indexOf(item), 1);
+                // console.log(
+                //     "remove bundle" +
+                //         this.Bundle_item.splice(
+                //             this.Bundle_item.indexOf(item),
+                //             1
+                //         )
+                // );
                 this.requestSetServiceAppId();
             },
 
@@ -789,23 +794,12 @@
                 //     this.$emit("onSecurityEvent", true);
                 // }
             },
-            
+
             //경고 알림 뱃지 체크
-            CheckSecurityAlert(){
-                console.log("CheckSecurityAlert");
-                let cnt = 0;
-                if(this.URL_item.length < 1){
-                    cnt += 1;
-                }
-                if(this.IP_item.length < 1){
-                    cnt += 1;
-                }
-                if(this.Bundle_item.length < 1){
-                    cnt += 1;
-                }
-
-                this.$emit("security-event", cnt);
-
+            CheckSecurityAlert() {
+                setTimeout(() => {
+                    this.$emit("security-event");
+                }, 1000);
             },
             cancelRemove() {
                 this.warning_dialog = false;
@@ -850,8 +844,6 @@
             },
 
             saveDialog() {
-                console.log("content :", this.ModalData.content);
-                console.log("modalType : ", this.ModalData.modalType);
                 switch (this.ModalData.modalType) {
                     case 0: //Domain Name
                         {
@@ -911,9 +903,7 @@
         align-self: flex-end;
     }
 
-   
     #table > .v-data-footer .v-icon {
-     color: lightgray;
+        color: lightgray;
     }
-    
 </style>

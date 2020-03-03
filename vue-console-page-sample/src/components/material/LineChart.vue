@@ -17,10 +17,10 @@
                 type: Object,
                 default: null
             },
+            selectedKey: null,
             start_date: null,
             end_date: null,
             usageServiceType: null,
-            selectedKey: String,
         },
 
         data: () => ({
@@ -128,12 +128,15 @@
             b_isData: false,
             start_date: "",
             end_date: "",
-            usageServiceType: 0,
+            usageServiceType: 0
         }),
+
+        beforeMount() {
+            this.getUsageServiceType();
+        },
 
         mounted() {
             //this.renderChart(this.chartdata, this.option);
-            this.getUsageServiceType();
         },
 
         watch: {

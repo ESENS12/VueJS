@@ -312,9 +312,9 @@
 
             GenerateNewKey() {
                 let siteId = -1; //site id
-                if (config.developerHost.includes("onemap")) {
+                if (config.siteName.includes("OneMap")) {
                     siteId = "34"; //onemap(sla)
-                } else if (config.developerHost.includes("nostramap")) {
+                } else if (config.siteName.includes("NostraMap")) {
                     siteId = "26"; //nostramap(CDG)
                 } else {
                     siteId = "1"; //fatos

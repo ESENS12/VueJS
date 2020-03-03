@@ -25,7 +25,10 @@ export default new Vuex.Store({
     getApiToken: (state) => state.api_token,
     getConfig: (state) => state.config,
     getKeyToken : (state) => state.key_token,
-    getAppToken: (state) => state.app_token,
+    getAppToken: (state) => {
+      
+      return state.app_token
+    },
     getRefToken: (state) => state.ref_token,
   },
 

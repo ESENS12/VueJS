@@ -7,6 +7,7 @@
                         <v-row>
                             <v-col>
                                 <v-select
+                                    v-model="selectedKey"
                                     :items="keys"
                                     label="Select Key"
                                     v-on:change="changeKey"
@@ -375,7 +376,7 @@
             },
 
             changeTab(index) {
-                console.log("changeTab :", index);
+                // console.log("changeTab :", index);
                 this.usageServiceType = index;
             },
 
@@ -414,7 +415,7 @@
 
                 getToken().then(function(result) {
                     if (result === true) {
-                        console.log("getToken success[resolve]");
+                        // console.log("getToken success[resolve]");
                         // next();
                         obj.getKeyList();
                     }
@@ -448,12 +449,14 @@
                             // service_ids = return_data.data.map(x => x.service_id);
 
                             this.keys = data.data.map(x => x.id);
-                            console.log("this.keys : ", this.keys);
+                            this.selectedKey = this.keys[0];
+                            // console.log("this.keys : ", this.keys);
+
                             //초기값은 기존대로 마지막 인덱스 키값(최초생성된놈)으로 데이터 조회
                             this.$store
                                 .dispatch("GETKEYTOKEN", {
                                     key_token:
-                                        data.data[data.data.length - 1].id || ""
+                                        this.selectedKey
                                 })
                                 .then(() => {
                                     this.getUsageDeviceType();
@@ -499,6 +502,7 @@
                     })
                     .catch(error => {
                         console.error("getUsageDevice Failed : " + error);
+                        
                     })
                     .then(() => {
                         this.$emit("loading-event", false);
@@ -530,7 +534,7 @@
                         this.isWebData = true;
                         this.isMobileData = true;
                         this.isTotalData = true;
-                        
+
                         this.getUsageDeviceType();
 
                         this.selectedKey = item;

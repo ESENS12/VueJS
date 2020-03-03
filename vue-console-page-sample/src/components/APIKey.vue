@@ -1,7 +1,7 @@
 <template>
-    <v-container fill-height fluid grid-list-xl md12 >
+    <v-container fill-height fluid grid-list-xl md12>
         <v-layout wrap md12>
-            <v-col md12 >
+            <v-col md12>
                 <v-row>
                     <v-flex xs12 md6 py-0>
                         <material-card
@@ -63,11 +63,18 @@
                             <v-row>
                                 <v-flex md12 class="align-center">
                                     <v-card-text class="mx-auto " xs12>
-                                        <h3
+                                        <v-select
+                                            :items="keys"
+                                            v-model="selectedKey"
+                                            label="API keys"
+                                            v-on:change="changeKey"
+                                            solo
+                                        ></v-select>
+                                        <!-- <h3
                                             class="font-weight-bold text-center"
                                         >
                                             {{ this.userData.API_KEY }}
-                                        </h3>
+                                        </h3> -->
                                     </v-card-text>
                                 </v-flex>
                                 <v-flex md12 class="align-center">
@@ -279,10 +286,28 @@
     export default {
         beforeMount() {
             // console.log('password : ' + password);
+
             this.initialize();
         },
 
-        mounted() {},
+        mounted() {
+            //mounted 된 다음 10분간 작업 없으면 logout, 해당 작업은 컴포넌트들만 적용 해야한다.
+
+            // setTimeout(() => {
+            //     //  console.log('router : ' , this.$router);
+            //     //this.$router.replace({ name: "Login" });
+
+            //     this.$store
+            //         .dispatch("LOGOUT")
+            //         .then(() => {
+            //             this.$router.replace({ name: "login" });
+            //             location.reload();
+            //         })
+            //         .catch(({ message }) =>
+            //             console.log("error setTimeout : ", message)
+            //         );
+            // }, this.timeout);
+        },
 
         created() {
             this.getUserInfo();
@@ -304,6 +329,9 @@
             //   source: String,
         },
         data: () => ({
+            timeout: 3000,
+            selectedKey: "",
+            keys: [],
             userData: {
                 available: "100,000",
                 userName: "FATOS",
@@ -381,6 +409,55 @@
         }),
         methods: {
             Search: true,
+            // refreshAppToken() {
+
+            //     const getToken = function() {
+            //         return new Promise(function(resolve) {
+            //             let refToken =
+            //                 store.getters.getRefToken ||
+            //                 sessionStorage.ref_token;
+            //             // console.log('reftoken  : ' , refToken);
+
+            //             store
+            //                 .dispatch("refreshAppToken", {
+            //                     refToken: refToken,
+            //                     resolve: resolve
+            //                 })
+            //                 .then(() => {
+            //                     // resolve(true);
+            //                     // console.log("refreshAppToken end");
+            //                 })
+            //                 .catch(({ message }) => (this.msg = message));
+            //         });
+            //     };
+
+            //     getToken().then(function(result) {
+            //         if (result === true) {
+            //             // console.log('getToken success[route resolve]');
+            //             // next();
+            //         }
+            //     });
+                
+            // },
+            changeKey(item) {
+                this.userData.API_KEY = item;
+                this.selectedKey = item;
+                // console.log("change key select!!  :", item);
+
+                this.$http
+                    .post(
+                        `${config.requestHost}/console/getKeyInfo`,
+                        {
+                            app_token: this.$store.getters.getAppToken,
+                            key: this.userData.API_KEY
+                        },
+                        `${myHeaders}`
+                    )
+                    .then(({ data }) => {
+                        // console.log("data :", data.data);
+                        this.setServiceAvailable(data.data);
+                    });
+            },
 
             /** /console/getRegisteredKeybyUser
              * @bodyParam app_token : string
@@ -404,7 +481,6 @@
                 ]
             }
              */
-
             getKeyInfo() {
                 this.$http
                     .post(
@@ -441,8 +517,14 @@
 
                             this.userData = {};
                         } else {
-                            this.userData.API_KEY =
-                                data.data[data.data.length - 1].id || "";
+                            this.keys = data.data.map(x => x.id);
+
+                            // console.log("keys : ", this.keys);
+
+                            this.userData.API_KEY = this.keys[0];
+                            this.selectedKey = this.userData.API_KEY;
+
+                            //todo 현재는 expireDate 없음
                             this.userData.expireDate =
                                 data.data[data.data.length - 1].expireDate ||
                                 "unlimited";
@@ -482,9 +564,8 @@
                     });
             },
 
-
             //유저정보 세팅
-            getUserInfo(){
+            getUserInfo() {
                 this.$http
                     .post(
                         `${config.requestHost}/auth/getUserInfo`,
@@ -514,9 +595,9 @@
                             // );
 
                             //userName이 없을때 사이트명으로 넣어준다.
-                            this.userData.userName = data.data[0].name || config.siteName;
+                            this.userData.userName =
+                                data.data[0].name || config.ㅊ;
                             // console.log("create_date : ", data.data[0].create_date.substring(0,10));
-                            
                         }
                     })
                     .catch(error => {
@@ -695,5 +776,4 @@
     .my-header :last-child {
         border-right: 0px;
     }
-    
 </style>
