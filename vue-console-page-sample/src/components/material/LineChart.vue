@@ -151,7 +151,7 @@
             },
 
             selectedKey() {
-                console.log("selectedKey changed[line chart]");
+                // console.log("selectedKey changed[line chart]");
                 this.getUsageServiceType();
             },
 
@@ -188,7 +188,7 @@
              */
 
             getUsageServiceType() {
-                console.log("getUsageService Type : ", this.selectedKey);
+                // console.log("getUsageService Type : ", this.selectedKey);
                 //기존 데이터 초기화
                 this.total_service_data.labels = [];
                 this.total_service_data.datasets = [];
@@ -206,10 +206,10 @@
                     )
                     .then(({ data }) => {
                         try {
-                            console.log(
-                                "getUsageServiceType Data[pure] : ",
-                                data
-                            );
+                            // console.log(
+                            //     "getUsageServiceType Data[pure] : ",
+                            //     data
+                            // );
 
                             let return_data = {
                                 result: "OK",

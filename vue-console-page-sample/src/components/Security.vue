@@ -98,6 +98,7 @@
                                     class="elevation-1 mb-0"
                                     :hide-default-header="true"
                                     :footer-props="{
+                                        dark,
                                         firstIcon: 'mdi-arrow-collapse-left',
                                         lastIcon: 'mdi-arrow-collapse-right'
                                     }"
@@ -903,7 +904,7 @@
         align-self: flex-end;
     }
 
-    #table > .v-data-footer .v-icon {
+    #table > .v-data-footer .v-icons-after {
         color: lightgray;
     }
 </style>

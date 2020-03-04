@@ -27,7 +27,7 @@
                             >
                                 <v-btn
                                     @click="goLoginPage"
-                                    class="mx-0 font-weight-light justify-center"
+                                    class="mx-0 justify-center"
                                     color="success"
                                 >
                                     Okay!
@@ -104,14 +104,14 @@
                                     >
                                         <v-btn
                                             @click="checkForm"
-                                            class="mx-0 font-weight-light justify-center"
+                                            class="mx-0 justify-center"
                                             color="success"
                                         >
                                             SignUp
                                         </v-btn>
                                         <v-btn
                                             @click="goLoginPage"
-                                            class="ml-5 font-weight-light justify-center"
+                                            class="ml-5 justify-center"
                                             color="blue"
                                         >
                                             GoBack

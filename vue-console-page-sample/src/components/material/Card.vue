@@ -23,11 +23,11 @@
         />
         <span v-else>
           <h4
-            class="title font-weight-light mb-2"
+            class="mb-2 font-weight-medium"
             v-text="title"
           />
           <p
-            class="category font-weight-thin"
+            class="font-weight-light mt-0 mb-0 pt-0 pb-0"
             v-text="text"
           />
         </span>

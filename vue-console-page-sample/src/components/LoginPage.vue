@@ -87,14 +87,14 @@
                                     >
                                         <v-btn
                                             @click="checkForm"
-                                            class="mx-0 font-weight-light justify-center"
+                                            class="mx-0 justify-center"
                                             color="success"
                                         >
                                             SignIn
                                         </v-btn>
                                         <v-btn
                                             @click="signUp"
-                                            class="ml-5 font-weight-light justify-center"
+                                            class="ml-5 justify-center"
                                             color="blue"
                                         >
                                             SignUp

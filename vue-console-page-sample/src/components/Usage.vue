@@ -166,8 +166,8 @@
                     title="Total Service Usage"
                     class="wrap py-0"
                 >
-                    <v-row class="justify-end mx-auto">
-                        <v-tabs right class="justify-end mx-auto">
+                    <v-row class="justify-end mx-auto mb-1">
+                        <v-tabs right class="justify-end mx-auto mt-2">
                             <v-tab class="tab" @click="changeTab(0)">Day</v-tab>
                             <v-tab class="tab" @click="changeTab(1)"
                                 >Month</v-tab
@@ -181,6 +181,7 @@
                     <div class="container align-center fill-height">
                         <v-layout class="align-center justify-center">
                             <line-chart
+                            class="mt-3"
                                 v-if="
                                     isTotalData &&
                                         start_date &&
@@ -364,11 +365,22 @@
 
         methods: {
             dateChanged(start_date, end_date) {
-                this.start_date = start_date;
-                this.end_date = end_date;
-                this.getUsageDeviceType();
+                let start = new Date(start_date);
+                let end = new Date(end_date);
 
-                
+                if (start > end) {
+                    
+                    this.$emit(
+                            "snack-event",
+                            "error",
+                            "End Date Can't Be Less Than Start Date"
+                        );
+                        
+                } else {
+                    this.start_date = start_date;
+                    this.end_date = end_date;
+                    this.getUsageDeviceType();
+                }
             },
 
             complete(index) {
@@ -455,8 +467,7 @@
                             //초기값은 기존대로 마지막 인덱스 키값(최초생성된놈)으로 데이터 조회
                             this.$store
                                 .dispatch("GETKEYTOKEN", {
-                                    key_token:
-                                        this.selectedKey
+                                    key_token: this.selectedKey
                                 })
                                 .then(() => {
                                     this.getUsageDeviceType();
@@ -502,7 +513,11 @@
                     })
                     .catch(error => {
                         console.error("getUsageDevice Failed : " + error);
-                        
+                        this.$emit(
+                            "snack-event",
+                            "error",
+                            error
+                        );
                     })
                     .then(() => {
                         this.$emit("loading-event", false);
@@ -525,7 +540,6 @@
             },
 
             changeKey(item) {
-
                 this.$store
                     .dispatch("GETKEYTOKEN", {
                         key_token: item
@@ -540,7 +554,6 @@
                         this.selectedKey = item;
                     })
                     .catch(({ message }) => (this.msg = message));
-                    
             }
         },
         computed: {

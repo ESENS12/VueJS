@@ -85,20 +85,30 @@
                                     :content="badgeCnt"
                                     :v-model="badgeCnt"
                                 >
-                                    <v-icon>{{ item.icon }}</v-icon>
+                                    <v-icon
+                                        v-if="i === selected"
+                                        color="blue darken-2"
+                                        >{{ item.icon }}</v-icon
+                                    >
+                                    <v-icon v-else>{{ item.icon }}</v-icon>
                                 </v-badge>
 
                                 <!-- <v-icon>{{ item.icon }}</!-->
                             </v-list-item-action>
 
                             <v-list-item-action v-else>
-                                <v-icon>{{ item.icon }}</v-icon>
+                                <v-icon
+                                    v-if="i === selected"
+                                    color="blue darken-2"
+                                    >{{ item.icon }}</v-icon
+                                >
+                                <v-icon v-else>{{ item.icon }}</v-icon>
                             </v-list-item-action>
 
                             <v-list-item-content>
                                 <v-list-item-title
                                     v-if="i === selected"
-                                    class="blue--text font-weight-bold"
+                                    class="blue--text font-weight-bold h4 "
                                 >
                                     {{ item.text }}
                                 </v-list-item-title>
@@ -157,47 +167,71 @@
             const host = window.location.host;
             // const host = "https://onemap-console.fatos.biz"
             // const parts = host.split("-");
-            
+
             this.siteName = "fatos";
 
-            // console.log("host : ", host);
-            
-            if(host.includes("onemap")){
+            if (host.includes("onemap")) {
                 this.siteName = "onemap";
             }
 
-            if(host.includes("nostramap")){
+            if (host.includes("nostramap")) {
                 this.siteName = "nostramap";
             }
 
             // if(parts.length >1){
             //     this.siteName = parts[0];
             //     console.log('nostra or onemap site :');
-                
+
             // }else{
 
             //     this.siteName = "fatos";
             //     console.log('fatos site');
-                
+
             // }
             // console.log('site name : ' , this.siteName);
 
-            switch(this.siteName){
-                case "fatos":{
-                    this.developerUri = "https://developer.fatos.biz"
-                    this.siteName = "FATOS"
-                }break;
-                case "onemap":{
-                    this.developerUri = "https://onemap.fatos.biz"
-                    this.siteName = "OneMap"
-                }break;
-                case "nostramap":{
-                    this.developerUri = "https://nostramap.fatos.biz"
-                    this.siteName = "NostraMap"
-                }break;
+            switch (this.siteName) {
+                case "fatos":
+                    {
+                        this.developerUri = "https://developer.fatos.biz";
+                        this.siteName = "FATOS";
+                    }
+                    break;
+                case "onemap":
+                    {
+                        this.developerUri = "https://onemap.fatos.biz";
+                        this.siteName = "OneMap";
+                    }
+                    break;
+                case "nostramap":
+                    {
+                        this.developerUri = "https://nostramap.fatos.biz";
+                        this.siteName = "NostraMap";
+                    }
+                    break;
             }
 
             config.siteName = this.siteName;
+
+            //host url이랑 라우터 동기화
+            const myhost = window.location + "";
+            const parts = myhost.split("/");
+
+            // console.log("window.location : ", parts[parts.length - 1]);
+            this.$router.replace({ name: parts[parts.length - 1] });
+
+            let itemText = this.items.map(function(name) {
+                let str = name.text + "";
+                str = str.split(" ").join("");
+                return str.toLowerCase();
+            });
+
+            const findOption = function(item) {
+                return parts[parts.length - 1] === item;
+            };
+
+            let index = itemText.findIndex(findOption);
+            this.selected = index;
 
         },
         mounted() {
@@ -258,6 +292,11 @@
         },
 
         watch: {
+
+            selected(){
+                // console.log('selected changed!');
+            },
+
             badgeCnt() {
                 if (this.badgeCnt > 0) {
                     this.items[1].needAlert = true;
@@ -268,9 +307,7 @@
                 // console.log("Alert Cnt Change : ", this.badgeCnt);
             }
 
-            // $route(to) {
-            // document.title = "FATOS Console";
-            // }
+            
         },
 
         name: "App",
@@ -369,11 +406,18 @@
             //         }
             //     });
             // },
-
+            replaceAll(str, searchStr, replaceStr) {
+                return str.split(searchStr).join(replaceStr);
+            },
             onLogin() {
                 this.isLogin = true;
+                let path = this.items[0].text + "";
+                path = this.replaceAll(path, " ", "");
+                path = path.toLowerCase();
+
+                this.selected = 0;
                 //첫페이지
-                this.$router.replace({ name: this.items[0].text });
+                this.$router.replace({ name: path });
 
                 let store = this.$store;
                 let obj = this;
@@ -458,7 +502,10 @@
                     this.confirm();
                 } else {
                     this.selected = index;
-                    this.$router.push({ name: this.items[index].text });
+                    let path = this.items[index].text + "";
+                    path = path.toLowerCase() + "";
+                    path = this.replaceAll(path, " ", "");                    
+                    this.$router.push({ name: path });
                 }
             },
 
@@ -467,7 +514,7 @@
                     .dispatch("LOGOUT")
                     .then(() => {
                         this.isLogin = false;
-                        this.$router.replace({ name: "Login" });
+                        this.$router.replace({ name: "login" });
                     })
                     .catch(({ message }) => (this.msg = message));
             },
@@ -637,7 +684,8 @@
                 }
                 return true; //검증 이상 없으면 그대로 리턴
             }
-        }
+        },
+        
     };
 </script>
 

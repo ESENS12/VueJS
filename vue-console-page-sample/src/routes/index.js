@@ -116,8 +116,8 @@ const router = new Router({
     },
 
     {
-      path: '/keys',
-      name: 'API Keys',
+      path: '/apikeys',
+      name: 'apikeys',
       component: APIKey,
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()
@@ -131,21 +131,21 @@ const router = new Router({
     },
     {
       path: '/profile',
-      name: 'Profile',
+      name: 'profile',
       component: Profile,
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()
     },
     {
       path: '/usage',
-      name: 'Usage',
+      name: 'usage',
       component: Usage,
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()
     },
     {
       path: '/security',
-      name: 'Security',
+      name: 'security',
       component: Security,
       beforeEnter: requireAuth(),
       beforeRouteUpdate: requireAuth()

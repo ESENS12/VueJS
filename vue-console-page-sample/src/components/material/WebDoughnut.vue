@@ -33,12 +33,12 @@
                     {
                         data: [],
                         backgroundColor: [
-                            "#a2d6c4",
-                            "#36A2EB",
-                            "#3e8787",
-                            "#579aac",
-                            "#A436FF",
-                            "#d600ff"
+                            "#216353",
+                            "#4e8787",
+                            "#7c2ade",
+                            "#9a4d1d",
+                            "#d600ff",
+                            "#fd6663",
                         ]
                     }
                 ]
@@ -54,11 +54,11 @@
 
         watch: {
             start_date() {
-                console.log("startdate changed(webDoughnut)");
+                // console.log("startdate changed(webDoughnut)");
                 this.getUsageBrowser();
             },
             end_date() {
-                console.log("enddate changed(webDoughnut)");
+                // console.log("enddate changed(webDoughnut)");
                 this.getUsageBrowser();
             },
             datacollectionForWeb() {
@@ -67,7 +67,7 @@
                 this.renderChart(this.datacollectionForWeb, this.options);
             },
             selectedKey() {
-                console.log("selectedKey changed(webDoughnut)");
+                // console.log("selectedKey changed(webDoughnut)");
 
                 this.getUsageBrowser();
             }
@@ -111,7 +111,7 @@
                     )
                     .then(({ data }) => {
                         try {
-                            console.log("webData : ", data);
+                            // console.log("webData : ", data);
 
                             this.datacollectionForWeb.datasets[0].data.push(
                                 data.data.chrome || 0
@@ -176,10 +176,10 @@
                             //     this.datacollectionForWeb.labels.push("Edge");
                             // }
 
-                            console.log(
-                                "this.datacollectionForWeb: ",
-                                this.datacollectionForWeb.datasets[0]
-                            );
+                            // console.log(
+                            //     "this.datacollectionForWeb: ",
+                            //     this.datacollectionForWeb.datasets[0]
+                            // );
 
                             for (var index in this.datacollectionForWeb
                                 .datasets[0].data) {
@@ -200,14 +200,13 @@
                                     this.options
                                 );
                             } else {
-                                
-                                console.log("web data 없음");
+                                // console.log("web data 없음");
                                 this.$emit("isnotwebdata");
                             }
 
                             // this.b_isData = false;
                         } catch {
-                            console.log("catch err");
+                            // console.log("catch err");
                             this.$emit("isnotwebdata");
                         }
                     })

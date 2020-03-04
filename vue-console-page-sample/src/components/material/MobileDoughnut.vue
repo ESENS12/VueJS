@@ -33,10 +33,10 @@
                     {
                         data: [],
                         backgroundColor: [
-                            "#a2d6c4",
-                            "#36A2EB",
-                            "#3e8787",
-                            "#579aac"
+                            "#ad6663",
+                            "#2e8787",
+                            "#dc2ade",
+                            "#6a4d1d",
                         ]
                     }
                 ]
@@ -61,7 +61,7 @@
             },
             
             selectedKey() {
-                console.log("selectedKey changed[mobile doughnut]");
+                // console.log("selectedKey changed[mobile doughnut]");
                 this.getUsageMobile();
             }
         },

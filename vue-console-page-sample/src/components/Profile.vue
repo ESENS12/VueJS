@@ -71,7 +71,7 @@
                                     <v-layout>
                                         <v-btn
                                             @click="updateProfile"
-                                            class="mx-auto font-weight-light align-end justify-end"
+                                            class="mx-auto font-weight-bold align-end justify-end"
                                             color="success"
                                         >
                                             Update Profile
@@ -142,6 +142,11 @@
                             }
                         })
                         .catch(error => {
+                            this.$emit(
+                            "snack-event",
+                            "error",
+                            error
+                        );
                             console.error("err: " + error);
                         });
                 } else {
@@ -193,6 +198,11 @@
                         }
                     })
                     .catch(error => {
+                        this.$emit(
+                            "snack-event",
+                            "error",
+                            error
+                        );
                         console.error("err: " + error);
                     });
             }
