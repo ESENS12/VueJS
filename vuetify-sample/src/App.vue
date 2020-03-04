@@ -26,6 +26,9 @@
                     </v-card>
                 </v-flex>
             </v-layout>
+            <v-layout>
+                <DatePickerSample></DatePickerSample>
+            </v-layout>
         </v-content>
     </v-app>
 </template>
@@ -35,6 +38,7 @@
     // import VFlexSample from './components/VFlexSample';
     import DashBoardSample from "./components/DashBoardSample";
     import Sparklines from "./components/Sparklines";
+    import DatePickerSample from "./components/DatePickerSample";
 
     export default {
         name: "App",
@@ -43,7 +47,8 @@
             // HelloWorld,
             // VFlexSample,
             DashBoardSample,
-            Sparklines
+            Sparklines,
+            DatePickerSample
         },
 
         data: () => ({
