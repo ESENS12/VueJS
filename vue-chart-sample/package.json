@@ -12,6 +12,7 @@
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
+    "vue-google-charts": "^0.3.2",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {

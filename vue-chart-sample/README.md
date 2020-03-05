@@ -3,11 +3,12 @@
 
 # References
  - vue-chart.js (https://github.com/apertureless/vue-chartjs)
+ - vue-google-chart (https://github.com/devstark-com/vue-google-charts#readme)
 
 # Project setup
 
 ```
-yarn add vuetify vue-chartjs chart.js
+yarn add vuetify vue-chartjs chart.js vue-google-charts
 ```
 
 ```
