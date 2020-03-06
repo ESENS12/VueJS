@@ -75,15 +75,24 @@
                 <v-row>
                     <v-col class="col-sm-12 col-md-6 col-dm-6">
                         <div class="container wrap height" >
-                            <h3 class="text-center">GoogleDoughnutChart</h3>
-                            <GoogleDoughnutChart></GoogleDoughnutChart>
+                            <h3 class="text-center">GooglePieChart</h3>
+                            <GooglePieChart></GooglePieChart>
                         </div>
                     </v-col>
 
                     <v-col class="col-sm-12 col-md-6 col-dm-6">
                         <div class="container wrap height" >
-                            <h3 class="text-center">GooglePieChart</h3>
-                            <GooglePieChart></GooglePieChart>
+                            <h3 class="text-center">GoogleDoughnutChart</h3>
+                            <GoogleDoughnutChart></GoogleDoughnutChart>
+                        </div>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col class="col-sm-12 col-md-6 col-dm-6">
+                        <div class="container wrap height" >
+                            <h3 class="text-center">PieChart</h3>
+                            <PieChart></PieChart>
                         </div>
                     </v-col>
                 </v-row>
@@ -95,19 +104,27 @@
 <script>
     // import HelloWorld from './components/HelloWorld';
     import GoogleChart from "./components/GoogleChart";
+    // import GoogleBarChart from "./components/GoogleBarChart";
     import GoogleDoughnutChart from "./components/GoogleDoughnutChart";
     import GooglePieChart from "./components/GooglePieChart";
     import LineChart from "./components/LineChart";
     import BarChart from "./components/BarChart";
+    import PieChart from "./components/PieChart";
     import HorizontalBarChart from "./components/HorizontalBarChart";
     import DoughnutChart from "./components/DoughnutChart";
     import BubbleChart from "./components/BubbleChart";
     import PolarAreaChart from "./components/PolarAreaChart";
+    import Chart from 'chart.js';
+    import ChartJsPluginDataLabels from "chartjs-plugin-datalabels";
+    // Chart.defaults.global.plugins.datalabels.display = false;
+    Chart.plugins.unregister(ChartJsPluginDataLabels);
 
     export default {
         name: "App",
 
         components: {
+            PieChart, 
+            // GoogleBarChart,
             GooglePieChart,
             GoogleDoughnutChart,
             GoogleChart,
