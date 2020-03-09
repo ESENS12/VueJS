@@ -5,5 +5,11 @@
 <script>
 export default {
   name: 'SecondPage',
+
+
+  created(){
+    console.log("SecondPage created");
+  },
+
 };
 </script>
