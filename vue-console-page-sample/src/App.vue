@@ -57,10 +57,12 @@
                 persistent
                 mobile-break-point="991"
             >
+                <a @click="GoMainPage">
                 <v-img
                     class="ma-10 mt-2"
                     :src="require(`@/assets/${siteName}.png`)"
                 />
+                </a>
                 <v-list dense>
                     <!-- Itmes -->
                     <template v-for="(item, i) in items" class="transparent">
@@ -683,6 +685,16 @@
                     }
                 }
                 return true; //검증 이상 없으면 그대로 리턴
+            },
+
+            GoMainPage(){
+                let path = this.items[0].text + "";
+                path = this.replaceAll(path, " ", "");
+                path = path.toLowerCase();
+
+                this.selected = 0;
+                //첫페이지
+                this.$router.replace({ name: path });
             }
         },
         

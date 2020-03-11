@@ -181,7 +181,7 @@
                     <div class="container align-center fill-height">
                         <v-layout class="align-center justify-center">
                             <line-chart
-                            class="mt-3"
+                                class="mt-3"
                                 v-if="
                                     isTotalData &&
                                         start_date &&
@@ -224,11 +224,20 @@
                         <v-layout class="align-center justify-center">
                             <v-flex lg8 sm12 md8 pa-0>
                                 <horizontal-bar-chart
-                                    v-if="TopServiceData.datasets[0].data"
+                                    class="mt-3"
+                                    v-if="
+                                        isTopData &&
+                                            start_date &&
+                                            end_date &&
+                                            selectedKey
+                                    "
+                                    v-bind:selectedKey="this.selectedKey"
+                                    v-bind:start_date="this.start_date"
+                                    v-bind:end_date="this.end_date"
+                                    @isnottopdata="top_update"
                                     :width="450"
                                     :height="300"
-                                    :styles="myStyles"
-                                    :chartdata="TopServiceData"
+                                    :styles="total_service_usage"
                                     :options="optionsForLine"
                                 ></horizontal-bar-chart>
                                 <div v-else>
@@ -315,7 +324,7 @@
                         fill: false,
                         showLine: true,
                         //Data to be represented on y-axis
-                        data: [10, 10, 10, 10, 10]
+                        data: [10, 23423, 10, 10, 10]
                     }
                 ]
             },
@@ -346,7 +355,8 @@
 
             isMobileData: true,
             isWebData: true,
-            isTotalData: true
+            isTotalData: true,
+            isTopData: true
         }),
 
         components: {
@@ -369,13 +379,11 @@
                 let end = new Date(end_date);
 
                 if (start > end) {
-                    
                     this.$emit(
-                            "snack-event",
-                            "error",
-                            "End Date Can't Be Less Than Start Date"
-                        );
-                        
+                        "snack-event",
+                        "error",
+                        "End Date Can't Be Less Than Start Date"
+                    );
                 } else {
                     this.start_date = start_date;
                     this.end_date = end_date;
@@ -513,11 +521,7 @@
                     })
                     .catch(error => {
                         console.error("getUsageDevice Failed : " + error);
-                        this.$emit(
-                            "snack-event",
-                            "error",
-                            error
-                        );
+                        this.$emit("snack-event", "error", error);
                     })
                     .then(() => {
                         this.$emit("loading-event", false);
@@ -539,6 +543,11 @@
                 this.isTotalData = false;
             },
 
+            top_update() {
+                console.log('top_update!');
+                this.isTopData = false;
+            },
+
             changeKey(item) {
                 this.$store
                     .dispatch("GETKEYTOKEN", {
@@ -548,6 +557,7 @@
                         this.isWebData = true;
                         this.isMobileData = true;
                         this.isTotalData = true;
+                        this.isTopData = true;
 
                         this.getUsageDeviceType();
 
