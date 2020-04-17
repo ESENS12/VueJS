@@ -4,3 +4,4 @@
 ## References
  - flex(css) https://d2.naver.com/helloworld/8540176#ch3
  - StickyHeader https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_sticky_header
+ - vuetify (carousels .. ) https://vuetifyjs.com/en/components/carousels/
