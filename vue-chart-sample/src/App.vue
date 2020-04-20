@@ -42,13 +42,12 @@
                             ></horizontal-bar-chart>
                         </div>
                     </v-col>
-
                     <v-col>
                         <div class="container">
                             <h3>Doughnut Chart</h3>
                             <DoughnutChart
                                 :chartdata="datacollectionForDouhnut"
-                                :options="options"
+                                :options="optionsForDoughnut"
                             ></DoughnutChart>
                         </div>
                     </v-col>
@@ -74,14 +73,14 @@
 
                 <v-row>
                     <v-col class="col-sm-12 col-md-6 col-dm-6">
-                        <div class="container wrap height" >
+                        <div class="container wrap height">
                             <h3 class="text-center">GooglePieChart</h3>
                             <GooglePieChart></GooglePieChart>
                         </div>
                     </v-col>
 
                     <v-col class="col-sm-12 col-md-6 col-dm-6">
-                        <div class="container wrap height" >
+                        <div class="container wrap height">
                             <h3 class="text-center">GoogleDoughnutChart</h3>
                             <GoogleDoughnutChart></GoogleDoughnutChart>
                         </div>
@@ -90,9 +89,22 @@
 
                 <v-row>
                     <v-col class="col-sm-12 col-md-6 col-dm-6">
-                        <div class="container wrap height" >
+                        <div class="container wrap height">
                             <h3 class="text-center">PieChart</h3>
                             <PieChart></PieChart>
+                        </div>
+                    </v-col>
+                </v-row>
+
+                <v-row >
+                    <v-col>
+                        <div class="container" style="width:1500px; height:100px; maxHeight:100px;" >
+                            <h3>Horizontal Bar Chart[Stack]</h3>
+                            <horizontal-bar-chart
+                                :chartdata="datacollectionForHorizontal"
+                                :options="optionsForStack"
+                                
+                            ></horizontal-bar-chart>
                         </div>
                     </v-col>
                 </v-row>
@@ -114,7 +126,7 @@
     import DoughnutChart from "./components/DoughnutChart";
     import BubbleChart from "./components/BubbleChart";
     import PolarAreaChart from "./components/PolarAreaChart";
-    import Chart from 'chart.js';
+    import Chart from "chart.js";
     import ChartJsPluginDataLabels from "chartjs-plugin-datalabels";
     // Chart.defaults.global.plugins.datalabels.display = false;
     Chart.plugins.unregister(ChartJsPluginDataLabels);
@@ -123,7 +135,7 @@
         name: "App",
 
         components: {
-            PieChart, 
+            PieChart,
             // GoogleBarChart,
             GooglePieChart,
             GoogleDoughnutChart,
@@ -277,7 +289,7 @@
                 labels: ["January", "February", "March"],
                 datasets: [
                     {
-                        data: [1, 0, 0],
+                        data: [0, 0, 0],
                         backgroundColor: [
                             "#a2d6c4",
                             "#36A2EB",
@@ -306,8 +318,22 @@
                         ]
                     }
                 ]
-            }
+            },
 
+            optionsForStack: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{ stacked: true }],
+                    yAxes: [{ stacked: true }]
+                },
+                intersect: true,
+                tooltips: {
+                    mode: "nearest"
+                }
+            },
+
+            optionsForDoughnut: {}
             // options: {
             //     elements: {
             //         center: {
@@ -359,11 +385,16 @@
         }),
 
         mounted() {
+
+            // console.log("document.getElementById : " , document.getElementById("horizontalbar-chart"));
+            // document.getElementById("horizontalbar-chart").width = "100vh";
+
             // console.log(this.dataset);
             // this.chartData is created in the mixin.
             // If you want to pass options please create a local options object
         },
         created() {
+            
             let return_data = {
                 result: "OK",
                 data: [
