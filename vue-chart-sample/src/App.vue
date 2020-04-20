@@ -103,6 +103,8 @@
                             <horizontal-bar-chart
                                 :chartdata="datacollectionForHorizontal"
                                 :options="optionsForStack"
+                                :styles="horizontal_stack"
+                                css-classes="horizontal_stack col-md-12 row-md-5 "
                                 
                             ></horizontal-bar-chart>
                         </div>
@@ -149,6 +151,11 @@
         },
 
         data: () => ({
+            horizontal_stack:{
+                height:'150px',
+                
+
+            },
             textInside: "Doughnut Chart",
             datacollection: {
                 //Data to be represented on x-axis
