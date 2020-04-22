@@ -37,8 +37,8 @@
                         <div class="container">
                             <h3>Horizontal Bar Chart</h3>
                             <horizontal-bar-chart
-                                :chartdata="datacollectionForHorizontal"
-                                :options="options"
+                                :chartdata="datacollectionForHorizontalVol2"
+                                :options="optionsForHorizontalBar"
                             ></horizontal-bar-chart>
                         </div>
                     </v-col>
@@ -96,16 +96,18 @@
                     </v-col>
                 </v-row>
 
-                <v-row >
+                <v-row>
                     <v-col>
-                        <div class="container" style="width:1500px; height:100px; maxHeight:100px;" >
+                        <div
+                            class="container"
+                            style="width:1500px; height:100px; maxHeight:100px;"
+                        >
                             <h3>Horizontal Bar Chart[Stack]</h3>
                             <horizontal-bar-chart
                                 :chartdata="datacollectionForHorizontal"
                                 :options="optionsForStack"
                                 :styles="horizontal_stack"
                                 css-classes="horizontal_stack col-md-12 row-md-5 "
-                                
                             ></horizontal-bar-chart>
                         </div>
                     </v-col>
@@ -151,10 +153,8 @@
         },
 
         data: () => ({
-            horizontal_stack:{
-                height:'150px',
-                
-
+            horizontal_stack: {
+                height: "150px"
             },
             textInside: "Doughnut Chart",
             datacollection: {
@@ -204,39 +204,59 @@
 
             datacollectionForHorizontal: {
                 //Data to be represented on x-axis
-                labels: ["Total Data"],
+
                 datasets: [
                     {
-                        label: "January",
-                        backgroundColor: "rgba(0, 0, 255, 0.5)",
+                        label: "# of usage",
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.5)",
+                            "rgba(54, 162, 235, 0.5)",
+                            "rgba(255, 206, 86, 0.5)",
+                            "rgba(75, 192, 192, 0.5)"
+                        ],
                         pointBackgroundColor: "white",
                         borderWidth: 5,
                         fill: false,
-                        showLine: true,
+                        showLine: false,
                         //Data to be represented on y-axis
-                        data: [90]
-                    },
+                        data: [90, 70, 25, 0]
+                    }
+                ]
+            },
 
+            datacollectionForHorizontalVol2: {
+                //Data to be represented on x-axis
+                labels: ["January", "February", "March", "April"],
+                datasets: [
                     {
-                        label: "February",
-                        backgroundColor: "rgba(255, 0, 0, 0.5)",
+                        label: "This Year",
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.5)",
+                            "rgba(54, 162, 235, 0.5)",
+                            "rgba(255, 206, 86, 0.5)",
+                            "rgba(75, 192, 192, 0.5)"
+                        ],
                         pointBackgroundColor: "white",
                         borderWidth: 5,
                         fill: false,
-                        showLine: true,
+                        showLine: false,
                         //Data to be represented on y-axis
-                        data: [70]
+                        data: [90, 70, 25, 0]
                     },
-
                     {
-                        label: "March",
-                        backgroundColor: "rgba(0, 255, 0, 0.5)",
+                        label: "Last Year",
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.5)",
+                            "rgba(54, 162, 235, 0.5)",
+                            "rgba(255, 206, 86, 0.5)",
+                            "rgba(75, 192, 192, 0.5)"
+                        ],
                         pointBackgroundColor: "white",
                         borderWidth: 5,
                         fill: false,
-                        showLine: true,
+                        showLine: false,
                         //Data to be represented on y-axis
-                        data: [25]
+                        data: [64, 99, 80, 10]
                     }
                 ]
             },
@@ -296,7 +316,7 @@
                 labels: ["January", "February", "March"],
                 datasets: [
                     {
-                        data: [0, 0, 0],
+                        data: [122, 80, 42],
                         backgroundColor: [
                             "#a2d6c4",
                             "#36A2EB",
@@ -340,6 +360,55 @@
                 }
             },
 
+            optionsForHorizontalBar: {
+                legend: {
+                    display: true
+                },
+                // scales: {
+                //     xAxes: [
+                //         {
+                //             ticks: {
+                //                 min: 0,
+                //                 stepSize: 100,
+                //                 fontSize: 14
+                //             }
+                //         }
+                //     ]
+                // },
+                plugins: {
+                    datalabels: {
+                        color: "white",
+                        anchor: "end",
+                        align: "start",
+                        labels: {
+                            title: {
+                                font: {
+                                    weight: "bold"
+                                }
+                            },
+                            value: {
+                                color: "green"
+                            }
+                        },
+                        formatter: function(value, context) {
+                            if (value <= 0) {
+                                return "";
+                            }
+
+                            var tot = 0;
+                            context.dataset.data.forEach(element => {
+                                tot += element;
+                            });
+
+                            return Math.round((value * 100) / tot) + "%";
+                        }
+                    }
+                }
+
+                // scales: {
+                //     yAxes: [{ ticks: { mirror: true } }]
+                // }
+            },
             optionsForDoughnut: {}
             // options: {
             //     elements: {
@@ -392,16 +461,13 @@
         }),
 
         mounted() {
-
             // console.log("document.getElementById : " , document.getElementById("horizontalbar-chart"));
             // document.getElementById("horizontalbar-chart").width = "100vh";
-
             // console.log(this.dataset);
             // this.chartData is created in the mixin.
             // If you want to pass options please create a local options object
         },
         created() {
-            
             let return_data = {
                 result: "OK",
                 data: [
