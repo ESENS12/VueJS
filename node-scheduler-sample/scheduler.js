@@ -39,6 +39,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+console.log("start scheduler");
 //
 
 var i = 0 ;
@@ -49,17 +50,19 @@ var i = 0 ;
 
 
 // 사용량은 12시간 마다 체크
-var scheduler = schedule.scheduleJob('*/3 * * * * *', function(){
+var scheduler = schedule.scheduleJob('*/1 * * * * *', function(){
   // '*/3 * * * * *' -> 3초마다
   // '* * * * * * ' -> 매초마다
   // '1-10 * * * * * ' -> 현재 초가 1~10초인경우 실행
   //  console.log('5분마다 실행'); 
-   console.log('3초마다 실행 : ' , i);
+   console.log('1초마다 실행 : ' , i ,"번째");
    i++; 
    //작업 취소
-   if(i > 10){
-     scheduler.cancel();
-   }
+  //  if(i > 5){
+  //    var item = null;
+  //    console.log("item.url : " ,item.url);  //crash code!!
+  //    scheduler.cancel();
+  //  }
   });
   
 
