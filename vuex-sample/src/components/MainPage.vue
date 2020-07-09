@@ -16,6 +16,7 @@ export default {
     }
   },
   created() {
+    console.log('this.$store : ' ,this.$store);
     // console.log('this.$store.getAccessToken:  ' + this.$store.getters.getAccessToken);
     axios.post('http://localhost:3000/auth/checkAuth', {params : this.$store.getters.getAccessToken})
       .then(({data}) => {

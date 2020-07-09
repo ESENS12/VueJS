@@ -98,14 +98,15 @@
                 this.$store
                     .dispatch("LOGIN", { email, password })
                     .then(() => {
-                        this.$http
-                            .post("http://localhost:3000/api/sendMail", this.userData)
-                            .then(response => {
-                                // $http.post('/login/signin',this.payload)
-                                // this.b_isSendMail = true;
-                                console.log("response.data : " + response.data);
-                                this.redirect();
-                            });
+                        this.redirect();
+
+                        // this.$http
+                        //     .post("http://localhost:3000/api/sendMail", this.userData)
+                        //     .then(response => {
+                        //         // $http.post('/login/signin',this.payload)
+                        //         // this.b_isSendMail = true;
+                        //         console.log("response.data : " + response.data);
+                        //     });
                         
                     })
                     .catch(({ message }) => (this.msg = message));

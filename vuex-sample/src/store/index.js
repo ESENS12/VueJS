@@ -7,12 +7,39 @@ Vue.use(Vuex)
 
 // const resourceHost = 'http://localhost:3000'
 
+
+import createPersistedState from 'vuex-persistedstate'
+import * as Cookies from 'js-cookie'
+
 export default new Vuex.Store({
+  plugins: [
+    createPersistedState({
+
+      storage: window.sessionStorage,
+
+      getState: (key) => {
+        Cookies.getJSON(key)
+        // console.log('getState!!', Cookies.getJSON(key))
+        // console.log('getState!!', Cookies)
+      },
+      setState: (key, state) => {
+        // console.log('setState!!')
+        Cookies.set(key, state, { expires: 3, secure: true })
+        // console.log(key);
+        // console.log(state);
+        // console.log(Cookies.set(key, state, { expires: 3, secure: true }));
+
+    
+    }
+    })
+  ],
   state: {
     accessToken: null
   },
   getters: {
-    getAccessToken: (state) => state.accessToken
+    getAccessToken: (state) =>{ 
+      state.accessToken
+    }
   },
   mutations: {
 
