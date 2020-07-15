@@ -9,5 +9,8 @@ export default {
   data() {
     return {};
   },
+  created(){
+    console.log("created app.vuew(popup)") 
+  }
 };
 </script>

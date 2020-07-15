@@ -14,8 +14,26 @@
   "background": {
     "scripts": [
       "background.js"
-    ]
+    ],
+
+    "persistent": false
+
   },
+  "content_scripts": [
+    {
+      "matches": ["*://*.naver.com/*","*.naver.com/*" , "*//naver.com/*","https://www.naver.com/"],
+      "js": ["getPagesSource.js"]
+    }
+  ],
+  
+  "permissions":[  
+    "*://*.naver.com/*",
+    "*.naver.com/*" , 
+    "*//naver.com/*",
+    "activeTab",
+    "tabs", "<all_urls>",
+    "webNavigation"
+  ],
   "options_ui": {
     "page": "options/options.html",
     "chrome_style": true

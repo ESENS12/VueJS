@@ -1,11 +1,14 @@
 <template>
-  <p>Hello world!</p>
+  <p>Hello Chrome</p>
 </template>
 
 <script>
 export default {
   data() {
     return {};
+  },
+  created(){
+    console.log("created  popup page");
   },
 };
 </script>
