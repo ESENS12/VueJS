@@ -4,6 +4,7 @@ let express = require('express');
 let path = require("path");
 let router = express.Router();
 let jwt = require("jsonwebtoken");
+var fs = require('fs');
 
 // router.use(bodyParser.json);
 
@@ -19,13 +20,42 @@ router.post('/', function(req, res, next) {
         if(email && password){
             res.status(200).json({accessToken : "Hello " + email});
         }else{
-            res.status(200).json({accessToken : "Hello World!"});
+            res.status(200).json({accessToken : "Hello World!"});    
         }
+
+        
         
     }catch(err){
         console.error(err);
         res.status(400).send("Error : " + err);
     }
+});
+
+router.post('/makeFile',function(req,res,next){
+    try{
+
+        const filePath = req.body.filePath;
+        const fileDest = req.body.fileDest;
+        if(filePath || fileDest){
+            //folder or file perfectly work!
+            fs.copyFile(filePath, fileDest, function(cp_param){
+                console.log("makeFile res : " , cp_param)
+                if(res.errno == -2){
+                    res.status(400).send("Error : " + err);        
+                }
+                res.status(200).send("Success");
+            });
+        }else{
+            errMsg = "filePath or fileDest is fucked up";
+            console.error(errMsg);
+            res.status(400).send(errMsg);
+        }
+
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+
 });
 
 
