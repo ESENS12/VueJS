@@ -5,7 +5,7 @@ let path = require("path");
 let router = express.Router();
 let jwt = require("jsonwebtoken");
 var fs = require('fs');
-
+const ncp = require('ncp').ncp;
 // router.use(bodyParser.json);
 
 const SecretKey = "~!@#$THISISPRIVATEKEY";
@@ -34,17 +34,21 @@ router.post('/', function(req, res, next) {
 router.post('/makeFile',function(req,res,next){
     try{
 
-        const filePath = req.body.filePath;
-        const fileDest = req.body.fileDest;
+        let filePath  = req.body.filePath + "";
+        let fileDest = req.body.fileDest + "";
+
         if(filePath || fileDest){
-            //folder or file perfectly work!
-            fs.copyFile(filePath, fileDest, function(cp_param){
-                console.log("makeFile res : " , cp_param)
-                if(res.errno == -2){
-                    res.status(400).send("Error : " + err);        
+
+            ncp(filePath, fileDest, (err) => {
+                if (err) {
+                 console.error('Error while copying folder contents.', err);
+                 return;
+                }else{
+                    console.log("folder copy success");
+                    res.status(200).send("folder copy success!");
                 }
-                res.status(200).send("Success");
             });
+           
         }else{
             errMsg = "filePath or fileDest is fucked up";
             console.error(errMsg);
