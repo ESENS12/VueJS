@@ -31,6 +31,44 @@ router.post('/', function(req, res, next) {
     }
 });
 
+var deleteFolderRecursive = function(path) {
+    if( fs.existsSync(path) ) {
+      fs.readdirSync(path).forEach(function(file,index){
+        var curPath = path + "/" + file;
+        if(fs.lstatSync(curPath).isDirectory()) {
+          deleteFolderRecursive(curPath);
+        } else { 
+          fs.unlinkSync(curPath);
+        }
+      });
+      fs.rmdirSync(path);
+    }
+};
+
+router.post('/deleteFolder',function(req,res,next){
+    try{        
+        console.log("/deleteFolder");
+
+        let newPath = "/Users/esens/Downloads/config_copy/";
+        let oldPath = req.body.oldPath;
+        if(oldPath){
+            if(oldPath.indexOf("/Users/esens/Downloads/") > -1){
+                console.log('contain index')
+                deleteFolderRecursive(oldPath);
+                res.status(200).send("folder delete success!");
+                return;
+            }
+        }
+        errMsg = "filePath or fileDest is went wrong";
+        console.error(errMsg);
+        res.status(400).send(errMsg);
+        
+    }catch(err){
+        console.error(err);
+        res.status(400).send("Error : " + err);
+    }
+});
+
 router.post('/makeFile',function(req,res,next){
     try{
 

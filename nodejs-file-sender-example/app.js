@@ -21,18 +21,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-function copyDir({ source, destination }) {
-  return new Promise((resolve, reject) => {
-   ncp(source, destination, (err) => {
-    if (err) {
-     console.error('Error while copying folder contents.', err);
-     reject(err);
-     return;
-    }
-    resolve();
-   });
-  });
- }
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
@@ -51,11 +39,15 @@ const fileFilter = (req, file, cb) => {
 
 var storage = multer.diskStorage({
   destination: function (request, file, callback) {
-      callback(null, '/uploads/');
+    // console.log('request file : ' , file)
+    // console.log('request params : ' , request.filePath)
+    console.log('destination')
+      callback(null, './uploads/');
   },
   filename: function (request, file, callback) {
       // console.log(file);
-      callback(null, file.originalname)
+      console.log('filename')
+      callback(null, "copy_file_"+file.originalname)
   }
 });
 
@@ -69,10 +61,8 @@ const upload = multer({
   // storage: storage
 })
 
-
-
-app.post('/upload',upload.single('file'),(req,res) =>{
-  console.log("upload body : " , req);
+app.post('/uploadLogoImage',upload.single('file'),(req,res) =>{
+  console.log("uploadLogoImage" );
   res.json({file:'Uploaded file'});
 });
 
@@ -86,11 +76,11 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  console.log("error : " , err);
   // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
 
-app.listen(5000,()=>console.log("Server listening on port 5000!"));
+app.listen(5555,()=>console.log("Server listening on port 5555!"));
