@@ -2,53 +2,66 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  var messages = require('../bin/addressbook_pb')
+
+  //pb에 데이터를 담는 과정
+  var addressbooks = require('../bin/addressbook_pb')
+  var simpleTest = require('../bin/simpleTest_pb')
   try{
-    console.log('messages : ' , messages);
-    console.log('messages : ' , messages.Person);
-    var addressBook = messages.AddressBook();
-    console.log("addressBook : " , addressBook)
-    var person = messages.Person();
-    var PhoneNumber = messages.PhoneNumber();
+
+    // var message = new simpleTest.Test1();
+    // console.log(message.setA(10000))
+    // console.log(message.getA())
+    // console.log(addressbooks);
+
+    var addressbook = new addressbooks.AddressBook();
     
-    console.log("person : " , person)
-    console.log("PhoneNumber : " , PhoneNumber)
+    //normal message constructor
+    var person = new addressbooks.Person();
+    
+    //nested message constructor
+    var phoneNumber = new addressbooks.Person.PhoneNumber();
+    phoneNumber.setNumber("010-1111-2222")
+    phoneNumber.setType(1)
+
+    // console.log(phoneNumber.getNumber())
+    // console.log(phoneNumber.getType())
+
+    //array type must be use add or setPhones([])
+    person.addPhones(phoneNumber);
+    // var getPhones = person.getPhonesList();
+
+    person.setName("SENS LEE")
+    person.setId(1)
+    person.setEmail("ESENS@corp.com")
+    addressbook.addPeople(person)
+    var people_list = addressbook.getPeopleList()
+    
+    //person === people_list[0]
+    // console.log("person : " , person)
+    // console.log("people : " , people_list[0])
+    console.log("name : " , people_list[0].getName())
+    console.log("id : " , people_list[0].getId())
+    console.log("email : " , people_list[0].getEmail())
+    console.log("phonNumber : " , people_list[0].getPhonesList()[0].getNumber())
+    
+    
+    var serialize_data = addressbook.serializeBinary()
+    console.log(`serializeBinary : ${serialize_data}`);
+    
+    //byte array
+    console.log(serialize_data[0])
+
+    var deserialize_data = addressbooks.AddressBook.deserializeBinary(serialize_data);
+    console.log(`deserialize_data : ${deserialize_data}`);
+    console.log(`deserialize_data name: ${deserialize_data.getPeopleList()[0].getName()}`);
+    console.log(`deserialize_data id: ${deserialize_data.getPeopleList()[0].getId()}`);
+    console.log(`deserialize_data email: ${deserialize_data.getPeopleList()[0].getEmail()}`);
+    console.log(`deserialize_data phonNumber: ${deserialize_data.getPeopleList()[0].getPhonesList()[0].getNumber()}`);
+  
   }catch(e){
     console.log('e : ' , e);
   }
-  // var person = new messages.Person();
-  console.log('addressBook :',addressBook);
-  console.log('person :',person);
-  // TRACKER_INFORMATION
-  // required string name = 1;
-  // required int32 id = 2;
-  // optional string email = 3;
-  person.name = "John Doe"
-  person.age = 25
-  person.PhoneNumber = ["010-3333-2222","010-1234,1234"]
   
-  // Serializes to a UInt8Array.
-  var bytes = person.serializeBinary();
-  
-  console.log("bytes : " , bytes); 
-  
-  var message2 = person.deserializeBinary(bytes);
-
-  console.log('deserialize : ' , message2);
-  // messages.AddressBook.serial
-  // var message = new messages.MyMessage();
-  // var john =
-  // messages.newBuilder()
-  //   .setId(1234)
-  //   .setName("John Doe")
-  //   .setEmail("jdoe@example.com")
-  //   .addPhones(
-  //     Person.PhoneNumber.newBuilder()
-  //       .setNumber("555-4321")
-  //       .setType(Person.PhoneType.HOME))
-  //   .build();
-
-  // console.log("john : " , john);
   res.render('index', { title: 'Express' });
 });
 
