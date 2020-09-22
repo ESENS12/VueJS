@@ -6,8 +6,13 @@ option java_outer_classname = "HelloWorldProto";
 option objc_class_prefix = "HLW";
 package helloworld;
 
+//import 해서 사용 가능하지만, js를 각각 빌드하긴 해야함
+import "empty.proto";
+
 service Greeter {
+  
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc GetMyName (NO_PARAM) returns (HelloReply) {}
 }
 
 message HelloRequest {
