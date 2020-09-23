@@ -1,0 +1,19 @@
+//request,result 합쳐서 사용..
+
+syntax = "proto3";
+
+option objc_class_prefix = "HLW";
+package result;
+
+// import "empty.proto";
+import "request.proto";
+import "result.proto";
+
+service Greeter {
+  rpc SayHello (request.HelloRequest) returns (result.HelloReply) {}
+  // rpc GetMyName (NO_PARAM) returns (HelloReply) {}
+}
+
+// message HelloReply {
+//   string message = 1;
+// }

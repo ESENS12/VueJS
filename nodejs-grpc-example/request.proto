@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option objc_class_prefix = "HLW";
+package request;
+
+// import "empty.proto";
+// import "result.proto";
+
+// service Greeter {
+
+//   rpc SayHello (HelloRequest) returns (HelloReply) {}
+//   // rpc GetMyName (NO_PARAM) returns (HelloReply) {}
+// }
+
+message HelloRequest {
+  string name = 1;
+}
