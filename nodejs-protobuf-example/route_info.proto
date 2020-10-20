@@ -1,0 +1,87 @@
+/* 
+ route.proto
+ mgl_iOS
+ 
+ Created by 정대연 on 15/09/2019.
+ Copyright © 2019 FATOS Co., ltd. All rights reserved.
+ */
+
+ syntax = "proto3";
+ option optimize_for = LITE_RUNTIME;
+ 
+ import "Define.proto";
+ 
+ package ROUTEINFO;
+ 
+ message info {
+     message location {
+         double lat                                      = 1;
+         double lng                                      = 2;
+     }
+     
+     message textvalue {
+         string                  text                    = 1;
+         int32                   value                   = 2;
+     }
+     
+     message bound {
+         location                northeast               = 1;	// min
+         location                southwest               = 2;	// max
+     }
+     
+     message line {
+         bytes                   points                  = 1;
+         DEFINE.MBRD				mbr                     = 2;
+     }
+     
+     message traffic_speed {
+         int32                   speed                   = 1;
+     }
+     
+     message link {	// google - step
+         uint32                  attr                    = 1;    // ?? 
+         textvalue               distance                = 10;   // 거리(value-미터단위, text-사람이 있을수있는 표현 방식)
+         textvalue               duration                = 20;   // 소요시간
+         location                start_location          = 30;   // 이 단계의 시작 지점 위치   (optional)
+         location                end_location            = 40;   // 이 단계의 마지막 지점 위치 (optional)
+         string                  maneuver                = 50;   // 턴코드
+         string                  html_instructions       = 60;   // 도로명 , 방면명칭 등
+         string                  laneguide               = 70;   // 차선정보
+         line                    polyline                = 80;   // 해당 링크 경로 polyline 형태로
+         string                  travel_mode             = 90;   // 사용된 이동모드(대중교통,자가용 등등)
+ 
+         string                  road_object             = 100;  // ro3(tvas) 도로 속성정보
+         string                  complex_intersection    = 110;  // 복잡교차로
+         string                  service_area            = 120;  // 휴게소 안내정보
+         string                  tollgate                = 130;  // 톨게이트
+ 
+     }
+     
+     message path {	// google - leg -> 경유지가 없으면 leg는 1.  경유지별로 +1 
+         textvalue               distance                = 10;   // 거리
+         textvalue               duration                = 20;   // 소요시간
+         string                  start_address           = 30;   // 출발지 주소
+         location                start_location          = 40;   // 출발지 좌표
+         string                  end_address             = 50;   // 도착지 주소
+         location                end_location            = 60;   // 도착지 좌표
+         
+         repeated link           steps                   = 70;   // 서비스단위 링크 배열
+         repeated traffic_speed  traffic_speed_entry     = 80;   // ??
+         repeated location       via_waypoint            = 90;   // 경유지 좌표(??) -> path가 각 경유지별로 1개씩 생성되는데 경유지 좌표..? 
+     }
+     
+     message route {	// 한개의 경로
+         string                  copyrights              = 10;
+         bound                   bounds                  = 20;	// 현재 경로의 mbr
+         repeated path           legs                    = 30;
+         line                    overview_polyline       = 40;   // 전체경로
+         string                  summary                 = 50;   // 요약정보
+         string                  warnings                = 60;   // 경고문구
+         repeated int32          waypoint_order          = 70;   // 경유지순서
+     }
+     
+     repeated route              routes                  = 10;   // 경로단위 배열
+     int32                       status                  = 20;   // 상태코드 
+     string                      status_msg              = 30;   // 상태 메시지
+ }
+ 

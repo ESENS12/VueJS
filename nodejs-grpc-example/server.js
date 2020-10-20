@@ -16,7 +16,7 @@ var last_user_name = ''
 function sayHello(call, callback) {
   var reply = new result_pb.HelloReply();
   last_user_name = call.request.getName() || ''
-  console.log("sayHello called , call is : " , call )
+  console.log("sayHello called")
   console.log("return result after 5 second")
   reply.setMessage('Hello ' + call.request.getName());
 

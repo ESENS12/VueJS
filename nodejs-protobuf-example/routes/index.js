@@ -75,8 +75,8 @@ router.get('/protobufjs', function(req, res, next) {
       throw err
     }
     // console.log("root : " , root);
-    var someMessage = root.lookupType("tutorial.Person");
-    var payload = {name : "John Doe"}
+    var someMessage = root.lookupType("Person");
+    var payload = {name : "John Doe", id:1}
 
     var errmsg = someMessage.verify(payload);
     if(errmsg){
@@ -93,6 +93,9 @@ router.get('/protobufjs', function(req, res, next) {
       enums: String,
       bytes: String,
     })
+
+    // second param is optional 
+    // var jobj = someMessage.toObject(postMessage)
 
     console.log('jobj : ' ,JSON.stringify(jobj));
     // console.log('someMessage : ' ,someMessage);

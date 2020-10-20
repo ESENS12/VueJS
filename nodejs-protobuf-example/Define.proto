@@ -1,0 +1,406 @@
+//------------------------------------------------------------------------
+// Description		: 각 PROTO 파일에서 사용되는 enum/message 등을 정의한다.
+//					: 이 파일은 XCode Editor에 최적화 되어 있습니다.
+//
+// Created Time		: 2017.01.17
+//
+// Update History	: 2017.01.17	V1.0	Kwanghee Kim	- 최초 작성
+//------------------------------------------------------------------------
+
+
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+
+package DEFINE;
+
+
+//------------------------------------------------------------------------
+//
+// REQUEST / RESPONSE 에 필요한 enum 등을 정의한다.
+//
+//------------------------------------------------------------------------
+enum PLATFORM{		// enum Platform type
+    PHONE_ANDROID           = 0;        // Phone Android
+    PHONE_IOS               = 1;        // Phone iOS
+    PND_ANDROID             = 2;        // PND Android
+    PND_WINCE               = 3;        // PND WinCE
+    FATOS_API				= 4;        // FATOS API
+	FATOS_SDK				= 5;        // FATOS SDK
+
+	PC_TEST					= 99;		// PC TEST용
+}
+
+enum SERVICETYPE{	// enum Service type
+	ST_ROUTE                = 0;		// 경로탐색
+	ST_SEARCH               = 1;		// 검색
+}
+
+enum SERVICESVR{	// enum Service Server
+	SS_NONE	                = 0;		// N/A
+	SS_FATOS_LOCAL          = 1;		// 파토스 로컬
+	SS_FATOS_SERVER         = 2;		// 파토스 서버
+	SS_FARM           		= 3;		// FARM
+
+	SS_TOP1           		= 10;		// TMAP TOP1
+	SS_TOP2_LOCAL			= 11;		// TMAP TOP2 로컬
+	SS_TOP2_SERVER			= 12;		// TMAP TOP2
+	SS_TMAP_ML         		= 13;		// TAMP 다국어버전
+	SS_TMAP_TRUCK      		= 14;		// TAMP Truck RP
+    SS_TOP2_SERVER_AVL      = 15;       // TMAP TOP2 AVL
+    
+    
+	SS_GOOGLE          		= 20;		// GOOGLE
+	SS_NAVER           		= 21;		// NAVER
+	SS_FATOS_HERE      		= 22;		// HERE map
+
+	SS_LGD					= 24;
+	
+	SS_NOSTRA	      		= 25;		// NOSTRA route api
+	SS_ONEMAP	      		= 26;		// Onemap api
+
+	SS_EVWHERE				= 31;		// EVWhere
+	SS_WHERE                = 32;		// 어디야
+
+	// 기타 외부 API
+	SS_OPINET				= 50;		// Opinet
+}
+
+enum COORD{			// enum Coordinate system
+	CD_WORLD				= 0;		// WORLD좌표
+	CD_WGS84				= 1;		// WGS84
+	CD_BESSEL				= 2;		// Bessel
+}
+
+enum ROUTE_REQTYPE{	// enum Request Type
+	REQTYPE_ROUTE			= 0;        // 최초 경로탐색
+	REQTYPE_REROUTE			= 1;        // 경로이탈 재탐색
+	REQTYPE_USERROUTE		= 2;        // 사용자 재탐색
+	REQTYPE_TPEGROUTE		= 3;        // 주기 재탐색
+	REQTYPE_ROUTE_DETAIL	= 4;        // 상세 경로정보
+
+	REQTYPE_RGSTART			= 10;		// 경로안내 시작
+	REQTYPE_TRIP			= 11;		// TRIP 정보
+	// ...
+}
+
+enum ROUTEOPTION{	// enum Route Option
+	RO_NONE					= 0;		// None
+	RO_SUGGEST1				= 1;		// 추천1
+	RO_SUGGEST2				= 2;		// 추천2
+	RO_HIGHWAY				= 4;		// 고속도로우선
+	RO_NOHIGHWAY			= 8;		// 일반도로우선
+    RO_SHORTEST				= 16;		// 최단
+	RO_FREE					= 32;		// 무료
+	RO_NOMOTORWAY			= 64;		// 자동차전용제외
+	RO_TRUCK				= 128;		// 화물차전용
+	RO_SHORT_FREE			= 256;		// 최단+무료
+	// ...
+}
+
+enum FEETYPE{		// enum Fee Type
+    CHARGE_NONE             = 0;        // None
+    CHARGE_NORMAL           = 1;        // 유료/무료(가중치 미적용)
+    CHARGE_SUGGEST          = 2;        // 최적요금(요금가중치 적용)
+    CHARGE_FREE				= 3;        // 무료
+    // ...
+}
+
+enum TGTYPE{		// enum Tollgate Type(SK 기준)
+	TG_NONE             	= 0;        // None
+	TG_OPEN         	 	= 1;        // 개방형
+	TG_CLOSED       	   	= 2;        // 폐쇄형
+	TG_IC					= 3;        // IC
+	TG_JC					= 4;        // JC
+	TG_OUTIC				= 5;        // 진출IC
+	TG_SA					= 6;        // 휴게소
+// ...
+}
+
+enum NONSTOP{ // nonstop link enum type
+    NONSTOP_NONE            = 0x00; 	//최근접 링크
+    NONSTOP_MOTOR           = 0x01;     //고속
+    NONSTOP_TRUNK           = 0x02; 	//도시고속
+    NONSTOP_TUNNEL          = 0x04; 	//터널
+    NONSTOP_BRIDGE          = 0x08;	    //교량
+    NONSTOP_UNDER           = 0x10;     //지하
+    NONSTOP_OVER            = 0x20;	    //고가
+    NONSTOP_NOR             = 0x40; 	//일반 도로 우선
+    NONSTOP_CHECK           = 0x4000; 	//nonstop check 요청
+};
+
+//http://korea.gnu.org/manual/release/gettext/gettext-ko_12.html
+//에 맞출것
+enum VOICELANG{		// enum Language
+	VL_KO					= 0;        // Korean
+	VL_EN					= 1;		// 영어
+	VL_DE					= 2;		// 독일
+	VL_FR					= 3;		// 프랑스어
+	VL_NL					= 4;		// 네덜란드
+	VL_ZH					= 5;		// 중국
+	VL_JA					= 6;		// 일어
+	VL_VI					= 7;		// 베트남
+	VL_TH					= 8;		// 태국
+	VL_MS					= 9;		// 말레이어
+	VL_ID					= 10;		// 인도네시아
+	VL_AR					= 11;		// 아랍어
+	VL_HI					= 12;		// 힌디어
+	VL_RU					= 13;		// 러시아
+	VL_IT					= 14;		// 이탈리아
+	VL_ES					= 15;		// 스페인
+	VL_PT					= 16;		// 포루투칼
+	// ...
+}
+
+
+enum CAR{			// 차종
+	// OLD
+	CAR_NONE				= 0;		//
+	CAR_1					= 1;		// 1종 (소형차)
+	CAR_2					= 2;		// 2종 (중형차)
+	CAR_3					= 3;		// 3종 (대형차)
+	CAR_4					= 4;		// 4종 (대형화물차)
+	CAR_5					= 5;		// 5종 (특수화물차)
+	CAR_6					= 6;		// 1종 (경차)
+	CAR_7					= 7;		// 고압가스,위험물차량(위험물관제용)
+	CAR_8					= 8;		// 화물자동차
+	CAR_9					= 9;		// 건설기계
+	CAR_10					= 10;		// 특수자동차
+	
+	CAR_20					= 20;		// 택시
+	CAR_30					= 30;		// 일반버스
+	
+	// NEW 20200915 (국내, CDG 통합)
+	CAR_SMALL_CAR				= 101;	// 2축, 승용차, 16이하 승합	[KOR:1종		/ CDG:1]
+	CAR_MID_CAR					= 102;	// 2축, 32아하 승합			[KOR:2종		/ CDG:x]
+	CAR_LARGE_CAR				= 103;	// 2축, 33이상 승합			[KOR:3종		/ CDG:x]
+	CAR_HEAVY_TRUCK				= 104;	// 3축, 10~20t 화물차		[KOR:4종		/ CDG:x]
+	CAR_SPECIAL_TRUCK			= 105;	// 4축이상, 20t이상 화물차	[KOR:5종		/ CDG:x]
+	CAR_LIGHT_CAR				= 106;	// 2축, 1000cc 이하 승용차	[KOR:6종		/ CDG:x]
+	// 화물차 전용
+	CAR_DANGEROUS_LOAD			= 111;	// 위험물(고압가스,위험물)		[KOR:위험물	/ CDG:16]
+	CAR_TRUCK					= 112;	// 화물차					[KOR:화물차	/ CDG:7]
+	CAR_CONSTRUCTION_MACHINERY	= 113;	// 건설기계				[KOR:건설기계	/ CDG:x]
+	CAR_SPECIAL_CAR				= 114;	// 건설기계				[KOR:특수자동차	/ CDG:x]
+	CAR_TRAILER					= 115;	// 트레일러				[KOR:x		/ CDG:8]
+	CAR_FARM_VEHICLE			= 116;	// 농장차량				[KOR:농장차량	/ CDG:14]
+	// 기타(전동)
+	CAR_BUS						= 121;	// 버스					[KOR:버스		/ CDG:2]
+	CAR_TAXI					= 122;	// 택시					[KOR:택시		/ CDG:3]
+	CAR_TAXI_WITHOUT_PASSENGER	= 123;	// 빈택시					[KOR:x		/ CDG:15]
+	CAR_CART					= 124;	// 태국 CART				[KOR:x		/ CDG:13]
+	CAR_HOV						= 125;	// HOV차량 				[KOR:x		/ CDG:9] (출퇴근 시간대 둘이상 탑승 차량, 국내는 다인승)
+	CAR_EMERGENCY_CAR			= 126;	// 응급차량				[KOR:x		/ CDG:10]
+	CAR_MOTORCYCLE				= 127;	// 오토바이				[KOR:오토바이	/ CDG:4]
+	CAR_3WHEEL_MOTORCYCLE		= 128;	// 3바퀴 오토바이			[KOR:x		/ CDG:12]
+	// 기타
+	CAR_BICYCLE					= 141;	// 자전거					[KOR:자전거	/ CDG:6]
+	CAR_TRICYCLES				= 142;	// 3발자전거				[KOR:x		/ CDG:11]
+	CAR_PEDESTRIAN				= 143;	// 보행자					[KOR:보행자	/ CDG:5]
+	CAR_PET						= 144;	// 팻 트레거 전용			[KOR:팻		/ CDG:x]
+	CAR_WHEELCHAIR				= 145;	// 휠체어					[KOR:휠체어	/ CDG:x]
+	CAR_VISUALLY_IMPAIRED		= 146;	// 시각장애인				[KOR:시각장애인	/ CDG:x]
+}
+
+enum FUEL{			// 연료 type
+	FUEL_GASOLINE			= 0;		// 휘발유
+	FUEL_DIESEL				= 1;		// 경유
+	FUEL_LPG				= 2;		// 액화석유가스
+	FUEL_CNG				= 3;		// 압축천연가스
+	FUEL_ELECTRIC			= 4;		// 전기
+	FULE_BIODIESEL			= 5;		// 바이오디젤
+}
+
+enum GUIDETYPE{		// GuidePoint type
+    GT_TURN					= 0;		// 회전정보
+	GT_TOLL					= 1;		// 톨게이트
+	GT_SA                   = 2;        // 휴게소 정보
+	GT_LINK					= 3;		// Link정보
+    GT_SDI					= 4;		// 안전운전
+	GT_LANE                 = 5;        // 차선 정보
+    GT_HIPASS               = 6;        // 하이패스 정보
+    GT_GAS                  = 7;		// 주유소 정보
+    GT_TRAFFIC				= 8;		// 교통 정보
+
+	GT_MC                   = 9;		// 복잡교차로 정보
+//  GT_DRG                  = 10;		// 강제 재탐색
+//	GT_WAY                  = 11;		// 경유지 정보
+//	GT_HIGH                 = 12;		// 고속모드 정보
+	
+	GT_WHR					= 20;		// 화물차 폭제한
+	GT_HTR					= 21;		// 화물차 높이제한
+	GT_WTR					= 22;		// 화물차 중량제한
+	GT_WPZ					= 23;		// 화물차 상수원보호구역
+	GT_TTR					= 24;		// 화물차 시간제한
+	//...
+}
+
+enum GASSTATION{	// 주유소/LPG 브랜드
+	G_NONE					= 0;		// 정보없음
+
+	G_OIL					= 1;		// 주유소는 있으나 브랜드 모름
+	G_POLE					= 2;		// 무POLE주유소
+	G_SK					= 3;		// SK
+	G_GS					= 4;		// GS
+	G_H_OIL					= 5;		// H-Oil
+	G_S_OIL                 = 6;        // S-Oil
+	G_T_OIL                 = 7;        // T-Oil
+	G_SKIC					= 8;		// SK 인천정유
+	G_NCOIL					= 9;		// NC Oil
+	G_NHOIL					= 10;		// NH Oil
+
+	G_GAS          	   		= 20;		// LPG 있으나 브랜드 모름
+	G_POLE_GAS             	= 21;		// LPG 무POLE
+	G_SK_GAS               	= 22;		// SK GAS
+	G_GS_GAS                = 23;		// GS GAS
+	G_HOIL_GAS				= 24;		// H-Oil GAS
+	G_SOIL_GAS				= 25;		// S-Oil GAS
+	G_SKIC_GAS				= 26;		// SK인천정유 GAS
+	G_NC_GAS				= 27;		// NC-Oil GAS
+	G_NH_GAS				= 28;		// NH-Oil GAS
+}
+
+enum SAINFO{	// 휴게소 편의시설 정보
+	SA_NONE					= 0x00;		// 정보없음
+	
+	SA_TRUCK				= 0x01;		// 화물차 휴게소
+	SA_SLEEP				= 0x02;		// 수면실
+	SA_SHOWER				= 0x04;		// 샤워실
+	SA_LAUNDRY				= 0x08;		// 세탁실
+	SA_CARWASH				= 0x10;		// 세차장
+	SA_GARAGE				= 0x20;		// 정비소
+}
+
+
+//------------------------------------------------------------------------
+//
+// REQUEST / RESPONSE 에 필요한 기본 message를 정의한다.
+//
+//------------------------------------------------------------------------
+
+message IPOINT{		// Integer 좌표
+	int32 x					= 1;
+	int32 y					= 2;
+	int32 z					= 3;
+}
+
+message DPOINT{		// Double 좌표
+	float x					= 1;
+	float y					= 2;
+	float z					= 3;
+}
+
+message ENCCOORD{	// 암호화 좌표
+	bytes x					= 1;
+	bytes y					= 2;
+	bytes z					= 3;
+}
+
+message MBR{
+	uint32 minx				= 1;	// MBR min좌표
+	uint32 miny				= 2;
+	uint32 maxx				= 3;	// MBR max좌표
+	uint32 maxy				= 4;
+}
+
+message MBRD{
+	double minx				= 1;	// MBR min좌표
+	double miny				= 2;
+	double maxx				= 3;	// MBR max좌표
+	double maxy				= 4;
+}
+
+
+message USERINFO{
+	uint32 usercode			= 1;	// 사용자코드
+	bytes devicename		= 2;	// 단말기 이름
+	bytes osversion			= 3;	// 단말기 OS version
+	uint32 svcprovider		= 4;	// 통신사
+}
+
+
+
+
+//------------------------------------------------------------------------
+//
+// ERROR CODE를 정의한다.
+//
+//------------------------------------------------------------------------
+enum ERRORCODE{
+	ERR_SUCCESS				= 0;	// 성공
+    ERR_FAIL                = 1;	// 실패
+	ERR_MEMORYALLOC			= 2;
+	ERR_SERVICESVR			= 3;	// 서비스서버 오류
+
+    ERR_UNKNOWNREQ          = 4;    // 알수 없는 요청 타입
+    ERR_NONEVALUE           = 5;    // 인수 값 오류
+
+// PBF 관련(공통)
+	ERR_PBF_REQUEST			= 10;	// Request Buffer 오류
+	ERR_PBF_MAKERESULT		= 11;	// 결과물생성 오류
+	ERR_PBF_COMMHEAD_BUF	= 12;	// CommonHeader buffer 오류
+	ERR_PBF_COMMHEAD_SIZE	= 13;	// CommonHeader size 오류
+	ERR_PBF_DECODING		= 14;	// Protocol buffer decoding 오류
+	ERR_PBF_REQ_HEADER		= 15;	// Request Header size 오류 또는 데이터 오류
+	ERR_PBF_REQ_BODY		= 16;	// Request Body size 오류 또는 데이터 오류
+	ERR_PBF_RES_HEADER		= 17;	// Header결과물 생성 오류
+	ERR_PBF_RES_BODY		= 18;	// Body결과물 생성 오류
+
+// 파싱 관련(ROUTE, 30~59)
+	ERR_RP_ROUTEOPTION		= 30;	// Route Option 값 오류
+	ERR_RP_GOALDIR			= 31;	// Goal Dir 값 오류
+	ERR_RP_GPSANGLE			= 32;	// GPS Angle 값 오류
+	ERR_RP_CARSPEED			= 33;	// 차량속도값 오류
+	ERR_RP_GOALTYPE			= 34;	// 목적지타입 오류
+	ERR_RP_CARTYPE			= 35;	// 차종 오류
+	ERR_RP_FUELTYPE			= 36;	// 연료타입 오류
+
+	ERR_RP_START_CNT		= 37;	// 출발지개수
+	ERR_RP_START_POS		= 38;	// 출발지좌표
+	ERR_RP_VIA_CNT			= 39;	// 경유지개수
+	ERR_RP_VIA_POS			= 40;	// 경유지좌표
+	ERR_RP_GOAL_CNT			= 41;	// 목적지개수
+	ERR_RP_GOAL_POS			= 42;	// 목적지좌표
+
+	ERR_RP_GPS_CNT			= 43;	// GPS로그 개수 오류
+	ERR_RP_GPS_LOG			= 44;	// GPS로그 오류
+	ERR_RP_LINKSET			= 45;	// 링크셋 오류
+	ERR_RP_FEETYPE			= 46;	// Fee Type 오류
+
+// 파싱 관련(SEARCH, 60~)
+
+// ROUTING 관련(100~)
+	ERR_RP_IMPOSSIBLE		= 100;	// 탐색불가능한 경로
+	ERR_RP_STARTLINK		= 101;	// 출발지 주변 링크 없음
+	ERR_RP_GOALLINK			= 102;	// 목적지 주변 링크 없음
+	ERR_RP_VIALINK			= 103;	// 경유지 주변 링크 없음
+	ERR_RP_POSCOUNT			= 104;	// 요청 좌표 개수 이상
+	ERR_RP_QUEUE_EMPTY		= 105;	// 큐 안에 링크 없음
+	ERR_RP_QUEUE_OVERFLOW	= 106;	// 탐색링크수가 허용범위 초과
+	ERR_RP_FERRY			= 107;	// 경로상에 페리항로 있음
+	ERR_RP_GRAPHINIT		= 108;	// Graph init 오류
+	ERR_RP_ROUTEINIT		= 109;	// Route init 오류
+	ERR_RP_PROHIBIT_LINK	= 110;	// 진입금지 경유지(위수지역 등..)
+	ERR_RP_RESTRICTION_TIME_LINK		= 111;	// 시간 통행제한 링크로 경로 탐색 오류
+	ERR_RP_RESTRICTION_CRITICAL_LINK	= 112;	// 높이/중량/길이/폭 등 통행제한 링크로 경로 탐색 오류
+	
+    ERR_RP_OUTREGION        = 120;   // 서비스 지역을 벗어남
+    
+// SEARCH 관련(130~)
+
+// 통신 관련(200~)
+	ERR_HT_SOCK             = 200;	// 소켓 오류
+	ERR_HT_SEND             = 201;	// 송신 오류
+	ERR_HT_RCV              = 202;	// 결과 수신 오류
+	ERR_HT_RCVSIZE			= 203;	// 결과 사이즈 오류
+	ERR_HT_RESPARSE			= 204;	// 결과물 파싱 오류
+
+	ERR_AUTH_SERVER         = 300;   // 인증 서버 오류
+	ERR_AUTH_DATA           = 301;   // 인증 데이터 오류
+	ERR_AUTH_KEY            = 302;   // 인증 키 오류
+	ERR_AUTH_DATE           = 303;   // 인증 유효기간 지남
+	ERR_AUTH_PERMISSION     = 304;   // 인증 권한 오류
+	ERR_AUTH_TYPE           = 305;   // 인증 요청 타입 오류
+
+// JSON관련
+	ERR_JSON_PARSING		= 400;	// JSON파싱 오류
+}
