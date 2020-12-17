@@ -28,6 +28,40 @@ router.post('/', function(req, res, next) {
     }
 });
 
+router.post('/hmac', function(req,res,next){
+    try{
+        const https = require('https');
+        const crypto = require('crypto');
+
+        // const datetime = new Date().toISOString().substr(2,17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
+        var datetime = Date.now();
+        var method ='POST';
+        var path ='/requestOpt?rp=true&other=1';
+        var query = '';
+
+        var message = datetime + method + path + query;
+        var urlpath = path + '?' + query;
+
+        var KEY = 'ACCESS KEY';
+        var URL = 'http://request.sample.url/blah/blah';
+    
+        var MESSAGE = URL + datetime;
+        var algorithm = 'SHA1';
+
+        const signature = crypto.createHmac(algorithm, KEY)
+                            .update(MESSAGE)
+                            .digest('base64');
+
+        const authorization = 'CEA algorithm=HmacSHA1, access-key=' + KEY + ', signed-date=' + datetime + ', signature=' + signature;
+        // console.log('utf : ' , Buffer.from(signature,'utf8'));
+        console.log(authorization);
+        
+    }catch(err){
+        console.error(err)
+        res.status(400).send("Error : " , err)
+    }
+})
+
 
 router.post('/login', function(req, res, next) {
     try{
