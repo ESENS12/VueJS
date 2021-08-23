@@ -33,8 +33,9 @@ export default {
     async onSubmit(){
       const formData = new FormData();
       formData.append('file',this.file);
+      formData.append('filePath',"/esens/co/kr/");
       try{
-        await axios.post('http://localhost:5000/upload',formData);
+        await axios.post('http://localhost:5555/uploadLogoImage',formData);
         this.message = 'Uploaded !!'
       }catch(err){
         console.log(err);

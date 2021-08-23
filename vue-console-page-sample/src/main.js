@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
@@ -14,10 +15,20 @@ import camelCase from 'lodash/camelCase'
 import Vuex from 'vuex'
 import store from '@/store'
 import config from '@/config'
-import 'babel-polyfill'
 import '@mdi/font/css/materialdesignicons.css'
 
 
+var agent = navigator.userAgent.toLowerCase();
+
+ 
+
+if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+
+  alert("인터넷 익스플로러 브라우저 입니다.");
+
+}
+
+console.log("ua : ",window.navigator.userAgent);
 document.title="FATOS Console"
 const requireComponent = require.context(
   '@/components', true, /\.vue$/

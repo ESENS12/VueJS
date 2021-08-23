@@ -5,7 +5,7 @@ import Login from '@/components/LoginPage'
 import FirstPage from '@/components/FirstPage'
 import SecondPage from '@/components/SecondPage'
 import onemap from '@/components/onemap'
-// let baseUrl = "twomap"
+let baseUrl = "onemap"
 
 Vue.use(Router)
 
@@ -19,7 +19,7 @@ const requireAuth = () => (from, to, next) => {
   var ref = document.referrer.split('/');
 
   console.log("baseurl :", ref[ref.length - 1]);
-  // baseUrl = ref;
+  baseUrl = ref;
   // router.base = baseUrl;
   console.log('router: ', router);
   next();
