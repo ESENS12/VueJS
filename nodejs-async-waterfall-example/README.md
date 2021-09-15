@@ -3,7 +3,7 @@
 
 # References
  - nodejs async waterfall (https://jybaek.tistory.com/745)
- - 
+ - Async Waterfall, Promises and Async Await conversion (https://tkssharma.com/writing-javascript-using-promises-and-async-await)
 
 # Project setup
 ```

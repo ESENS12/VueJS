@@ -50,28 +50,71 @@ router.get('/async_waterfall',function(req,res,next){
   );
 
 
-  var wakeup = function (callback){
-    callback(null, ['세수하기']);
-  }
-  var eat = function(doing,callback){
-    callback(null, doing.concat(['밥먹기, 양치질하기']));
-  }
-  var goToWork = function(doing, callback){
-    callback(null, doing.concat(['출근하기']))
-  }
-  var comebackHome = function(doing, callback){
-    // callback(null, doing.concat(['퇴근하기']))
-    callback('야근', doing);
-  }
+  // var wakeup = function (callback){
+  //   callback(null, ['세수하기']);
+  // }
+  // var eat = function(doing,callback){
+  //   callback(null, doing.concat(['밥먹기, 양치질하기']));
+  // }
+  // var goToWork = function(doing, callback){
+  //   callback(null, doing.concat(['출근하기']))
+  // }
+  // var comebackHome = function(doing, callback){
+  //   // callback(null, doing.concat(['퇴근하기']))
+  //   callback('야근', doing);
+  // }
 
-  var tasks = [wakeup, eat, goToWork,comebackHome]
-  async.waterfall(tasks, function(err, result){
-    if(err) {
-      console.log("Error : " + result.concat(err));
+  // var tasks = [wakeup, eat, goToWork,comebackHome]
+  // async.waterfall(tasks, function(err, result){
+  //   if(err) {
+  //     console.log("Error : " + result.concat(err));
+  //   }
+  //   else{
+  //     console.log("오늘 한 일 : ", result);
+  //   }
+  // });
+
+
+  // async.parallel([
+  //   function(callback) {
+  //     setTimeout(function() {
+  //       console.log('Task One');
+  //       callback(null, 1);
+  //     }, 200);
+  //   },
+  //   function(callback) {
+  //     setTimeout(function() {
+  //       console.log('Task Two');
+  //       callback(null, 2);
+  //     }, 1000);
+  //   }
+  // ],
+  // function(err, results) {
+  //   console.log(results);
+  //   // the results array will equal [1, 2] even though
+  //   // the second function had a shorter timeout.
+  // });
+
+
+  async.series([
+    function(callback) {
+      console.log('one');
+      callback(null, 1);
+    },
+    function(callback) {
+      setTimeout(function() {
+        console.log('two');
+        callback(null, 2);
+      }, 1000);
+    },
+    function(callback) {
+      console.log('three');
+      callback(null, 3);
     }
-    else{
-      console.log("오늘 한 일 : ", result);
-    }
+  ],
+  function(err, results) {
+    console.log(results);
+    // results is now equal to [1, 2, 3]
   });
 
 });
